@@ -87,6 +87,7 @@
     
   <script>
   (function(){
+    let harpLoaded = false;
     const harpSampler = new Tone.Sampler({
   urls: {
     B2:'B2.mp3',
@@ -315,20 +316,7 @@ synth.volume.value = 6;
 
       const noteName = rowsPitches[n.pitchRow].name;
       
-function playImmediatePitch(rowIdx){
-  const pitch = rowsPitches[rowIdx];
-  if(!pitch) return;
-
-  if (Tone.context.state !== 'running') Tone.context.resume();
-  const noteName = pitch.name;
-  const duration = 0.5; // seconds
-    
-if (currentInstrument === 'piano') {
-  synth.triggerAttackRelease(noteName, Tone.Time(duration).toSeconds(), Tone.now() + timeFromNow);
-} else if (currentInstrument === 'string') {
-  if (harpSampler.loaded) {  // <-- check if samples are loaded
-    harpSampler.triggerAttackRelease(noteName, Tone.Time(duration).toSeconds(), Tone.now() + timeFromNow);
-  }
+playImmediatePitch(n.pitchRow, timeFromNow, duration);
 }
 }
 
@@ -345,11 +333,24 @@ if (currentInstrument === 'piano') {
     Tone.now() + timeFromNow
   );
 }*/
+  scheduledUntil = endBeat;
+  }
+
+function playImmediatePitch(rowIdx, timeFromNow, duration){
+  const pitch = rowsPitches[rowIdx];
+  if(!pitch) return;
+
+  if (Tone.context.state !== 'running') Tone.context.resume();
+  const noteName = pitch.name;
+
+  if (currentInstrument === 'piano') {
+    synth.triggerAttackRelease(noteName, Tone.Time(duration).toSeconds(), Tone.now() + timeFromNow);
+  } else if (currentInstrument === 'string') {
+    if (harpSampler.loaded) {
+      harpSampler.triggerAttackRelease(noteName, Tone.Time(duration).toSeconds(), Tone.now() + timeFromNow);
     }
   }
-  scheduledUntil = endBeat;
 }
-
     function getGridTransformX(){
       const st = getComputedStyle(gridEl).transform;
       if(!st || st === 'none') return 0;
@@ -553,3 +554,4 @@ function getLastNoteEnd() {
 </body>
 
 </html>
+
