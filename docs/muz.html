@@ -206,25 +206,6 @@ synth.volume.value = 2;
       }
     }
 
-    function renderNotes(){
-      const existing = gridEl.querySelectorAll('.note');
-      existing.forEach(n=>n.remove());
-      for(const n of notes){
-        const top = n.pitchRow * cellH;
-        const left = n.start * cellW;
-        const w = Math.max(1, n.length) * cellW - 4;
-        const el = document.createElement('div');
-        el.className = 'note';
-        el.style.top = top + 'px';
-        el.style.left = left + 'px';
-        el.style.width = w + 'px';
-        const label = rowsPitches[n.pitchRow] ? rowsPitches[n.pitchRow].name : '';
-        el.textContent = label;
-        el.dataset.id = n.id;
-        gridEl.appendChild(el);
-      }
-    }
-
     function updateNotesList(){
       if(notes.length===0){ notesList.textContent='No notes'; return; }
       notesList.innerHTML='';
@@ -508,7 +489,26 @@ function getLastNoteEnd() {
   })();
 
     //feature update
+  function renderNotes(){
+      const existing = gridEl.querySelectorAll('.note');
+      existing.forEach(n=>n.remove());
+      for(const n of notes){
+        const top = n.pitchRow * cellH;
+        const left = n.start * cellW;
+        const w = Math.max(1, n.length) * cellW - 4;
+        const el = document.createElement('div');
+        el.className = 'note';
+        el.style.top = top + 'px';
+        el.style.left = left + 'px';
+        el.style.width = w + 'px';
+        const label = rowsPitches[n.pitchRow] ? rowsPitches[n.pitchRow].name : '';
+        el.textContent = label;
+        el.dataset.id = n.id;
+        gridEl.appendChild(el);
+      }
+    }
 
+    
 (function(){
   const chordUI = document.createElement('div');
   chordUI.className = 'chord-ui';
@@ -604,6 +604,7 @@ function getLastNoteEnd() {
 </body>
 
 </html>
+
 
 
 
