@@ -277,14 +277,24 @@ function playImmediatePitch(rowIdx, timeFromNow = 0, duration = 0.5){
   const pitch = rowsPitches[rowIdx];
   if(!pitch) return;
 
-  if (Tone.context.state !== 'running') Tone.context.resume();
   const noteName = pitch.name;
 
-  if (currentInstrument === 'piano') {
-    synth.triggerAttackRelease(noteName, Tone.Time(duration).toSeconds(), Tone.now() + timeFromNow);
-  } else if (currentInstrument === 'string' && harpLoaded) {
-    harpSampler.triggerAttackRelease(noteName, Tone.Time(duration).toSeconds(), Tone.now() + timeFromNow);
-  }
+  // Ensure context is running, and only then trigger the note
+  Tone.start().then(() => {
+    if (currentInstrument === 'piano') {
+      synth.triggerAttackRelease(
+        noteName,
+        Tone.Time(duration).toSeconds(),
+        Tone.now() + timeFromNow
+      );
+    } else if (currentInstrument === 'string' && harpLoaded) {
+      harpSampler.triggerAttackRelease(
+        noteName,
+        Tone.Time(duration).toSeconds(),
+        Tone.now() + timeFromNow
+      );
+    }
+  }).catch(e => console.warn("Tone.js failed to start:", e));
 }
     function getGridTransformX(){
       const st = getComputedStyle(gridEl).transform;
@@ -489,6 +499,7 @@ function getLastNoteEnd() {
 </body>
 
 </html>
+
 
 
 
