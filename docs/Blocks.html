@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Klotski — Vibe Project (Recreated)</title>
+<style>
+  :root{--toolbar-h:72px}
+  html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial,Helvetica,sans-serif;background:#f4f6f8}
+  .app{min-height:100%;display:flex;flex-direction:column;align-items:center;padding:18px}
+  .toolbar{height:var(--toolbar-h);display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap}
+  .group{display:flex;gap:8px;align-items:center}
+  button,input,label{font-size:14px}
+  button{padding:8px 12px;border-radius:8px;border:1px solid #bbb;background:white;cursor:pointer}
+  button.active{background:gray;color:#fff;border-color:gray}
+  .center{display:flex;flex-direction:column;align-items:center;gap:10px}
+  .stage-wrap{background:white;padding:14px;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,0.06)}
+  canvas{display:block;cursor:crosshair;border-radius:6px}
+  .moves{margin-top:8px;font-weight:600;text-align:center}
+  .hint{font-size:13px;color:#555;max-width:720px}
+  .inp{width:72px;padding:6px;border-radius:6px;border:1px solid #ccc}
+  .small{font-size:13px}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="toolbar">
+    <div class="group">
+      <button id="createBlocksBtn">Create blocks</button>
+      <button id="editBgBtn">Edit BG</button>
+      <button id="defineGoalBtn">Define Goal</button>
+      <button id="defineTargetBtn">Define target</button>
+      <button id="playModeBtn">Play mode</button>
+    </div>
+    <div class="group">
+      <label>Rows <input id="rows" class="inp" type="number" min="2" value="6"></label>
+      <label>Cols <input id="cols" class="inp" type="number" min="2" value="6"></label>
+      <label>Cell size <input id="cellSize" class="inp" type="number" min="20" value="50"></label>
+      <button id="applyGrid">Apply</button>
+    </div>
+    <div class="group">
+      <button id="resetPos">Reset positions</button>
+      <label class="small"><input type="checkbox" id="chunkMode"> Chunk mode</label>
+    </div>
+  </div>
+
+  <div class="center">
+    <div class="stage-wrap">
+      <canvas id="board"></canvas>
+    </div>
+    <div class="moves">Moves: <span id="movesCount">0</span></div>
+    <div class="hint small">Toolbar on top. <strong>Edit BG</strong> toggles live cells (click). <strong>Create blocks</strong>: click once to begin a block, then click or drag over live cells to add/remove them from that block (click an already-selected cell to remove it). Press <strong>Create blocks</strong> again to finalize. <strong>Define Goal</strong> toggles hatched goal cells. <strong>Define target</strong> selects a block to be the mission target (it will get a bold offset outline). In Play mode drag a block orthogonally to move (Chunk mode allows moving touching blocks together).</div>
+  </div>
+</div>
+
+<script>
+(() => {
+  // DOM
+  const canvas = document.getElementById('board');
+  const ctx = canvas.getContext('2d');
+  const createBlocksBtn = document.getElementById('createBlocksBtn');
+  const editBgBtn = document.getElementById('editBgBtn');
+  const defineGoalBtn = document.getElementById('defineGoalBtn');
+  const defineTargetBtn = document.getElementById('defineTargetBtn');
+  const playModeBtn = document.getElementById('playModeBtn');
+  const rowsInput = document.getElementById('rows');
+  const colsInput = document.getElementById('cols');
+  const cellSizeInput = document.getElementById('cellSize');
+  const applyGridBtn = document.getElementById('applyGrid');
+  const resetPosBtn = document.getElementById('resetPos');
+  const chunkModeCheck = document.getElementById('chunkMode');
+  const movesCountEl = document.getElementById('movesCount');
+
+  // state
+  let mode = 'editor'; // 'editor' | 'play'
+  let tool = null; // 'create' | 'editbg' | 'goal' | 'target' | null
+  let rows = parseInt(rowsInput.value,10);
+  let cols = parseInt(colsInput.value,10);
+  let cellSize = parseInt(cellSizeInput.value,10);
+
+  // data
+  let grid = []; // {active:boolean, goal:boolean}
+  let blocks = []; // {id,color,cells:[{r,c}],initialCells,isTarget}
+  let currentCreateBlock = null; // block being painted until finalize
+  let savedInitial = null; let moves = 0;
+  const palette = ['#ff8a4b','#8ecfff','#ffd166','#9be89f','#c49bff','#ffb3d9','#c0d6ff'];
+
+  // sizing
+  function resizeCanvas(){ canvas.width = cols * cellSize + 1; canvas.height = rows * cellSize + 1; canvas.style.width = canvas.width + 'px'; canvas.style.height = canvas.height + 'px'; draw(); }
+  function makeGrid(r,c){ rows=r; cols=c; grid = Array.from({length:rows}, ()=>Array.from({length:cols}, ()=>({active:true, goal:false}))); }
+  makeGrid(rows,cols); resizeCanvas();
+
+  // helpers
+  function inGrid(r,c){ return r>=0 && r<rows && c>=0 && c<cols; }
+  function cellAtXY(clientX,clientY){ const rect = canvas.getBoundingClientRect(); const x = clientX - rect.left; const y = clientY - rect.top; const c = Math.floor(x / cellSize); const r = Math.floor(y / cellSize); const lx = x - c*cellSize; const ly = y - r*cellSize; return {r,c,lx,ly}; }
+  function updateMoves(){ movesCountEl.textContent = moves; }
+
+  function occupancy(list){ const map = Array.from({length:rows}, ()=>Array(cols).fill(null)); for(const b of list){ for(const z of b.cells) if(inGrid(z.r,z.c)) map[z.r][z.c] = b.id; } return map; }
+
+  // drawing
+  function drawGrid(){
+    for(let r=0;r<rows;r++){
+      for(let c=0;c<cols;c++){
+        ctx.fillStyle = grid[r][c].active? '#fff':'#f0f0f0'; ctx.fillRect(c*cellSize, r*cellSize, cellSize, cellSize);
+        if(grid[r][c].goal){ ctx.save(); ctx.beginPath(); ctx.rect(c*cellSize, r*cellSize, cellSize, cellSize); ctx.clip(); ctx.strokeStyle='rgba(0,0,0,0.12)'; for(let i=-cellSize;i<cellSize*2;i+=8){ ctx.beginPath(); ctx.moveTo(c*cellSize+i, r*cellSize); ctx.lineTo(c*cellSize+i+cellSize, r*cellSize+cellSize); ctx.stroke(); } ctx.restore(); }
+      }
+    }
+    ctx.strokeStyle = '#e4e4e4'; ctx.lineWidth = 1;
+    for(let r=0;r<=rows;r++){ ctx.beginPath(); ctx.moveTo(0, r*cellSize+0.5); ctx.lineTo(cols*cellSize, r*cellSize+0.5); ctx.stroke(); }
+    for(let c=0;c<=cols;c++){ ctx.beginPath(); ctx.moveTo(c*cellSize+0.5, 0); ctx.lineTo(c*cellSize+0.5, rows*cellSize); ctx.stroke(); }
+  }
+
+  function drawBlocks(){
+    // draw blocks by cell
+    for(const b of blocks){
+      for(const z of b.cells){ ctx.fillStyle = b.color; ctx.fillRect(z.c*cellSize+2, z.r*cellSize+2, cellSize-4, cellSize-4); }
+    }
+    // draw bold offset outline for target block only
+    const target = blocks.find(b=>b.isTarget);
+    if(target){
+      // build pixel path around union of target cells using simple algorithm: draw slightly enlarged rects and use globalCompositeOperation to get outer stroke — here we'll just stroke each cell's perimeter with offset to create a chunky outline effect
+      ctx.save(); ctx.lineWidth = 4; ctx.strokeStyle = '#000';
+      for(const z of target.cells){ const x = z.c*cellSize+1, y = z.r*cellSize+1, s = cellSize-2; ctx.strokeRect(x,y,s,s); }
+      ctx.restore();
+    }
+  }
+
+  function draw(){ ctx.clearRect(0,0,canvas.width,canvas.height); drawGrid(); drawBlocks(); }
+
+  // block creation
+  function startCreateBlock(){ const id = Date.now() + Math.random(); const color = palette[blocks.length % palette.length]; const b = {id, color, cells:[], initialCells:[], isTarget:false}; blocks.push(b); currentCreateBlock = b; saveInitial(); draw(); }
+  function finalizeCreateBlock(){ if(currentCreateBlock){ currentCreateBlock.initialCells = currentCreateBlock.cells.map(x=>({r:x.r,c:x.c})); currentCreateBlock = null; saveInitial(); draw(); } }
+  function toggleCellInCurrentBlock(r,c){ if(!inGrid(r,c)) return false; if(!grid[r][c].active) return false; const occ = occupancy(blocks); // cannot add if occupied by another block
+    if(occ[r][c] !== null && occ[r][c] !== (currentCreateBlock && currentCreateBlock.id)) return false;
+    if(!currentCreateBlock) return false;
+    const idx = currentCreateBlock.cells.findIndex(z=>z.r===r && z.c===c);
+    if(idx>=0){ currentCreateBlock.cells.splice(idx,1); return true; }
+    currentCreateBlock.cells.push({r,c}); return true;
+  }
+
+  function setTargetByCell(r,c){ const occ = occupancy(blocks); const id = occ[r][c]; for(const b of blocks) b.isTarget=false; if(id){ const b = blocks.find(x=>x.id===id); if(b) b.isTarget = true; saveInitial(); draw(); } }
+
+  function saveInitial(){ savedInitial = blocks.map(b=>({id:b.id, cells:b.cells.map(x=>({r:x.r,c:x.c})), color:b.color, isTarget:b.isTarget})); }
+  function resetToInitial(){ if(!savedInitial) return; blocks = savedInitial.map(s=>({id:s.id, cells:s.cells.map(x=>({r:x.r,c:x.c})), initialCells:s.cells.map(x=>({r:x.r,c:x.c})), color:s.color, isTarget:s.isTarget})); moves=0; updateMoves(); draw(); }
+
+  // movement & collisions
+  function canMove(blockIds, dr, dc){ const occ = occupancy(blocks); const staticMap = Array.from({length:rows}, ()=>Array(cols).fill(null)); for(const b of blocks){ if(!blockIds.includes(b.id)){ for(const z of b.cells) staticMap[z.r][z.c] = b.id; } }
+    for(const id of blockIds){ const b = blocks.find(x=>x.id===id); for(const z of b.cells){ const nr=z.r+dr, nc=z.c+dc; if(!inGrid(nr,nc)) return false; if(!grid[nr][nc].active) return false; if(staticMap[nr][nc] !== null) return false; } }
+    return true; }
+  function moveBlockIds(blockIds, dr, dc){ for(const id of blockIds){ const b = blocks.find(x=>x.id===id); for(const z of b.cells){ z.r += dr; z.c += dc; } } }
+
+  function findTouching(startId, dir){ const dirVec = {left:[0,-1], right:[0,1], up:[-1,0], down:[1,0]}[dir]; if(!dirVec) return [startId]; const [dr,dc] = dirVec; const occ = occupancy(blocks); const q=[startId]; const seen=new Set(q);
+    while(q.length){ const id=q.shift(); const b=blocks.find(x=>x.id===id); for(const cell of b.cells){ const nr=cell.r+dr, nc=cell.c+dc; if(inGrid(nr,nc)){ const other = occ[nr][nc]; if(other !== null && !seen.has(other)){ seen.add(other); q.push(other); } } } }
+    return Array.from(seen); }
+
+  // interaction
+  let dragging=false, dragMode=null; // 'paint' or 'move'
+  let dragStart=null, dragBlock=null, movePreview={dr:0,dc:0,blockIds:[]};
+
+  canvas.addEventListener('pointerdown', (ev)=>{
+    canvas.setPointerCapture(ev.pointerId);
+    const p = cellAtXY(ev.clientX, ev.clientY);
+    if(!inGrid(p.r,p.c)) return;
+    if(mode==='editor'){
+      if(tool==='editbg'){ grid[p.r][p.c].active = !grid[p.r][p.c].active; draw(); return; }
+      if(tool==='goal'){ grid[p.r][p.c].goal = !grid[p.r][p.c].goal; draw(); return; }
+      if(tool==='create'){
+        if(!currentCreateBlock) startCreateBlock(); dragging=true; dragMode='paint'; toggleCellInCurrentBlock(p.r,p.c); draw(); return; }
+      if(tool==='target'){ setTargetByCell(p.r,p.c); return; }
+    } else if(mode==='play'){
+      const occ = occupancy(blocks); const id = occ[p.r][p.c]; if(!id) return; dragBlock = blocks.find(b=>b.id===id); dragging=true; dragMode='move'; dragStart={x:ev.clientX,y:ev.clientY}; movePreview={dr:0,dc:0,blockIds:[]}; }
+  });
+
+  canvas.addEventListener('pointermove', (ev)=>{
+    const p = cellAtXY(ev.clientX, ev.clientY);
+    if(!inGrid(Math.max(0,Math.min(rows-1,p.r)), Math.max(0,Math.min(cols-1,p.c)))) return;
+    if(!dragging) return;
+    if(dragMode==='paint'){
+      toggleCellInCurrentBlock(p.r,p.c); draw();
+    } else if(dragMode==='move'){
+      const dx = ev.clientX - dragStart.x; const dy = ev.clientY - dragStart.y; let dr=0, dc=0;
+      if(Math.abs(dx) > Math.abs(dy)){
+        const steps = Math.floor(Math.abs(dx) / cellSize); dc = Math.sign(dx) * steps;
+      } else {
+        const steps = Math.floor(Math.abs(dy) / cellSize); dr = Math.sign(dy) * steps;
+      }
+      if(dr===0 && dc===0){ movePreview={dr:0,dc:0,blockIds:[]}; draw(); return; }
+      let blockIds = [dragBlock.id];
+      if(chunkModeCheck.checked){ const dir = dr!==0 ? (dr>0?'down':'up') : (dc>0?'right':'left'); blockIds = findTouching(dragBlock.id, dir); }
+      const maxStep = Math.max(Math.abs(dr), Math.abs(dc)); const sgnR = dr===0?0:Math.sign(dr); const sgnC = dc===0?0:Math.sign(dc); let allowed=0;
+      for(let s=1;s<=maxStep;s++){ if(canMove(blockIds, s*sgnR, s*sgnC)) allowed=s; else break; }
+      movePreview={dr:allowed*sgnR, dc:allowed*sgnC, blockIds}; draw(); if(allowed>0){ ctx.save(); ctx.globalAlpha=0.22; for(const id of blockIds){ const b=blocks.find(x=>x.id===id); for(const z of b.cells){ ctx.fillStyle=b.color; ctx.fillRect((z.c+movePreview.dc)*cellSize+2, (z.r+movePreview.dr)*cellSize+2, cellSize-4, cellSize-4); } } ctx.restore(); }
+    }
+  });
+
+  canvas.addEventListener('pointerup', (ev)=>{
+    canvas.releasePointerCapture(ev.pointerId);
+    if(!dragging) return; dragging=false;
+    if(dragMode==='paint'){ saveInitial(); draw(); }
+    else if(dragMode==='move'){
+      if(movePreview && (movePreview.dr!==0 || movePreview.dc!==0)){
+        moveBlockIds(movePreview.blockIds, movePreview.dr, movePreview.dc); moves++; updateMoves(); draw();
+        // win check
+        const target = blocks.find(b=>b.isTarget);
+        if(target){ const allInGoal = target.cells.every(z=> grid[z.r] && grid[z.r][z.c] && grid[z.r][z.c].goal); if(allInGoal) setTimeout(()=>alert('Target delivered! Moves: '+moves),50); }
+      }
+      movePreview={dr:0,dc:0,blockIds:[]}; draw();
+    }
+    dragMode=null; dragBlock=null;
+  });
+
+  // UI actions
+  function setActiveButton(name){ document.querySelectorAll('button').forEach(b=>b.classList.remove('active')); if(!name) return; const el = document.getElementById(name); if(el) el.classList.add('active'); }
+
+  createBlocksBtn.addEventListener('click', ()=>{
+    if(tool==='create'){ finalizeCreateBlock(); tool=null; setActiveButton(null); }
+    else { tool='create'; setActiveButton('createBlocksBtn'); editBgBtn.classList.remove('active'); defineGoalBtn.classList.remove('active'); defineTargetBtn.classList.remove('active'); playModeBtn.classList.remove('active'); mode='editor'; }
+  });
+
+  editBgBtn.addEventListener('click', ()=>{
+    if(tool==='editbg'){ tool=null; setActiveButton(null); } else { tool='editbg'; setActiveButton('editBgBtn'); createBlocksBtn.classList.remove('active'); defineGoalBtn.classList.remove('active'); defineTargetBtn.classList.remove('active'); playModeBtn.classList.remove('active'); mode='editor'; }
+  });
+
+  defineGoalBtn.addEventListener('click', ()=>{
+    if(tool==='goal'){ tool=null; setActiveButton(null); } else { tool='goal'; setActiveButton('defineGoalBtn'); createBlocksBtn.classList.remove('active'); editBgBtn.classList.remove('active'); defineTargetBtn.classList.remove('active'); playModeBtn.classList.remove('active'); mode='editor'; }
+  });
+
+  defineTargetBtn.addEventListener('click', ()=>{
+    if(tool==='target'){ tool=null; setActiveButton(null); } else { tool='target'; setActiveButton('defineTargetBtn'); createBlocksBtn.classList.remove('active'); editBgBtn.classList.remove('active'); defineGoalBtn.classList.remove('active'); playModeBtn.classList.remove('active'); mode='editor'; }
+  });
+
+  playModeBtn.addEventListener('click', ()=>{ if(currentCreateBlock) finalizeCreateBlock(); tool=null; setActiveButton('playModeBtn'); mode='play'; });
+
+  applyGridBtn.addEventListener('click', ()=>{
+    const r = parseInt(rowsInput.value,10); const c = parseInt(colsInput.value,10); const s = parseInt(cellSizeInput.value,10);
+    if(isNaN(r)||isNaN(c)||isNaN(s)|| r<1 || c<1) return alert('Invalid grid values'); rows=r; cols=c; cellSize=s; // preserve goal flags and clip blocks
+    const old = grid; makeGrid(rows,cols);
+    for(let rr=0; rr<Math.min(old.length, rows); rr++) for(let cc=0; cc<Math.min(old[0].length, cols); cc++){ grid[rr][cc].goal = old[rr][cc].goal; grid[rr][cc].active = old[rr][cc].active; }
+    blocks = blocks.map(b=>({ id:b.id, color:b.color, cells: b.cells.filter(z=> inGrid(z.r,z.c) && grid[z.r][z.c].active ), initialCells: b.initialCells? b.initialCells.filter(z=> inGrid(z.r,z.c) && grid[z.r][z.c].active):[], isTarget:b.isTarget })).filter(b=>b.cells.length>0);
+    resizeCanvas(); saveInitial(); draw();
+  });
+
+  resetPosBtn.addEventListener('click', ()=>{ resetToInitial(); });
+
+  // dblclick to set target in target tool
+  canvas.addEventListener('dblclick', (ev)=>{ if(tool!=='target') return; const p = cellAtXY(ev.clientX,ev.clientY); if(!inGrid(p.r,p.c)) return; setTargetByCell(p.r,p.c); });
+
+  // initial
+  draw(); updateMoves();
+})();
+</script>
+</body>
+</html>
