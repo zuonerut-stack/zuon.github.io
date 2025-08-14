@@ -100,8 +100,9 @@
   },
   baseUrl: './',
   onload: () => {
-    console.log("Harp samples loaded!");
-  }
+  harpLoaded = true;
+  console.log("Harp samples loaded!");
+}
 }).toDestination();
     const synth = new Tone.PolySynth(Tone.Synth, {
   oscillator: { type: "triangle" },  // try "sine", "square", "triangle", "sawtooth"
@@ -246,59 +247,8 @@ synth.volume.value = 6;
     function midiToFreq(m){
       return 440 * Math.pow(2, (m - 69)/12);
     }
-
-    /*function playImmediatePitch(rowIdx){
-      ensureAudio();
-      const pitch = rowsPitches[rowIdx];
-      if(!pitch) return;
-      const midi = noteToMidi(pitch.name);
-      const freq = midiToFreq(midi);
-      const now = audioCtx.currentTime;
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      if (currentInstrument === 'piano') {
-  osc.type = 'sawtooth'; // or 'triangle' for a softer attack
-} else if (currentInstrument === 'string') {
-  osc.type = 'sawtooth'; // richer, string-like timbre
-}
-      osc.frequency.value = freq;
-      gain.gain.setValueAtTime(0, now);
-      gain.gain.linearRampToValueAtTime(0.9, now+0.01);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now+1.5);
-      osc.connect(gain).connect(audioCtx.destination);
-      osc.start(now); osc.stop(now+2.1);
-    }*/
     
-    
-
     let scheduledUntil = 0;
-    /*function scheduleFromPosition(beatPos){
-      if(!audioCtx) return;
-      const secondsPerBeat = 60 / bpm;
-      const secondsPerCell = secondsPerBeat / 4;
-      const lookaheadBeats = Math.ceil((5) / secondsPerCell);
-      const startBeat = Math.floor(beatPos);
-      const endBeat = startBeat + lookaheadBeats;
-      if(endBeat <= scheduledUntil) return;
-      for(const n of notes){
-        if(n.start >= scheduledUntil && n.start < endBeat){
-          const t = audioCtx.currentTime + (n.start - beatPos) * secondsPerCell;
-          if(t < audioCtx.currentTime) continue;
-          const freq = midiToFreq(noteToMidi(rowsPitches[n.pitchRow].name));
-          const osc = audioCtx.createOscillator();
-          const gain = audioCtx.createGain();
-          const dur = Math.max(0.01, n.length * secondsPerCell) + 0.3;
-          osc.type = 'sine';
-          osc.frequency.value = freq;
-          gain.gain.setValueAtTime(0.0001, t);
-          gain.gain.linearRampToValueAtTime(0.8, t+0.01);
-          gain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-          osc.connect(gain).connect(audioCtx.destination);
-          osc.start(t); osc.stop(t + dur + 0.1);
-        }
-      }
-      scheduledUntil = endBeat;
-    }*/
     
     function scheduleFromPosition(beatPos){
   if(!Tone.context) return;
@@ -320,19 +270,6 @@ playImmediatePitch(n.pitchRow, timeFromNow, duration);
 }
 }
 
-/*if (currentInstrument === 'piano') {
-  synth.triggerAttackRelease(
-    noteName,
-    Tone.Time(duration).toSeconds(),
-    Tone.now() + timeFromNow
-  );
-} else if (currentInstrument === 'string') {
-  harpSampler.triggerAttackRelease(
-    noteName,
-    Tone.Time(duration).toSeconds(),
-    Tone.now() + timeFromNow
-  );
-}*/
   scheduledUntil = endBeat;
   }
 
@@ -345,11 +282,9 @@ function playImmediatePitch(rowIdx, timeFromNow, duration){
 
   if (currentInstrument === 'piano') {
     synth.triggerAttackRelease(noteName, Tone.Time(duration).toSeconds(), Tone.now() + timeFromNow);
-  } else if (currentInstrument === 'string') {
-    if (harpSampler.loaded) {
-      harpSampler.triggerAttackRelease(noteName, Tone.Time(duration).toSeconds(), Tone.now() + timeFromNow);
-    }
-  }
+  } else if (currentInstrument === 'string' && harpLoaded) {
+  harpSampler.triggerAttackRelease(noteName, Tone.Time(duration).toSeconds(), Tone.now() + timeFromNow);
+}
 }
     function getGridTransformX(){
       const st = getComputedStyle(gridEl).transform;
@@ -419,7 +354,7 @@ function playImmediatePitch(rowIdx, timeFromNow, duration){
       transportPos = Math.max(0, pos.beat);
       gridEl.style.transform = `translateX(${-(transportPos*cellW)}px)`;
       seek.value = Math.max(0, Math.min(parseInt(seek.max), transportPos));
-      scheduledUntil = transportPos;
+      scheduledUntil = Math.floor(transportPos);
     });
 
     let rafId = null;
@@ -454,7 +389,6 @@ function playImmediatePitch(rowIdx, timeFromNow, duration){
     toggleModeBtn.addEventListener('click', ()=>{
       editorMode = !editorMode;
       toggleModeBtn.textContent = editorMode? 'Switch to Player Mode':'Switch to Editor Mode';
-      modeInfo.textContent = editorMode? 'Editor Mode — Left-click to add, drag to lengthen, right-click to delete':'Player Mode — Use slider to seek, play to audition';
     });
 
     playBtn.addEventListener('click', ()=>{
@@ -554,4 +488,5 @@ function getLastNoteEnd() {
 </body>
 
 </html>
+
 
