@@ -486,8 +486,6 @@ function getLastNoteEnd() {
   return Math.max(...notes.map(n => n.start + n.length));
 }
 
-  })();
-
     //feature update
   function renderNotes(){
       const existing = gridEl.querySelectorAll('.note');
@@ -508,8 +506,6 @@ function getLastNoteEnd() {
       }
     }
 
-    
-(function(){
   const chordUI = document.createElement('div');
   chordUI.className = 'chord-ui';
   chordUI.style.display = 'none';
@@ -604,6 +600,7 @@ function getLastNoteEnd() {
 </body>
 
 </html>
+
 
 
 
