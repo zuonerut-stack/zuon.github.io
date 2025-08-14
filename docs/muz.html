@@ -273,19 +273,18 @@ playImmediatePitch(n.pitchRow, timeFromNow, duration);
   scheduledUntil = endBeat;
   }
 
-function playImmediatePitch(rowIdx, timeFromNow, duration){
+function playImmediatePitch(rowIdx, timeFromNow = 0, duration = 0.5){
   const pitch = rowsPitches[rowIdx];
   if(!pitch) return;
 
   if (Tone.context.state !== 'running') Tone.context.resume();
   const noteName = pitch.name;
-const dur = duration && duration > 0 ? duration : 0.5;
 
   if (currentInstrument === 'piano') {
-    synth.triggerAttackRelease(noteName, Tone.Time(dur).toSeconds(), Tone.now() + (timeFromNow || 0));
+    synth.triggerAttackRelease(noteName, Tone.Time(duration).toSeconds(), Tone.now() + timeFromNow);
   } else if (currentInstrument === 'string' && harpLoaded) {
-  harpSampler.triggerAttackRelease(noteName, Tone.Time(duration).toSeconds(), Tone.now() + timeFromNow);
-}
+    harpSampler.triggerAttackRelease(noteName, Tone.Time(duration).toSeconds(), Tone.now() + timeFromNow);
+  }
 }
     function getGridTransformX(){
       const st = getComputedStyle(gridEl).transform;
@@ -490,6 +489,7 @@ function getLastNoteEnd() {
 </body>
 
 </html>
+
 
 
 
