@@ -581,13 +581,14 @@ function getLastNoteEnd() {
         chordUI.style.top = rect.bottom + 2 + 'px';
         chordUI.style.display = 'flex';
       });
-      n.addEventListener('mouseleave', ()=>{
-        hoveredNote = null;
-        chordUI.style.display = 'none';
-        document.querySelectorAll('.key').forEach(k=>k.classList.remove('highlight'));
-      });
     });
   }
+
+  chordUI.addEventListener('mouseleave', () => {
+  hoveredNote = null;
+  chordUI.style.display = 'none';
+  document.querySelectorAll('.key').forEach(k => k.classList.remove('highlight'));
+});
 
   // Reattach hover whenever notes are rendered
   const originalRenderNotes = renderNotes;
@@ -600,6 +601,7 @@ function getLastNoteEnd() {
 </body>
 
 </html>
+
 
 
 
