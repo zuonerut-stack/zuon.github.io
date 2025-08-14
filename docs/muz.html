@@ -375,23 +375,19 @@ function playImmediatePitch(rowIdx, timeFromNow = 0, duration = 0.5){
     // Stop automatically if beyond last note
     const lastEnd = getLastNoteEnd();
     if(transportPos >= lastEnd){
-        playing = false;
+       
+      if (document.getElementById('autoRepeat').checked) {
+        transportPos = 0;
+        startTransport = 0;
+        startTime = now; // restart timing reference
+        synth.releaseAll(); // stop lingering sounds
+  // You may want to schedule the first notes again immediately
+        scheduleFromPosition(0)} else {
+       playing = false;
       playBtn.textContent = 'Play';
       synth.releaseAll(); // stop lingering sounds
       transportPos = lastEnd; // optional: stop exactly at last note
-      
-      if (document.getElementById('autoRepeat').checked) {
-        transportPos = 0;
-  startTransport = 0;
-  startTime = now; // restart timing reference
-
-  synth.releaseAll(); // stop lingering sounds
-
-  // You may want to schedule the first notes again immediately
-  scheduleFromPosition(0);
-
-
-      } 
+      }
     }
 
     // Move grid/playhead
@@ -615,6 +611,7 @@ function getLastNoteEnd() {
 </body>
 
 </html>
+
 
 
 
