@@ -223,7 +223,7 @@ synth.volume.value = 2;
         el.dataset.id = n.id;
         gridEl.appendChild(el);
       }
-    /*  updateNotesList();*/
+      updateNotesList();
     }
 
     function updateNotesList(){
@@ -508,102 +508,104 @@ function getLastNoteEnd() {
 
   })();
 
-// -------------------- ENHANCED CHORD HOVER FEATURE --------------------
-const chordUI = document.createElement('div');
-chordUI.className = 'chord-ui';
-chordUI.style.display = 'none';
-document.body.appendChild(chordUI);
+    //feature update
 
-const chordTypes = [
-  {label:'X', type:'maj'},
-  {label:'Xm', type:'min'},
-  {label:'Xaug', type:'aug'},
-  {label:'Xsus', type:'sus'},
-  {label:'Xdim', type:'dim'}
-];
+(function(){
+  const chordUI = document.createElement('div');
+  chordUI.className = 'chord-ui';
+  chordUI.style.display = 'none';
+  document.body.appendChild(chordUI);
 
-chordTypes.forEach(c => {
-  const btn = document.createElement('button');
-  btn.textContent = c.label;
-  btn.dataset.type = c.type;
-  chordUI.appendChild(btn);
+  const chordTypes = [
+    {label:'X', type:'maj'},
+    {label:'Xm', type:'min'},
+    {label:'Xaug', type:'aug'},
+    {label:'Xsus', type:'sus'},
+    {label:'Xdim', type:'dim'}
+  ];
 
-  btn.addEventListener('mouseenter', () => {
-    if(!hoveredNote) return;
-    highlightChord(getNoteNameFromRow(hoveredNote.pitchRow), c.type);
-  });
-});
+  chordTypes.forEach(c=>{
+    const btn = document.createElement('button');
+    btn.textContent = c.label;
+    btn.dataset.type = c.type;
+    chordUI.appendChild(btn);
 
-function getNoteNameFromRow(row){ return rowsPitches[row].name; }
-
-function getChordNotes(root, chordType){
-  const semitoneMap = {C:0,'C#':1,D:2,'D#':3,E:4,F:5,'F#':6,G:7,'G#':8,A:9,'A#':10,B:11};
-  const intervals = {maj:[0,4,7], min:[0,3,7], aug:[0,4,8], sus:[0,5,7], dim:[0,3,6]};
-  const m = root.match(/^([A-G]#?)(\d+)$/);
-  if(!m) return [];
-  const rootName = m[1], octave = parseInt(m[2]);
-  const base = semitoneMap[rootName];
-  const notesArr = [];
-  for(let oct=octave-1; oct<=octave+1; oct++){
-    intervals[chordType].forEach(i => notesArr.push(base + i + oct*12));
-  }
-  return notesArr;
-}
-
-function highlightChord(root, chordType){
-  const chordNotes = getChordNotes(root, chordType);
-  document.querySelectorAll('.key').forEach(k=>{
-    const midi = noteToMidi(k.textContent);
-    if(chordNotes.includes(midi)) k.classList.add('highlight');
-    else k.classList.remove('highlight');
-  });
-}
-
-let hoveredNote = null;
-
-function attachHoverToNotes(){
-  const noteEls = document.querySelectorAll('.note');
-  noteEls.forEach(n => {
-    n.addEventListener('mouseenter', () => {
-      hoveredNote = notes.find(x => x.id == n.dataset.id);
-      updateChordUIPosition(n);
-      chordUI.style.display = 'flex';
-    });
-    n.addEventListener('mouseleave', () => {
-      hoveredNote = null;
-      chordUI.style.display = 'none';
-      document.querySelectorAll('.key').forEach(k=>k.classList.remove('highlight'));
+    btn.addEventListener('mouseenter', ()=>{
+      if(!hoveredNote) return;
+      highlightChord(getNoteNameFromRow(hoveredNote.pitchRow), c.type);
     });
   });
-}
 
-function updateChordUIPosition(noteEl){
-  const noteRect = noteEl.getBoundingClientRect();
-  const scrollX = window.scrollX || document.documentElement.scrollLeft;
-  const scrollY = window.scrollY || document.documentElement.scrollTop;
-
-  chordUI.style.left = (noteRect.left + scrollX) + 'px';
-  chordUI.style.top = (noteRect.bottom + scrollY + 4) + 'px';
-}
-
-// Wrap the original renderNotes to reattach hover
-const originalRenderNotes = renderNotes;
-renderNotes = function(){
-  originalRenderNotes();
-  attachHoverToNotes();
-};
-
-// Update position on scroll
-window.addEventListener('scroll', () => {
-  if(hoveredNote){
-    const noteEl = document.querySelector(`.note[data-id="${hoveredNote.id}"]`);
-    if(noteEl) updateChordUIPosition(noteEl);
+  function getNoteNameFromRow(row){
+    return rowsPitches[row].name;
   }
-});
+
+  function getChordNotes(root, chordType){
+    const semitoneMap = {
+      'C':0,'C#':1,'D':2,'D#':3,'E':4,'F':5,'F#':6,'G':7,'G#':8,'A':9,'A#':10,'B':11
+    };
+    const intervals = {
+      maj:[0,4,7],
+      min:[0,3,7],
+      aug:[0,4,8],
+      sus:[0,5,7],
+      dim:[0,3,6]
+    };
+    const m = root.match(/^([A-G]#?)(\d+)$/);
+    if(!m) return [];
+    const rootName = m[1], octave = parseInt(m[2]);
+    const base = semitoneMap[rootName];
+    const notes = [];
+    for(let oct=octave-1; oct<=octave+1; oct++){
+      intervals[chordType].forEach(i=>{
+        notes.push(base + i + oct*12);
+      });
+    }
+    return notes;
+  }
+
+  function highlightChord(root, chordType){
+    const chordNotes = getChordNotes(root, chordType);
+    const keyEls = document.querySelectorAll('.key');
+    keyEls.forEach(k=>{
+      const midi = noteToMidi(k.textContent);
+      if(chordNotes.includes(midi)) k.classList.add('highlight');
+      else k.classList.remove('highlight');
+    });
+  }
+
+  let hoveredNote = null;
+
+  function attachHoverToNotes(){
+    const noteEls = document.querySelectorAll('.note');
+    noteEls.forEach(n=>{
+      n.addEventListener('mouseenter', ()=> {
+        hoveredNote = notes.find(x=>x.id == n.dataset.id);
+        const rect = n.getBoundingClientRect();
+        chordUI.style.left = rect.left + 'px';
+        chordUI.style.top = rect.bottom + 2 + 'px';
+        chordUI.style.display = 'flex';
+      });
+      n.addEventListener('mouseleave', ()=>{
+        hoveredNote = null;
+        chordUI.style.display = 'none';
+        document.querySelectorAll('.key').forEach(k=>k.classList.remove('highlight'));
+      });
+    });
+  }
+
+  // Reattach hover whenever notes are rendered
+  const originalRenderNotes = renderNotes;
+  renderNotes = function(){
+    originalRenderNotes();
+    attachHoverToNotes();
+  };
+})();
   </script>
 </body>
 
 </html>
+
 
 
 
