@@ -380,6 +380,7 @@ function playImmediatePitch(rowIdx, timeFromNow = 0, duration = 0.5){
         transportPos = 0;
         startTransport = 0;
         startTime = now; // restart timing reference
+        scheduledUntil = 0; 
         // Clear any pending Tone.js events and restart scheduling
   Tone.Transport.cancel(); // remove old scheduled events
   scheduleFromPosition(0); // queue first notes instantly
@@ -613,6 +614,7 @@ function getLastNoteEnd() {
 </body>
 
 </html>
+
 
 
 
