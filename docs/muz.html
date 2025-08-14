@@ -6,6 +6,18 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Mini MIDI Piano Roll</title>
   <style>
+  .chord-ui{
+  display:flex; gap:4px; position:absolute; z-index:1000; pointer-events:auto;
+  background:rgba(19,34,62,0.95); padding:4px 6px; border-radius:6px; box-shadow:0 2px 6px rgba(0,0,0,0.5);
+  font-size:12px;
+}
+.chord-ui button{
+  background:#13223e; color:#dfe7ff; border:none; padding:2px 6px; border-radius:4px; cursor:pointer;
+}
+.key.highlight{ background: orange !important; }
+
+
+    
     :root{
       --cell-w:24px;
       --cell-h:22px;
@@ -495,10 +507,108 @@ function getLastNoteEnd() {
 }
 
   })();
+
+// -------------------- ENHANCED CHORD HOVER FEATURE --------------------
+(function(){
+  const chordUI = document.createElement('div');
+  chordUI.className = 'chord-ui';
+  chordUI.style.display = 'none';
+  document.body.appendChild(chordUI);
+
+  const chordTypes = [
+    {label:'X', type:'maj'},
+    {label:'Xm', type:'min'},
+    {label:'Xaug', type:'aug'},
+    {label:'Xsus', type:'sus'},
+    {label:'Xdim', type:'dim'}
+  ];
+
+  chordTypes.forEach(c => {
+    const btn = document.createElement('button');
+    btn.textContent = c.label;
+    btn.dataset.type = c.type;
+    chordUI.appendChild(btn);
+
+    btn.addEventListener('mouseenter', () => {
+      if(!hoveredNote) return;
+      highlightChord(getNoteNameFromRow(hoveredNote.pitchRow), c.type);
+    });
+  });
+
+  function getNoteNameFromRow(row){
+    return rowsPitches[row].name;
+  }
+
+  function getChordNotes(root, chordType){
+    const semitoneMap = {C:0,'C#':1,D:2,'D#':3,E:4,F:5,'F#':6,G:7,'G#':8,A:9,'A#':10,B:11};
+    const intervals = {maj:[0,4,7], min:[0,3,7], aug:[0,4,8], sus:[0,5,7], dim:[0,3,6]};
+    const m = root.match(/^([A-G]#?)(\d+)$/);
+    if(!m) return [];
+    const rootName = m[1], octave = parseInt(m[2]);
+    const base = semitoneMap[rootName];
+    const notes = [];
+    for(let oct=octave-1; oct<=octave+1; oct++){
+      intervals[chordType].forEach(i => notes.push(base + i + oct*12));
+    }
+    return notes;
+  }
+
+  function highlightChord(root, chordType){
+    const chordNotes = getChordNotes(root, chordType);
+    document.querySelectorAll('.key').forEach(k=>{
+      const midi = noteToMidi(k.textContent);
+      if(chordNotes.includes(midi)) k.classList.add('highlight');
+      else k.classList.remove('highlight');
+    });
+  }
+
+  let hoveredNote = null;
+
+  function attachHoverToNotes(){
+    const noteEls = document.querySelectorAll('.note');
+    noteEls.forEach(n => {
+      n.addEventListener('mouseenter', () => {
+        hoveredNote = notes.find(x => x.id == n.dataset.id);
+        updateChordUIPosition(n);
+        chordUI.style.display = 'flex';
+      });
+      n.addEventListener('mouseleave', () => {
+        hoveredNote = null;
+        chordUI.style.display = 'none';
+        document.querySelectorAll('.key').forEach(k=>k.classList.remove('highlight'));
+      });
+    });
+  }
+
+  function updateChordUIPosition(noteEl){
+    const noteRect = noteEl.getBoundingClientRect();
+    const scrollX = window.scrollX || document.documentElement.scrollLeft;
+    const scrollY = window.scrollY || document.documentElement.scrollTop;
+
+    chordUI.style.left = (noteRect.left + scrollX) + 'px';
+    chordUI.style.top = (noteRect.bottom + scrollY + 4) + 'px';
+  }
+
+  // Reattach hover after rendering notes
+  const originalRenderNotes = renderNotes;
+  renderNotes = function(){
+    originalRenderNotes();
+    attachHoverToNotes();
+  };
+
+  // Update position on scroll for smooth follow
+  window.addEventListener('scroll', () => {
+    if(hoveredNote){
+      const noteEl = document.querySelector(`.note[data-id="${hoveredNote.id}"]`);
+      if(noteEl) updateChordUIPosition(noteEl);
+    }
+  });
+})();
   </script>
 </body>
 
 </html>
+
 
 
 
