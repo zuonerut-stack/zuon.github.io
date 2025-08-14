@@ -380,9 +380,11 @@ function playImmediatePitch(rowIdx, timeFromNow = 0, duration = 0.5){
         transportPos = 0;
         startTransport = 0;
         startTime = now; // restart timing reference
-        synth.releaseAll(); // stop lingering sounds
+        // Clear any pending Tone.js events and restart scheduling
+  Tone.Transport.cancel(); // remove old scheduled events
+  scheduleFromPosition(0); // queue first notes instantly
   // You may want to schedule the first notes again immediately
-        scheduleFromPosition(0)} else {
+      } else {
        playing = false;
       playBtn.textContent = 'Play';
       synth.releaseAll(); // stop lingering sounds
@@ -611,6 +613,7 @@ function getLastNoteEnd() {
 </body>
 
 </html>
+
 
 
 
