@@ -136,7 +136,7 @@ synth.volume.value = 6;
 
     const rows = rowsPitches.length;
     document.documentElement.style.setProperty('--rows', rows);
-
+    
     const gridEl = document.getElementById('grid');
     const keysEl = document.getElementById('keys');
     const viewport = document.getElementById('viewport');
@@ -279,9 +279,10 @@ function playImmediatePitch(rowIdx, timeFromNow, duration){
 
   if (Tone.context.state !== 'running') Tone.context.resume();
   const noteName = pitch.name;
+const dur = duration && duration > 0 ? duration : 0.5;
 
   if (currentInstrument === 'piano') {
-    synth.triggerAttackRelease(noteName, Tone.Time(duration).toSeconds(), Tone.now() + timeFromNow);
+    synth.triggerAttackRelease(noteName, Tone.Time(dur).toSeconds(), Tone.now() + (timeFromNow || 0));
   } else if (currentInstrument === 'string' && harpLoaded) {
   harpSampler.triggerAttackRelease(noteName, Tone.Time(duration).toSeconds(), Tone.now() + timeFromNow);
 }
@@ -391,9 +392,10 @@ function playImmediatePitch(rowIdx, timeFromNow, duration){
       toggleModeBtn.textContent = editorMode? 'Switch to Player Mode':'Switch to Editor Mode';
     });
 
-    playBtn.addEventListener('click', ()=>{
-  if(!playing){
+playBtn.addEventListener('click', async () => {
+  if (!playing) {
     ensureAudio();
+    await Tone.start(); // <-- add this line
     playing = true;
     playBtn.textContent = 'Stop';
     startTransport = transportPos;
@@ -416,7 +418,7 @@ function playImmediatePitch(rowIdx, timeFromNow, duration){
     gridEl.style.transform = `translateX(0px)`;
     seek.value = 0;
   }
-});//playhead error fix
+});
 
     bpmInput.addEventListener('change', ()=>{ bpm = parseFloat(bpmInput.value) || 120; });
 
@@ -488,5 +490,6 @@ function getLastNoteEnd() {
 </body>
 
 </html>
+
 
 
