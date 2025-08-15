@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Turn-Cycle Maze</title>
+  <style>
+    :root{ --cell:36px; --gap:2px; --bg:#0f172a; --panel:#111827; --text:#e5e7eb; --muted:#94a3b8; }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial}
+    header{display:flex;gap:12px;align-items:center;padding:12px 16px;background:#0b1220;position:sticky;top:0;z-index:5;border-bottom:1px solid #1f2937}
+    header h1{font-size:18px;margin:0;font-weight:700}
+    header .muted{color:var(--muted);font-size:12px}
+    .wrap{display:grid;grid-template-columns:320px 1fr;gap:12px;padding:12px;min-height:calc(100vh - 56px)}
+    .panel{background:var(--panel);border:1px solid #1f2937;border-radius:14px;padding:14px}
+    .grid{display:grid;gap:var(--gap);place-content:start}
+    .cell{width:var(--cell);height:var(--cell);border-radius:6px;display:grid;place-items:center;font-size:11px;font-weight:700;color:#0b1220;user-select:none}
+    .cell.obstacle{background:#000;color:#fff}
+    /* Base palette (when "on") */
+    .Y{background:#fde047} /* yellow */
+    .B{background:#93c5fd} /* light blue */
+    .G{background:#86efac} /* green */
+    .M{background:#f0abfc} /* magenta */
+    .O{background:#fdba74} /* orange */
+    .W{background:#e5e7eb;color:#0f172a} /* plain white (used during editing before coloring) */
+    .S{outline:2px solid #22d3ee; outline-offset:-3px} /* start */
+    .E{outline:2px solid #f43f5e; outline-offset:-3px} /* goal */
+    .blackout{background:#0a0a0a !important;color:#e5e7eb}
+    .controls{display:grid;gap:8px}
+    .controls label{font-size:12px;color:var(--muted)}
+    .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    input[type=number]{width:90px;background:#0b1220;border:1px solid #1f2937;border-radius:10px;color:var(--text);padding:8px}
+    button{background:#1f2937;border:1px solid #2b3444;color:var(--text);padding:8px 10px;border-radius:10px;cursor:pointer}
+    button.primary{background:#2563eb;border-color:#1d4ed8}
+    button.warn{background:#dc2626;border-color:#b91c1c}
+    .legend{display:grid;grid-template-columns:repeat(2, minmax(0,1fr));gap:8px;margin-top:8px}
+    .legend .item{display:flex;align-items:center;gap:8px}
+    .mini{width:18px;height:18px;border-radius:4px;border:1px solid #1f2937}
+    .pad{height:12px}
+    .pad2{height:6px}
+    .kbd{display:grid;grid-template-columns:repeat(3,42px);gap:6px;margin-top:8px}
+    .kbd button{height:42px}
+    .status{display:flex;gap:16px;align-items:center;margin-top:6px;font-size:14px}
+    .msg{color:#facc15}
+    .small{font-size:12px;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Turn‑Cycle Maze</h1>
+    <span class="muted">Move in 4 directions. After <em>each move</em>, the board advances one turn and some tiles blackout.</span>
+  </header>
+  <div class="wrap">
+    <section class="panel controls">
+      <div class="row">
+        <label>Rows</label>
+        <input id="rows" type="number" min="3" max="40" value="12" />
+        <label>Cols</label>
+        <input id="cols" type="number" min="3" max="40" value="18" />
+        <button id="newBoard">New board</button>
+      </div>
+      <div class="row">
+        <button id="editWalls">1) Draw walls</button>
+        <button id="setStart">2) Set Start</button>
+        <button id="setGoal">3) Set Goal</button>
+      </div>
+      <div class="row">
+        <button id="colorize" class="primary">4) Generate solvable coloring</button>
+        <button id="resetPlay">Reset play</button>
+        <button id="showPath">Hint path</button>
+        <button id="clearColors" class="warn">Clear colors</button>
+      </div>
+      <div class="status">
+        <div>Turn: <strong id="turn">0</strong></div>
+        <div>Mode: <strong id="mode">edit walls</strong></div>
+        <div class="msg" id="msg"></div>
+      </div>
+      <div class="pad"></div>
+      <div>
+        <div class="small">Tile cycles (blackout on last turn of each cycle):</div>
+        <div class="legend">
+          <div class="item"><span class="mini" style="background:#fde047"></span> Yellow: every 2nd turn</div>
+          <div class="item"><span class="mini" style="background:#93c5fd"></span> Light blue: every 3rd</div>
+          <div class="item"><span class="mini" style="background:#86efac"></span> Green: every 4th</div>
+          <div class="item"><span class="mini" style="background:#f0abfc"></span> Magenta: every 5th</div>
+          <div class="item"><span class="mini" style="background:#fdba74"></span> Orange: every 6th</div>
+          <div class="item"><span class="mini" style="background:#000"></span> Black: obstacle</div>
+        </div>
+      </div>
+      <div class="pad2"></div>
+      <div>
+        <div class="small">Keyboard: Arrow keys or WASD to move. Space to wait (advance a turn without moving).</div>
+        <div class="kbd">
+          <div></div><button id="btnUp">↑</button><div></div>
+          <button id="btnLeft">←</button><button id="btnDown">↓</button><button id="btnRight">→</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div id="board" class="grid"></div>
+    </section>
+  </div>
+
+  <script>
+  // --- Data model -----------------------------------------------------------
+  const TYPES = {
+    OBST: {code:'#', period:1},
+    Y:    {code:'Y', period:2}, // yellow: blackout when (t % 2) == 1
+    B:    {code:'B', period:3}, // light blue: blackout when (t % 3) == 2
+    G:    {code:'G', period:4},
+    M:    {code:'M', period:5},
+    O:    {code:'O', period:6},
+  };
+  const COLOR_SET = ['Y','B','G','M','O'];
+  const LCM = 60; // lcm(2,3,4,5,6)
+    
+  let hintEnabled = false; // New state
+  let R=12, C=18;
+  let grid = []; // cells: {type:'W'|'#'|'Y'|'B'|'G'|'M'|'O'}; W means uncolored/editable empty
+  let dragPainting = false; let paintTo = '#';
+  let mode = 'editWalls'; // editWalls | setStart | setGoal | play
+  let start = {r:0, c:0};
+  let goal  = {r:11, c:17};
+  let turn = 0; // increases after each player action
+  let player = {...start};
+  let pathHint = [];
+
+  const elBoard = document.getElementById('board');
+  const elTurn = document.getElementById('turn');
+  const elMode = document.getElementById('mode');
+  const elMsg = document.getElementById('msg');
+
+  function initGrid(){
+    grid = Array.from({length:R},(_,r)=>Array.from({length:C},(_,c)=>({type: (r===0&&c===0||r===R-1&&c===C-1)?'W':'W'})));
+    player = {...start};
+    turn = 0; pathHint = [];
+    render();
+  }
+
+  function setDims(){
+    elBoard.style.gridTemplateColumns = `repeat(${C}, var(--cell))`;
+  }
+
+  function blackoutAt(typeCode, t){
+    if(typeCode==='#') return true;
+    if(typeCode==='W') return false; // plain empty in edit/uncalored state
+    const p = TYPES[typeCode].period;
+    return (t % p) === (p-1); // blackout on last tick of its cycle
+  }
+
+  function traversable(r,c,t){
+    if(r<0||c<0||r>=R||c>=C) return false;
+    const cell = grid[r][c];
+    if(cell.type==='#') return false;
+    // Start/goal must always be allowed (tolerate during coloring)
+    if(r===start.r && c===start.c) return true;
+    if(r===goal.r && c===goal.c) return true;
+    return !blackoutAt(cell.type, t);
+  }
+
+  function render(){
+  setDims();
+  elBoard.innerHTML = '';
+  for(let r=0;r<R;r++){
+    for(let c=0;c<C;c++){
+      const div = document.createElement('div');
+      const cell = grid[r][c];
+      const tNow = turn;
+      const isBlackout = blackoutAt(cell.type, tNow);
+      div.className = 'cell ' + (cell.type==='W' ? 'W' : (cell.type==='#' ? 'obstacle' : cell.type));
+      if(isBlackout && cell.type!=='W' && cell.type!=='#') div.classList.add('blackout');
+      if(r===start.r && c===start.c) div.classList.add('S');
+      if(r===goal.r && c===goal.c) div.classList.add('E');
+
+      // Show hint path if enabled
+      if(hintEnabled && pathHint.length){
+        const hit = pathHint.find(p=>p.r===r&&p.c===c);
+        if(hit) { div.style.outline = '2px dashed #a78bfa'; div.style.outlineOffset='-3px'; }
+      }
+
+      // Turns left until blackout
+      const remainingTurns = (() => {
+        if (cell.type === '#' || cell.type === 'W') return '';
+        const p = TYPES[cell.type].period;
+        const rem = (p - ((tNow % p) + 1)) % p;
+        return rem + 1;
+      })();
+
+      // Player or number
+      if(player.r===r && player.c===c){
+        div.textContent = '🧭';
+        div.style.boxShadow='inset 0 0 0 3px rgba(255,255,255,.6)';
+      } else {
+        div.textContent = remainingTurns;
+      }
+
+      div.addEventListener('mousedown', (e)=> onCellDown(e, r, c));
+      div.addEventListener('mouseenter', (e)=> onCellEnter(e, r, c));
+      elBoard.appendChild(div);
+    }
+  }
+}
+
+  function onCellDown(e,r,c){
+    e.preventDefault();
+    if(mode==='editWalls'){
+      dragPainting = true;
+      const cur = grid[r][c].type;
+      paintTo = (cur==='#')?'W':'#';
+      grid[r][c].type = paintTo;
+      if(r===start.r&&c===start.c) start = findFirstOpen();
+      if(r===goal.r&&c===goal.c) goal = findLastOpen();
+      render();
+    } else if(mode==='setStart'){
+      if(grid[r][c].type!=='#'){ start={r,c}; player={...start}; mode='editWalls'; uiMode(); render(); }
+    } else if(mode==='setGoal'){
+      if(grid[r][c].type!=='#'){ goal={r,c}; mode='editWalls'; uiMode(); render(); }
+    }
+  }
+  function onCellEnter(e,r,c){
+    if(dragPainting && mode==='editWalls'){
+      if(grid[r][c].type!==paintTo){ grid[r][c].type=paintTo; render(); }
+    }
+  }
+  window.addEventListener('mouseup', ()=> dragPainting=false);
+
+  // --- Input (move) ---------------------------------------------------------
+  function tryMove(dr,dc){
+    if(mode!=='play') return;
+    const nr = player.r + dr, nc = player.c + dc;
+    const newTurn = turn + 1;
+    if(dr===0 && dc===0){ // wait
+      turn = newTurn; render(); checkWin(); return;
+    }
+    if(traversable(nr,nc,newTurn)){
+      player = {r:nr,c:nc};
+      turn = newTurn; render(); checkWin();
+    } else {
+      flash('Blocked by blackout or wall.');
+    }
+  }
+  function checkWin(){
+    if(player.r===goal.r && player.c===goal.c){
+      flash('🎉 Goal! You made it in '+turn+' turns.');
+      mode='editWalls'; uiMode();
+    }
+  }
+  function flash(text){ elMsg.textContent = text; setTimeout(()=>{ if(elMsg.textContent===text) elMsg.textContent=''; }, 2000); }
+
+  // --- Coloring & solver ----------------------------------------------------
+  function colorizeSolvable(maxAttempts=100){
+    // Make all non-wall cells colored (random among Y,B,G,M,O) except start/goal which become Yellow (easiest) to ensure playable spots
+    let attempt=0;
+    while(attempt++ < maxAttempts){
+      for(let r=0;r<R;r++) for(let c=0;c<C;c++){
+        if(grid[r][c].type!=='#') grid[r][c].type = COLOR_SET[(Math.random()*COLOR_SET.length)|0];
+      }
+      grid[start.r][start.c].type='Y';
+      grid[goal.r][goal.c].type='Y';
+      const route = findPathTimed(start, goal);
+      if(route){ pathHint = route; render(); flash('Solvable pattern generated. Press Reset play, then Play!'); return true; }
+    }
+    flash('Could not find a solvable coloring. Adjust walls/size and try again.');
+    return false;
+  }
+
+  function findPathTimed(s, g){
+    // BFS in (r,c,tmod) space with period LCM. Start at t=turn (usually 0) and disallow stepping onto blackout at t+1
+    const key=(r,c,t)=>r+','+c+','+t;
+    const q=[]; const prev=new Map(); const seen=new Set();
+    const t0 = 0; // we plan from turn 0 for hint
+    q.push({r:s.r,c:s.c,t:t0}); seen.add(key(s.r,s.c,t0));
+    const dirs=[[1,0],[-1,0],[0,1],[0,-1],[0,0]]; // allow wait
+    while(q.length){
+      const cur = q.shift();
+      if(cur.r===g.r && cur.c===g.c){
+        // Reconstruct path at (r,c) only (ignore t). Return cells sequence excluding start.
+        const seq=[]; let k=key(cur.r,cur.c,cur.t);
+        while(prev.has(k)){ const p=prev.get(k); seq.push({r:cur.r,c:cur.c}); k=p.k; cur.r=p.r; cur.c=p.c; cur.t=p.t; }
+        return seq.reverse();
+      }
+      for(const [dr,dc] of dirs){
+        const nr=cur.r+dr, nc=cur.c+dc, nt=(cur.t+1)%LCM;
+        if(!traversable(nr,nc,cur.t+1)) continue;
+        const k2=key(nr,nc,nt);
+        if(seen.has(k2)) continue;
+        seen.add(k2);
+        prev.set(k2,{k:key(cur.r,cur.c,cur.t), r:cur.r, c:cur.c, t:cur.t});
+        q.push({r:nr,c:nc,t:nt});
+      }
+    }
+    return null;
+  }
+
+  // --- UI wiring ------------------------------------------------------------
+  document.getElementById('newBoard').addEventListener('click', ()=>{
+    R = clamp(parseInt(document.getElementById('rows').value)||12,3,40);
+    C = clamp(parseInt(document.getElementById('cols').value)||18,3,40);
+    start = {r:0,c:0}; goal = {r:R-1,c:C-1};
+    initGrid();
+  });
+  document.getElementById('editWalls').addEventListener('click', ()=>{ mode='editWalls'; uiMode(); });
+  document.getElementById('setStart').addEventListener('click', ()=>{ mode='setStart'; uiMode(); });
+  document.getElementById('setGoal').addEventListener('click', ()=>{ mode='setGoal'; uiMode(); });
+  document.getElementById('colorize').addEventListener('click', ()=>{ colorizeSolvable(); });
+  document.getElementById('resetPlay').addEventListener('click', ()=>{ player={...start}; turn=0; mode='play'; uiMode(); render(); });
+  document.getElementById('clearColors').addEventListener('click', ()=>{
+    for(let r=0;r<R;r++) for(let c=0;c<C;c++) if(grid[r][c].type!=='#') grid[r][c].type='W';
+    pathHint=[]; turn=0; player={...start}; mode='editWalls'; uiMode(); render();
+  });
+  document.getElementById('showPath').addEventListener('click', ()=>{
+  if (hintEnabled) {
+    hintEnabled = false;
+    flash('Hint path hidden.');
+  } else {
+    const route = findPathTimed(player, goal);
+    if (route) {
+      pathHint = route;
+      hintEnabled = true;
+      flash('Hint shown (dashed).');
+    } else {
+      flash('No timed path from current position.');
+    }
+  }
+  render();
+});
+  document.getElementById('btnUp').addEventListener('click', ()=>tryMove(-1,0));
+  document.getElementById('btnDown').addEventListener('click', ()=>tryMove(1,0));
+  document.getElementById('btnLeft').addEventListener('click', ()=>tryMove(0,-1));
+  document.getElementById('btnRight').addEventListener('click', ()=>tryMove(0,1));
+
+  window.addEventListener('keydown', (e)=>{
+    if(e.key==='ArrowUp'||e.key==='w') { tryMove(-1,0); e.preventDefault(); }
+    else if(e.key==='ArrowDown'||e.key==='s') { tryMove(1,0); e.preventDefault(); }
+    else if(e.key==='ArrowLeft'||e.key==='a') { tryMove(0,-1); e.preventDefault(); }
+    else if(e.key==='ArrowRight'||e.key==='d') { tryMove(0,1); e.preventDefault(); }
+    else if(e.key===' '){ tryMove(0,0); e.preventDefault(); }
+  });
+
+  function uiMode(){
+    elMode.textContent = mode.replace(/([A-Z])/g,' $1').toLowerCase();
+    elTurn.textContent = String(turn);
+  }
+
+  function clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
+  function findFirstOpen(){ for(let r=0;r<R;r++) for(let c=0;c<C;c++) if(grid[r][c].type!=='#') return {r,c}; return {r:0,c:0}; }
+  function findLastOpen(){ for(let r=R-1;r>=0;r--) for(let c=C-1;c>=0;c--) if(grid[r][c].type!=='#') return {r,c}; return {r:R-1,c:C-1}; }
+
+  // --- boot -----------------------------------------------------------------
+  initGrid(); uiMode();
+  </script>
+</body>
+</html>
