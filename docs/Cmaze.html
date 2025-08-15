@@ -88,6 +88,11 @@
         </div>
       </div>
       <div class="pad2"></div>
+      
+    </section>
+
+    <section class="panel">
+      <div id="board" class="grid"></div>
       <div>
         <div class="small">Keyboard: Arrow keys or WASD to move. Space to wait (advance a turn without moving).</div>
         <div class="kbd">
@@ -95,10 +100,6 @@
           <button id="btnLeft">←</button><button id="btnDown">↓</button><button id="btnRight">→</button>
         </div>
       </div>
-    </section>
-
-    <section class="panel">
-      <div id="board" class="grid"></div>
     </section>
   </div>
 
@@ -321,22 +322,22 @@ function isBoardFullySafe() {
 
     
   function colorizeSolvable(maxAttempts=100){
-  let attempt = 0;
-  while (attempt++ < maxAttempts) {
-    for (let r=0;r<R;r++) {
-      for (let c=0;c<C;c++) {
-        if (grid[r][c].type !== '#')
-          grid[r][c].type = COLOR_SET[(Math.random() * COLOR_SET.length) | 0];
-      }
+  let attempt=0;
+  while(attempt++ < maxAttempts){
+    for(let r=0;r<R;r++) for(let c=0;c<C;c++){
+      if(grid[r][c].type!=='#')
+        grid[r][c].type = COLOR_SET[(Math.random()*COLOR_SET.length)|0];
     }
-    grid[start.r][start.c].type = 'Y';
-    grid[goal.r][goal.c].type = 'Y';
+    grid[start.r][start.c].type='Y';
+    grid[goal.r][goal.c].type='Y';
 
     const route = findPathTimed(start, goal);
     if (route && isBoardFullySafe()) {
+      // Store the exact verifying path as the hint
       pathHint = route;
+      hintEnabled = true;  // always visible
       render();
-      flash('Safe solvable pattern generated.');
+      flash('Solvable pattern generated. Hint path shown.');
       return true;
     }
   }
