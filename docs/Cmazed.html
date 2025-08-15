@@ -300,6 +300,20 @@ div.style.borderRight  = (!rightType || rightType !== myType) ? `1px solid #999`
     return false;
   }
 
+//trap solver
+function safePosition(r, c, t) {
+  // Position must be traversable now
+  if (!traversable(r, c, t)) return false;
+
+  // Also: from this position, there must be at least 1 safe exit next turn
+  const dirs = [[1,0], [-1,0], [0,1], [0,-1], [0,0]]; // include wait
+  for (const [dr, dc] of dirs) {
+    const rr = r + dr, cc = c + dc;
+    if (traversable(rr, cc, t + 1)) return true;
+  }
+  return false; // all exits lead to blackout
+}
+    
   function findPathTimed(s, g){
     // BFS in (r,c,tmod) space with period LCM. Start at t=turn (usually 0) and disallow stepping onto blackout at t+1
     const key=(r,c,t)=>r+','+c+','+t;
@@ -319,6 +333,7 @@ div.style.borderRight  = (!rightType || rightType !== myType) ? `1px solid #999`
       const nr=cur.r+dr, nc=cur.c+dc, nt=(cur.t+1)%LCM;
 
       // Use the corrected traversable
+      if (!safePosition(nr, nc, cur.t+1)) continue;
       if(!traversable(nr,nc,cur.t+1)) continue;
 
   const k2=key(nr,nc,nt);
