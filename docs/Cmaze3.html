@@ -148,22 +148,26 @@
     const p = TYPES[typeCode].period;
     return (t % p) === (p-1); // blackout on last tick of its cycle
   }
-
+  function turnsUntilBlackout(cell, t) {
+  if(cell.type === '#' || cell.type === 'W') return 0; // walls always blackout / empty never
+  const p = TYPES[cell.type].period;
+  return (p - (t % p) - 1 + p) % p; 
+}
   function traversable(r, c, t) {
   if (r < 0 || c < 0 || r >= R || c >= C) return false;
   const cell = grid[r][c];
 
-  // Always allow start/goal
-  if ((r === start.r && c === start.c) || (r === goal.r && c === goal.c)) return true;
-
-  if(cell.type === '#') return false; // fixed black
-
-  // Compute turns until next blackout
-  if(cell.type !== 'W' && TYPES[cell.type]){
-    const period = TYPES[cell.type].period;
-    const remaining = (period - (t % period) - 1 + period) % period;
-    if(remaining < 1) return false; // block: currently or next turn blackout
+  // Always allow start/goal if not currently black
+  const remaining = turnsUntilBlackout(cell, t);
+  if ((r === start.r && c === start.c) || (r === goal.r && c === goal.c)) {
+    return remaining > 0;
   }
+
+  // Cannot step on walls
+  if (cell.type === '#') return false;
+
+  // Cannot step on cells that are black now or next turn
+  if (remaining <= 1) return false;
 
   return true;
 }
