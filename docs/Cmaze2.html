@@ -150,23 +150,24 @@
   }
 
   function traversable(r, c, t) {
-  if(r < 0 || c < 0 || r >= R || c >= C) return false;
+  if (r < 0 || c < 0 || r >= R || c >= C) return false;
   const cell = grid[r][c];
 
-  // Start/goal always allowed
-  if((r===start.r && c===start.c) || (r===goal.r && c===goal.c)) return true;
+  // Always allow start/goal
+  if ((r === start.r && c === start.c) || (r === goal.r && c === goal.c)) return true;
 
   // Fixed black
-  if(cell.type === '#') return false;
+  if (cell.type === '#') return false;
 
   // Currently black
-  if(blackoutAt(cell.type, t)) return false;
+  if (blackoutAt(cell.type, t)) return false;
 
-  // Will blackout next turn? Only block if remainingTurns <= 1
-  const period = TYPES[cell.type]?.period || 1;
-  const remaining = (period - ((t % period) + 1) + period) % period; // 0 = blackout this turn
-  if(remaining === 0) return false; // already blocked
-  if(remaining === 1) return false; // will blackout next turn
+  // Will blackout next turn? Compute remaining turns
+  if (cell.type !== 'W' && TYPES[cell.type]) {
+    const period = TYPES[cell.type].period;
+    const remaining = (period - ((t % period) + 1) + period) % period;
+    if (remaining === 1) return false;  // countdown = 1 → cannot step
+  }
 
   return true;
 }
