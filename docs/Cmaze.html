@@ -316,14 +316,17 @@ div.style.borderRight  = (!rightType || rightType !== myType) ? `1px solid #999`
         return seq.reverse();
       }
       for(const [dr,dc] of dirs){
-        const nr=cur.r+dr, nc=cur.c+dc, nt=(cur.t+1)%LCM;
-        if(!traversable(nr,nc,cur.t+1)) continue;
-        const k2=key(nr,nc,nt);
-        if(seen.has(k2)) continue;
-        seen.add(k2);
-        prev.set(k2,{k:key(cur.r,cur.c,cur.t), r:cur.r, c:cur.c, t:cur.t});
-        q.push({r:nr,c:nc,t:nt});
-      }
+      const nr=cur.r+dr, nc=cur.c+dc, nt=(cur.t+1)%LCM;
+
+      // Use the corrected traversable
+      if(!traversable(nr,nc,cur.t+1)) continue;
+
+  const k2=key(nr,nc,nt);
+  if(seen.has(k2)) continue;
+  seen.add(k2);
+  prev.set(k2,{k:key(cur.r,cur.c,cur.t), r:cur.r, c:cur.c, t:cur.t});
+  q.push({r:nr,c:nc,t:nt});
+}
     }
     return null;
   }
