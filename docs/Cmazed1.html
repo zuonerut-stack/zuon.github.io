@@ -283,22 +283,67 @@ div.style.borderRight  = (!rightType || rightType !== myType) ? `1px solid #999`
   }
   function flash(text){ elMsg.textContent = text; setTimeout(()=>{ if(elMsg.textContent===text) elMsg.textContent=''; }, 2000); }
 
+
+
+    
   // --- Coloring & solver ----------------------------------------------------
-  function colorizeSolvable(maxAttempts=100){
-    // Make all non-wall cells colored (random among Y,B,G,M,O) except start/goal which become Yellow (easiest) to ensure playable spots
-    let attempt=0;
-    while(attempt++ < maxAttempts){
-      for(let r=0;r<R;r++) for(let c=0;c<C;c++){
-        if(grid[r][c].type!=='#') grid[r][c].type = COLOR_SET[(Math.random()*COLOR_SET.length)|0];
+function isBoardFullySafe() {
+  const seen = new Set();
+  const q = [{ r: start.r, c: start.c, t: 0 }];
+  const key = (r, c, t) => `${r},${c},${t}`;
+  seen.add(key(start.r, start.c, 0));
+
+  while (q.length) {
+    const cur = q.shift();
+    // If any position is unsafe, reject
+    if (!safePosition(cur.r, cur.c, cur.t)) return false;
+
+    const dirs = [[1,0],[-1,0],[0,1],[0,-1],[0,0]];
+    for (const [dr, dc] of dirs) {
+      const nr = cur.r + dr, nc = cur.c + dc, nt = (cur.t + 1) % LCM;
+      if (!safePosition(nr, nc, nt)) continue;
+      const k = key(nr, nc, nt);
+      if (!seen.has(k)) {
+        seen.add(k);
+        q.push({ r: nr, c: nc, t: nt });
       }
-      grid[start.r][start.c].type='Y';
-      grid[goal.r][goal.c].type='Y';
-      const route = findPathTimed(start, goal);
-      if(route){ pathHint = route; render(); flash('Solvable pattern generated. Press Reset play, then Play!'); return true; }
     }
-    flash('Could not find a solvable coloring. Adjust walls/size and try again.');
-    return false;
   }
+
+  // Board is safe if we reached the goal during exploration
+  return [...seen].some(k => {
+    const [r, c] = k.split(',').map(Number);
+    return r === goal.r && c === goal.c;
+  });
+}
+
+
+
+    
+  function colorizeSolvable(maxAttempts=100){
+  let attempt = 0;
+  while (attempt++ < maxAttempts) {
+    for (let r=0;r<R;r++) {
+      for (let c=0;c<C;c++) {
+        if (grid[r][c].type !== '#')
+          grid[r][c].type = COLOR_SET[(Math.random() * COLOR_SET.length) | 0];
+      }
+    }
+    grid[start.r][start.c].type = 'Y';
+    grid[goal.r][goal.c].type = 'Y';
+
+    const route = findPathTimed(start, goal);
+    if (route && isBoardFullySafe()) {
+      pathHint = route;
+      render();
+      flash('Safe solvable pattern generated.');
+      return true;
+    }
+  }
+  flash('Could not find a safe solvable coloring.');
+  return false;
+}
+
 
 //trap solver
 function safePosition(r, c, t) {
