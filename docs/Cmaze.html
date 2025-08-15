@@ -157,20 +157,19 @@
   if (r < 0 || c < 0 || r >= R || c >= C) return false;
   const cell = grid[r][c];
 
-  // Always allow start/goal if not currently black
-  const remaining = turnsUntilBlackout(cell, t);
-  if ((r === start.r && c === start.c) || (r === goal.r && c === goal.c)) {
-    return remaining > 0;
-  }
-
   // Cannot step on walls
   if (cell.type === '#') return false;
 
-  // Cannot step on cells that are black now or next turn
-  if (remaining <= 1) return false;
+  // Cannot step on cell that will blackout at the next turn
+  if (blackoutAt(cell.type, t)) return false;
+
+  // Always allow start/goal if not black
+  if ((r === start.r && c === start.c) || (r === goal.r && c === goal.c)) {
+    return true;
+  }
 
   return true;
-}
+  }
 function getCellVisualType(cell) {
   // For border calculations, treat blackout and fixed black as the same
   if(cell.type === '#' || blackoutAt(cell.type, turn)) return 'BLACK';
