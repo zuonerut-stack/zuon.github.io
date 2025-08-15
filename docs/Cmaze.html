@@ -184,7 +184,8 @@
         if (cell.type === '#' || cell.type === 'W') return '';
         const p = TYPES[cell.type].period;
         const rem = (p - ((tNow % p) + 1)) % p;
-        return rem + 1;
+        if (rem === 0) return '';
+        return rem;
       })();
 
       // Player or number
