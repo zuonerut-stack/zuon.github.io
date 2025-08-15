@@ -162,7 +162,7 @@
   if(cell.type !== 'W' && TYPES[cell.type]){
     const period = TYPES[cell.type].period;
     const remaining = (period - (t % period) - 1 + period) % period;
-    if(remaining <= 1) return false; // block: currently or next turn blackout
+    if(remaining < 1) return false; // block: currently or next turn blackout
   }
 
   return true;
