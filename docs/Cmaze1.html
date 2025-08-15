@@ -153,21 +153,28 @@
   if(r < 0 || c < 0 || r >= R || c >= C) return false;
   const cell = grid[r][c];
 
-  // Always allow start/goal
+  // Start/goal always allowed
   if((r===start.r && c===start.c) || (r===goal.r && c===goal.c)) return true;
 
-  // 1) Fixed black
+  // Fixed black
   if(cell.type === '#') return false;
 
-  // 2) Currently black
+  // Currently black
   if(blackoutAt(cell.type, t)) return false;
 
-  // 3) Will become black after this move
-  if(blackoutAt(cell.type, t + 1)) return false;
+  // Will blackout next turn? Only block if remainingTurns <= 1
+  const period = TYPES[cell.type]?.period || 1;
+  const remaining = (period - ((t % period) + 1) + period) % period; // 0 = blackout this turn
+  if(remaining === 0) return false; // already blocked
+  if(remaining === 1) return false; // will blackout next turn
 
   return true;
 }
-
+function getCellVisualType(cell) {
+  // For border calculations, treat blackout and fixed black as the same
+  if(cell.type === '#' || blackoutAt(cell.type, turn)) return 'BLACK';
+  return cell.type; // other types stay the same
+}
   function render(){
   setDims();
   elBoard.innerHTML = '';
@@ -182,18 +189,22 @@
       if(isBlackout && cell.type!=='W' && cell.type!=='#') div.classList.add('blackout');
       if(r===start.r && c===start.c) div.classList.add('S');
       if(r===goal.r && c===goal.c) div.classList.add('E');
-       const topCell    = r>0 ? grid[r-1][c] : null;
-      const bottomCell = r<R-1 ? grid[r+1][c] : null;
-      const leftCell   = c>0 ? grid[r][c-1] : null;
-      const rightCell  = c<C-1 ? grid[r][c+1] : null;
+       //for bordering
+const topCell    = r>0 ? grid[r-1][c] : null;
+const bottomCell = r<R-1 ? grid[r+1][c] : null;
+const leftCell   = c>0 ? grid[r][c-1] : null;
+const rightCell  = c<C-1 ? grid[r][c+1] : null;
 
-      const borderColor = '#999';
-    
-div.style.borderTop    = (!topCell || topCell.type !== cell.type) ? `1px solid ${borderColor}` : 'none';
-div.style.borderBottom = (!bottomCell || bottomCell.type !== cell.type) ? `1px solid ${borderColor}` : 'none';
-div.style.borderLeft   = (!leftCell || leftCell.type !== cell.type) ? `1px solid ${borderColor}` : 'none';
-div.style.borderRight  = (!rightCell || rightCell.type !== cell.type) ? `1px solid ${borderColor}` : 'none'
-      // Show hint path if enabled
+const myType = getCellVisualType(cell);
+const topType = topCell ? getCellVisualType(topCell) : null;
+const bottomType = bottomCell ? getCellVisualType(bottomCell) : null;
+const leftType = leftCell ? getCellVisualType(leftCell) : null;
+const rightType = rightCell ? getCellVisualType(rightCell) : null;
+
+div.style.borderTop    = (!topType || topType !== myType) ? `1px solid #999` : 'none';
+div.style.borderBottom = (!bottomType || bottomType !== myType) ? `1px solid #999` : 'none';
+div.style.borderLeft   = (!leftType || leftType !== myType) ? `1px solid #999` : 'none';
+div.style.borderRight  = (!rightType || rightType !== myType) ? `1px solid #999` : 'none';
       if(hintEnabled && pathHint.length){
         const hit = pathHint.find(p=>p.r===r&&p.c===c);
         if(hit) { div.style.outline = '2px dashed #a78bfa'; div.style.outlineOffset='-3px'; }
