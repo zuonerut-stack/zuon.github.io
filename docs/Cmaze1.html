@@ -160,12 +160,15 @@
   // Cannot step on walls
   if (cell.type === '#') return false;
 
-  // Cannot step on cell that will blackout at the next turn
-  if (blackoutAt(cell.type, t)) return false;
+  
 
   // Always allow start/goal if not black
   if ((r === start.r && c === start.c) || (r === goal.r && c === goal.c)) {
     return true;
+  } else {
+    // Cannot step on cell that will blackout at the next turn
+  if (blackoutAt(cell.type, t)) return false;
+  if (blackoutAt(cell.type, t-1)) return false;
   }
 
   return true;
