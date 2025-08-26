@@ -189,11 +189,11 @@
       }
       // Validate primality with BigInt MR test (fast), but also guard against huge P for listing equations
       const primeOK = isPrimeBig(P);
-      if(!primeOK){
-        out2.textContent = '';
-        stats2.innerHTML = `<span class="danger">P must be prime.</span> The value ${formatNumber(P)} is not prime.`;
-        return;
-      }
+     /* if(!primeOK){
+        *out2.textContent = '';
+        *stats2.innerHTML = `<span class="danger">P must be prime.</span> The value ${formatNumber(P)} is not prime.`;
+        *return;
+      *}*/
       if(P-1 > MAX_SIEVE){
         stats2.innerHTML = `<span class="danger">P is large.</span> To enumerate all primes < P, this demo caps P at ${formatNumber(MAX_SIEVE)}. Try P ≤ ${formatNumber(MAX_SIEVE)}.`;
         out2.textContent = '';
