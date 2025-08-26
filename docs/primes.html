@@ -201,15 +201,44 @@
       }
       const t0 = performance.now();
       const {primes} = sieve(P-1);
-      const lines = [];
-      for(const Pi of primes){
-        const Ai = Math.floor(P / Pi);
-        const Bi = P % Pi;
-        // Ensure vertical display, one equation per line
-        lines.push(`${P} = ${Pi} × ${Ai} + ${Bi}`);
-      }
+     const lines = [];
+for (let j = 0; j < primes.length; j++) {
+  const Pi = primes[j];
+  const Ai = Math.floor(P / Pi);
+  const Bi = P % Pi;
+
+  // By default: plain text
+  let AiStr = Ai.toString();
+
+  // Check the relation A_j = A_{j+1} + A_{j+2}
+  if (j + 2 < primes.length) {
+    const A1 = Math.floor(P / primes[j + 1]);
+    const A2 = Math.floor(P / primes[j + 2]);
+    if (Ai === A1 + A2) {
+      AiStr = `<span style="color:deepskyblue;font-weight:bold">${Ai}</span>`;
+    }
+  }
+
+  // Also check if this Ai is the "A_{j+1}" or "A_{j+2}" part of a previous match
+  if (j - 1 >= 0 && j + 1 < primes.length) {
+    const Aprev = Math.floor(P / primes[j - 1]);
+    const Anext = Math.floor(P / primes[j + 1]);
+    if (Aprev === Ai + Anext) {
+      AiStr = `<span style="color:deepskyblue;font-weight:bold">${Ai}</span>`;
+    }
+  }
+  if (j - 2 >= 0) {
+    const Aprev2 = Math.floor(P / primes[j - 2]);
+    const Aprev1 = Math.floor(P / primes[j - 1]);
+    if (Aprev2 === Aprev1 + Ai) {
+      AiStr = `<span style="color:deepskyblue;font-weight:bold">${Ai}</span>`;
+    }
+  }
+
+  lines.push(`${P} = ${Pi} × ${AiStr} + ${Bi}`);
+}
+out2.innerHTML = lines.join("<br>");
       const t1 = performance.now();
-      out2.textContent = lines.join('\n');
       stats2.textContent = `${formatNumber(primes.length)} equations for all primes P_i < ${formatNumber(P)}. Computed in ${(t1-t0).toFixed(1)} ms.`;
     }
 
