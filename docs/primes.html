@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Prime Utilities – Two Programs</title>
+  <style>
+    :root{
+      --bg:#0b0f14; --panel:#111826; --accent:#6ee7b7; --muted:#94a3b8; --text:#e5e7eb;
+      --border:#1f2937; --danger:#f87171;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font:16px/1.5 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, Ubuntu, Cantarell, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";background:linear-gradient(180deg,#0b0f14,#0a1420 40%,#0b1b2a);color:var(--text)}
+    .wrap{max-width:1100px;margin:0 auto;padding:32px}
+    h1{font-size:clamp(26px,3vw,34px);letter-spacing:.3px;margin:0 0 18px}
+    p.lead{color:var(--muted);margin:0 0 24px}
+
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px}
+    .card{background:rgba(17,24,38,.9);border:1px solid var(--border);border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.35);padding:18px 18px 16px}
+    .card h2{font-size:18px;margin:0 0 12px}
+
+    label{display:block;font-weight:600;margin:6px 0 6px}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    input[type=number]{appearance:textfield;background:#0c1420;border:1px solid var(--border);border-radius:12px;color:var(--text);padding:10px 12px;min-width:160px;font-size:16px}
+    input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{appearance:none;margin:0}
+    button{cursor:pointer;border:1px solid transparent;background:var(--accent);color:#06251a;font-weight:800;padding:10px 14px;border-radius:12px;transition:transform .04s ease, filter .12s ease}
+    button:active{transform:translateY(1px)}
+    .ghost{background:transparent;color:var(--text);border-color:var(--border)}
+    .muted{color:var(--muted)}
+    .note{font-size:13px;color:var(--muted);margin-top:8px}
+    .danger{color:var(--danger);font-weight:600}
+
+    .panel{margin-top:12px;background:#0c1420;border:1px solid var(--border);border-radius:14px;padding:12px;max-height:360px;overflow:auto;white-space:pre-wrap}
+    .stats{font-size:14px;color:var(--muted);margin-top:6px}
+    .pill{display:inline-block;font-size:12px;border:1px solid var(--border);border-radius:999px;padding:4px 8px;margin-right:6px}
+    .flex-between{display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .vspace{height:6px}
+    code.k{background:#0b1624;border:1px solid var(--border);padding:2px 6px;border-radius:8px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Prime Utilities – Two Programs</h1>
+    <p class="lead">1) List all primes ≤ <em>N</em>. 2) For a prime <em>P</em>, print the full set of equations <code>P = P<sub>i</sub>·A<sub>i</sub> + B<sub>i</sub></code> for every prime <code>P<sub>i</sub> &lt; P</code> (so <code>0 ≤ B<sub>i</sub> &lt; P<sub>i</sub></code>).</p>
+
+    <div class="grid">
+      <!-- Program 1 -->
+      <section class="card" id="prog1">
+        <div class="flex-between">
+          <h2>1) Primes up to N</h2>
+          <span class="pill">Eratosthenes Sieve</span>
+        </div>
+        <label for="nInput">Positive integer N</label>
+        <div class="row">
+          <input id="nInput" type="number" min="2" step="1" placeholder="e.g. 100" />
+          <button id="runN">List primes ≤ N</button>
+          <button class="ghost" id="copy1" title="Copy primes to clipboard">Copy</button>
+        </div>
+        <div class="note">Tip: Press <code class="k">Enter</code> to run. Reasonable up to a few million.</div>
+        <div class="stats" id="stats1"></div>
+        <div class="panel" id="out1" aria-live="polite"></div>
+      </section>
+
+      <!-- Program 2 -->
+      <section class="card" id="prog2">
+        <div class="flex-between">
+          <h2>2) Equations for a Prime P</h2>
+          <span class="pill">P = P<sub>i</sub>·A<sub>i</sub> + B<sub>i</sub></span>
+        </div>
+        <label for="pInput">Prime number P</label>
+        <div class="row">
+          <input id="pInput" type="number" min="2" step="1" placeholder="e.g. 97" />
+          <button id="runP">List equations</button>
+          <button class="ghost" id="copy2" title="Copy equations to clipboard">Copy</button>
+        </div>
+        <div class="note">For performance, this tool lists all primes <span class="muted">&lt; P</span> using a sieve. Limits apply for very large P.</div>
+        <div class="stats" id="stats2"></div>
+        <div class="panel" id="out2" aria-live="polite"></div>
+      </section>
+    </div>
+
+    <div class="vspace"></div>
+    <div class="note">Keyboard shortcuts: In an input, press <code class="k">Enter</code> to run that panel. <code class="k">Ctrl/Cmd+C</code> also works after clicking Copy.</div>
+  </div>
+
+  <script>
+    // —— Utilities ——
+    const MAX_SIEVE = 5_000_000; // soft ceiling to keep the page snappy
+
+    function formatNumber(n){
+      return n.toLocaleString(undefined);
+    }
+
+    // Sieve of Eratosthenes up to n (inclusive)
+    function sieve(n){
+      if(n < 2) return { primes: [], isPrimeArray: new Uint8Array(n+1) };
+      const isPrime = new Uint8Array(n+1);
+      isPrime.fill(1); isPrime[0] = 0; isPrime[1] = 0;
+      for(let p=2; p*p<=n; p++){
+        if(isPrime[p]){
+          for(let m=p*p; m<=n; m+=p){ isPrime[m] = 0; }
+        }
+      }
+      const primes = [];
+      for(let i=2;i<=n;i++) if(isPrime[i]) primes.push(i);
+      return { primes, isPrimeArray: isPrime };
+    }
+
+    // Deterministic Miller–Rabin for 64-bit integers using BigInt
+    function isPrimeBig(n){
+      n = BigInt(n);
+      if(n < 2n) return false;
+      const small = [2n,3n,5n,7n,11n,13n,17n,19n,23n,29n,31n,37n];
+      for(const p of small){
+        if(n === p) return true;
+        if(n % p === 0n) return false;
+      }
+      // write n-1 = d * 2^s with d odd
+      let d = n - 1n, s = 0n;
+      while((d & 1n) === 0n){ d >>= 1n; s++; }
+      // Bases sufficient for 64-bit determinism
+      const bases = [2n, 3n, 5n, 7n, 11n, 13n, 17n];
+      for(const a of bases){
+        if(a % n === 0n) continue;
+        let x = modPow(a, d, n);
+        if(x === 1n || x === n-1n) continue;
+        let cont = false;
+        for(let r=1n; r<s; r++){
+          x = (x * x) % n;
+          if(x === n-1n){ cont = true; break; }
+        }
+        if(cont) continue;
+        return false;
+      }
+      return true;
+    }
+    function modPow(base, exp, mod){
+      let res = 1n, b = base % mod, e = exp;
+      while(e > 0n){
+        if(e & 1n) res = (res * b) % mod;
+        b = (b * b) % mod;
+        e >>= 1n;
+      }
+      return res;
+    }
+
+    // —— Program 1: list primes ≤ N ——
+    const nInput = document.getElementById('nInput');
+    const out1 = document.getElementById('out1');
+    const stats1 = document.getElementById('stats1');
+
+    function runProg1(){
+      const N = Number(nInput.value);
+      if(!Number.isInteger(N) || N < 2){
+        out1.textContent = '';
+        stats1.innerHTML = '<span class="danger">Please enter an integer N ≥ 2.</span>';
+        return;
+      }
+      if(N > MAX_SIEVE){
+        stats1.innerHTML = `<span class="danger">N is large.</span> To keep things fast, the page caps N at ${formatNumber(MAX_SIEVE)}. Using N = ${formatNumber(MAX_SIEVE)} instead.`;
+      }
+      const limit = Math.min(N, MAX_SIEVE);
+      const t0 = performance.now();
+      const {primes} = sieve(limit);
+      const t1 = performance.now();
+      out1.textContent = primes.join(', ');
+      stats1.textContent = `Found ${formatNumber(primes.length)} primes ≤ ${formatNumber(limit)} in ${(t1-t0).toFixed(1)} ms.`;
+    }
+
+    document.getElementById('runN').addEventListener('click', runProg1);
+    nInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter') runProg1(); });
+
+    document.getElementById('copy1').addEventListener('click', async ()=>{
+      try{ await navigator.clipboard.writeText(out1.textContent); }catch(e){}
+    });
+
+    // —— Program 2: equations for a given prime P ——
+    const pInput = document.getElementById('pInput');
+    const out2 = document.getElementById('out2');
+    const stats2 = document.getElementById('stats2');
+
+    function runProg2(){
+      const P = Number(pInput.value);
+      if(!Number.isInteger(P) || P < 2){
+        out2.textContent = '';
+        stats2.innerHTML = '<span class="danger">Please enter an integer P ≥ 2.</span>';
+        return;
+      }
+      // Validate primality with BigInt MR test (fast), but also guard against huge P for listing equations
+      const primeOK = isPrimeBig(P);
+      if(!primeOK){
+        out2.textContent = '';
+        stats2.innerHTML = `<span class="danger">P must be prime.</span> The value ${formatNumber(P)} is not prime.`;
+        return;
+      }
+      if(P-1 > MAX_SIEVE){
+        stats2.innerHTML = `<span class="danger">P is large.</span> To enumerate all primes < P, this demo caps P at ${formatNumber(MAX_SIEVE)}. Try P ≤ ${formatNumber(MAX_SIEVE)}.`;
+        out2.textContent = '';
+        return;
+      }
+      const t0 = performance.now();
+      const {primes} = sieve(P-1);
+      const lines = [];
+      for(const Pi of primes){
+        const Ai = Math.floor(P / Pi);
+        const Bi = P % Pi;
+        // Ensure vertical display, one equation per line
+        lines.push(`${P} = ${Pi} × ${Ai} + ${Bi}`);
+      }
+      const t1 = performance.now();
+      out2.textContent = lines.join('\n');
+      stats2.textContent = `${formatNumber(primes.length)} equations for all primes P_i < ${formatNumber(P)}. Computed in ${(t1-t0).toFixed(1)} ms.`;
+    }
+
+    document.getElementById('runP').addEventListener('click', runProg2);
+    pInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter') runProg2(); });
+    document.getElementById('copy2').addEventListener('click', async ()=>{
+      try{ await navigator.clipboard.writeText(out2.textContent); }catch(e){}
+    });
+
+  </script>
+</body>
+</html>
