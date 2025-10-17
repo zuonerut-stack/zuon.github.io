@@ -2,26 +2,26 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Matrix Survival Shifting Simulation</title>
+<title>Matrix Survival Simulator – Final Rule</title>
 <style>
   body { font-family: Arial, sans-serif; margin: 20px; }
   input, button { font-size: 1rem; margin: 5px; padding: 5px 10px; }
   .matrix { display: grid; gap: 4px; margin: 10px 0; }
-  .cell { 
-    border: 1px solid #aaa; 
+  .cell {
+    border: 1px solid #aaa;
     border-radius: 6px;
-    padding: 6px 10px; 
+    padding: 6px 10px;
     text-align: center;
     min-width: 30px;
   }
   .alive { background-color: #e0f7e9; }
-  .dead { background-color: #ffd6d6; color: #900; }
-  .step { margin-bottom: 25px; border-bottom: 1px dashed #ccc; padding-bottom: 15px; }
+  .dead  { background-color: #ffd6d6; color: #900; }
+  .step  { margin-bottom: 25px; border-bottom: 1px dashed #ccc; padding-bottom: 15px; }
 </style>
 </head>
 <body>
 
-<h2>Matrix Survival Simulator (with X-shifting)</h2>
+<h2>Matrix Survival Simulator (Dead = 0)</h2>
 <p>Enter a positive integer <b>n</b>:</p>
 <input type="number" id="numInput" min="2" placeholder="Enter n">
 <button onclick="runSimulation()">Run</button>
@@ -30,70 +30,70 @@
 
 <script>
 function runSimulation() {
-  const n = parseInt(document.getElementById('numInput').value);
-  const output = document.getElementById('output');
-  output.innerHTML = "";
+  const n = parseInt(document.getElementById("numInput").value);
+  const out = document.getElementById("output");
+  out.innerHTML = "";
   if (isNaN(n) || n < 2) {
-    output.innerHTML = "<p>Please enter integer ≥ 2.</p>";
+    out.innerHTML = "<p>Please enter integer ≥ 2.</p>";
     return;
   }
 
-  let seq = Array.from({length: n}, (_, i) => i + 1);
+  let seq = Array.from({ length: n }, (_, i) => i + 1);
   let a = 2;
   let b = Math.floor(n / 2);
-  let stepCount = 1;
+  let step = 1;
 
-  while (b >= 2 && seq.length > 0) {
-    // Fill matrix
+  while (b >= 2) {
+    // Build matrix rows of length b
     const matrix = [];
     for (let i = 0; i < seq.length; i += b)
       matrix.push(seq.slice(i, i + b));
 
-    // Determine X positions and collect removed entries
-    let removed = [];
-    for (let i = b; i < seq.length; i += b) {
-      matrix[Math.floor(i / b)][i % b] = 'X';
-      removed.push(seq[i]);  // store removed
+    // Mark every k*b-th entry (k>1) as 0
+    for (let i = 0; i < seq.length; i++) {
+      const humanIndex = i + 1;
+      if (humanIndex % b === 0 && humanIndex / b > 1) {
+        matrix[Math.floor(i / b)][i % b] = 0;
+        seq[i] = 0;
+      }
     }
 
-    // Show this step
-    const stepDiv = document.createElement('div');
+    // Show current matrix
+    const stepDiv = document.createElement("div");
     stepDiv.className = "step";
-    stepDiv.innerHTML = `<h3>Step ${stepCount}: a=${a}, b=${b}</h3>`;
+    stepDiv.innerHTML = `<h3>Step ${step}: a = ${a}, b = ${b}</h3>`;
     renderMatrix(matrix, stepDiv, b);
-    output.appendChild(stepDiv);
-
-    // Create new sequence: removed (X) elements first, survivors next
-    const survivors = seq.filter((_, idx) => !((idx + 1) % b === 0 && (idx + 1) / b > 1));
-    seq = removed.concat(survivors);
+    out.appendChild(stepDiv);
 
     a++;
     b--;
-    stepCount++;
+    step++;
   }
 
-  // Final result
-  const finalDiv = document.createElement('div');
-  finalDiv.innerHTML = `<h3>Final Surviving Numbers:</h3><p>${seq.join(', ')}</p>`;
-  output.appendChild(finalDiv);
+  const survivors = seq.filter(v => v !== 0);
+  const finalDiv = document.createElement("div");
+  finalDiv.innerHTML =
+    `<h3>Final Surviving Numbers:</h3><p>${survivors.join(",  ")}</p>`;
+  out.appendChild(finalDiv);
 }
 
 function renderMatrix(matrix, container, b) {
-  const grid = document.createElement('div');
-  grid.className = 'matrix';
+  const grid = document.createElement("div");
+  grid.className = "matrix";
   grid.style.gridTemplateColumns = `repeat(${b}, auto)`;
-  matrix.forEach(row => {
+  matrix.forEach(row =>
     row.forEach(val => {
-      const cell = document.createElement('div');
-      cell.className = 'cell ' + (val === 'X' ? 'dead' : 'alive');
-      cell.textContent = val;
-      grid.appendChild(cell);
-    });
-  });
+      const c = document.createElement("div");
+      c.className = "cell " + (val === 0 ? "dead" : "alive");
+      c.textContent = val;
+      grid.appendChild(c);
+    })
+  );
   container.appendChild(grid);
 }
 </script>
 
 </body>
 </html>
+
 
