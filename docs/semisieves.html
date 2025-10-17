@@ -2,97 +2,108 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Matrix Survival Simulator – Final Rule</title>
+<title>Matrix Sieve Simulation</title>
 <style>
-  body { font-family: Arial, sans-serif; margin: 20px; }
-  input, button { font-size: 1rem; margin: 5px; padding: 5px 10px; }
-  .matrix { display: grid; gap: 4px; margin: 10px 0; }
-  .cell {
-    border: 1px solid #aaa;
-    border-radius: 6px;
-    padding: 6px 10px;
-    text-align: center;
-    min-width: 30px;
-  }
-  .alive { background-color: #e0f7e9; }
-  .dead  { background-color: #ffd6d6; color: #900; }
-  .step  { margin-bottom: 25px; border-bottom: 1px dashed #ccc; padding-bottom: 15px; }
+  body { font-family: monospace; background: #f9f9f9; padding: 20px; }
+  table { border-collapse: collapse; margin-bottom: 10px; }
+  td { border: 1px solid #aaa; padding: 4px 8px; text-align: center; }
+  .x { background: #ffcccc; color: red; font-weight: bold; }
+  .stage { margin-bottom: 25px; }
 </style>
 </head>
 <body>
 
-<h2>Matrix Survival Simulator (Dead = 0)</h2>
-<p>Enter a positive integer <b>n</b>:</p>
-<input type="number" id="numInput" min="2" placeholder="Enter n">
-<button onclick="runSimulation()">Run</button>
+<h2>Matrix Sieve Simulation</h2>
+<label>Enter a positive integer (n): </label>
+<input id="numInput" type="number" min="1">
+<button onclick="runSieve()">Run</button>
 
 <div id="output"></div>
 
 <script>
-function runSimulation() {
-  const n = parseInt(document.getElementById("numInput").value);
-  const out = document.getElementById("output");
-  out.innerHTML = "";
-  if (isNaN(n) || n < 2) {
-    out.innerHTML = "<p>Please enter integer ≥ 2.</p>";
-    return;
+function makeMatrix(n) {
+  const rows = [];
+  let N = Math.floor(n / 2);
+  let num = 1;
+  if (n % 2 === 0) {
+    // even n → 2 rows of N elements each
+    rows.push(Array.from({length: N}, (_, i) => num++));
+    rows.push(Array.from({length: N}, (_, i) => num++));
+  } else {
+    // odd n → 3rd row single last element
+    rows.push(Array.from({length: N}, (_, i) => num++));
+    rows.push(Array.from({length: N}, (_, i) => num++));
+    rows.push([num]);
   }
+  return rows;
+}
 
-  let seq = Array.from({ length: n }, (_, i) => i + 1);
-  let a = 2;
-  let b = Math.floor(n / 2);
-  let step = 1;
+function flatten(mat) {
+  return mat.flat();
+}
 
-  while (b >= 2) {
-    // Build matrix rows of length b
-    const matrix = [];
-    for (let i = 0; i < seq.length; i += b)
-      matrix.push(seq.slice(i, i + b));
+function toTable(mat) {
+  let html = '<table>';
+  for (const r of mat) {
+    html += '<tr>' + r.map(v => 
+      v === 'X' ? `<td class="x">X</td>` : `<td>${v}</td>`).join('') + '</tr>';
+  }
+  html += '</table>';
+  return html;
+}
 
-    // Mark every k*b-th entry (k>1) as 0
-    for (let i = 0; i < seq.length; i++) {
-      const humanIndex = i + 1;
-      if (humanIndex % b === 0 && humanIndex / b > 1) {
-        matrix[Math.floor(i / b)][i % b] = 0;
-        seq[i] = 0;
-      }
+function runSieve() {
+  const n = parseInt(document.getElementById('numInput').value);
+  if (!n || n < 1) return alert("Please enter a valid positive integer.");
+  const out = document.getElementById('output');
+  out.innerHTML = "";
+
+  // Initialize matrix
+  let mat = makeMatrix(n);
+  let stage = 1;
+  let lastNum = n % 2 === 0 ? n : n - 1; // last number in initial table
+
+  while (flatten(mat).length > 2) {
+    // display current matrix
+    const stageDiv = document.createElement('div');
+    stageDiv.className = 'stage';
+    stageDiv.innerHTML = `<b>Stage ${stage}:</b><br>${toTable(mat)}`;
+    out.appendChild(stageDiv);
+
+    const flat = flatten(mat);
+    const maxNum = Math.max(...flat.filter(v => typeof v === 'number'));
+    // mark the largest as X
+    const nextFlat = flat.map(v => (v === maxNum ? 'X' : v));
+
+    // move X to front
+    const idx = nextFlat.indexOf('X');
+    if (idx > -1) {
+      nextFlat.splice(idx, 1);
+      nextFlat.unshift('X');
     }
 
-    // Show current matrix
-    const stepDiv = document.createElement("div");
-    stepDiv.className = "step";
-    stepDiv.innerHTML = `<h3>Step ${step}: a = ${a}, b = ${b}</h3>`;
-    renderMatrix(matrix, stepDiv, b);
-    out.appendChild(stepDiv);
-
-    a++;
-    b--;
-    step++;
+    // reshape smaller matrix
+    const newCols = Math.floor(nextFlat.filter(v => v !== 'X').length / mat.length);
+    const newMat = [];
+    let temp = nextFlat.slice();
+    while (temp.length) {
+      newMat.push(temp.splice(0, newCols));
+    }
+    mat = newMat;
+    stage++;
   }
 
-  const survivors = seq.filter(v => v !== 0);
-  const finalDiv = document.createElement("div");
-  finalDiv.innerHTML =
-    `<h3>Final Surviving Numbers:</h3><p>${survivors.join(",  ")}</p>`;
-  out.appendChild(finalDiv);
-}
+  // final stage
+  const stageDiv = document.createElement('div');
+  stageDiv.className = 'stage';
+  stageDiv.innerHTML = `<b>Final Stage:</b><br>${toTable(mat)}`;
+  out.appendChild(stageDiv);
 
-function renderMatrix(matrix, container, b) {
-  const grid = document.createElement("div");
-  grid.className = "matrix";
-  grid.style.gridTemplateColumns = `repeat(${b}, auto)`;
-  matrix.forEach(row =>
-    row.forEach(val => {
-      const c = document.createElement("div");
-      c.className = "cell " + (val === 0 ? "dead" : "alive");
-      c.textContent = val;
-      grid.appendChild(c);
-    })
-  );
-  container.appendChild(grid);
+  // show sieved numbers
+  const remain = flatten(mat).filter(v => v !== 'X');
+  out.innerHTML += `<hr><b>The sieved numbers are:</b> ${remain.join(', ')}`;
 }
 </script>
-
 </body>
 </html>
 
