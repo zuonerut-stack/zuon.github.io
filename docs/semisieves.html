@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Matrix Survival Simulation</title>
+<style>
+  body { font-family: Arial, sans-serif; margin: 20px; }
+  input, button { font-size: 1rem; margin: 5px; padding: 5px 10px; }
+  .matrix { display: grid; gap: 4px; margin: 10px 0; }
+  .cell { 
+    border: 1px solid #aaa; 
+    border-radius: 6px;
+    padding: 6px 10px; 
+    text-align: center;
+    min-width: 30px;
+  }
+  .alive { background-color: #e0f7e9; }
+  .dead { background-color: #ffd6d6; color: #900; }
+  .step { margin-bottom: 25px; border-bottom: 1px dashed #ccc; padding-bottom: 15px; }
+</style>
+</head>
+<body>
+
+<h2>Matrix Survival Simulator</h2>
+<p>Enter a positive integer <b>n</b>:</p>
+<input type="number" id="numInput" min="2" placeholder="Enter n">
+<button onclick="runSimulation()">Run</button>
+
+<div id="output"></div>
+
+<script>
+function runSimulation() {
+  const n = parseInt(document.getElementById('numInput').value);
+  const output = document.getElementById('output');
+  output.innerHTML = "";
+  if (isNaN(n) || n < 2) {
+    output.innerHTML = "<p>Please enter integer ≥ 2.</p>";
+    return;
+  }
+
+  let seq = Array.from({length: n}, (_, i) => i + 1);
+  let a = 2;
+  let b = Math.floor(n / 2);
+  let stepCount = 1;
+
+  while (b >= 2 && seq.length > 0) {
+    const matrix = [];
+    for (let i = 0; i < seq.length; i += b)
+      matrix.push(seq.slice(i, i + b));
+
+    // Mark every k*b-th entry (k>1) as X
+    let newSeq = [];
+    for (let i = 0; i < seq.length; i++) {
+      if ((i + 1) % b === 0 && (i + 1) / b > 1)
+        matrix[Math.floor(i / b)][i % b] = 'X';
+      else
+        newSeq.push(seq[i]);
+    }
+
+    // Show step
+    const stepDiv = document.createElement('div');
+    stepDiv.className = "step";
+    stepDiv.innerHTML = `<h3>Step ${stepCount}: a=${a}, b=${b}</h3>`;
+    renderMatrix(matrix, stepDiv, b);
+    output.appendChild(stepDiv);
+
+    seq = newSeq;
+    a++;
+    b--;
+    stepCount++;
+  }
+
+  // Final result
+  const finalDiv = document.createElement('div');
+  finalDiv.innerHTML = `<h3>Final Surviving Numbers:</h3><p>${seq.join(', ')}</p>`;
+  output.appendChild(finalDiv);
+}
+
+function renderMatrix(matrix, container, b) {
+  const grid = document.createElement('div');
+  grid.className = 'matrix';
+  grid.style.gridTemplateColumns = `repeat(${b}, auto)`;
+  matrix.forEach(row => {
+    row.forEach(val => {
+      const cell = document.createElement('div');
+      cell.className = 'cell ' + (val === 'X' ? 'dead' : 'alive');
+      cell.textContent = val;
+      grid.appendChild(cell);
+    });
+  });
+  container.appendChild(grid);
+}
+</script>
+
+</body>
+</html>
