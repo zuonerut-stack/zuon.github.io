@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Chess Study v0.8</title>
+<title>Chess Study v1.2</title>
 <style>
 :root{
 
@@ -43,6 +43,12 @@ body{font-family: Inter, system-ui, Arial; background:#f2efe9; margin:20px; colo
 .save-canvas{position:relative;width:100%;height:260px;border-radius:8px;background:linear-gradient(180deg,#fffafa,#f6fcff);overflow:auto}
 .node{position:absolute;padding:8px 10px;border-radius:8px;background:#fff;border:1px solid #ddd;box-shadow:0 6px 12px rgba(0,0,0,0.06);cursor:grab}
 .node .title{font-weight:600;font-size:13px}
+.node { position:absolute;padding:6px;border-radius:8px;background:#fff;border:1px solid #ddd;box-shadow:0 6px 12px rgba(0,0,0,0.06);cursor:grab; width:120px; height:100px; display:flex; align-items:center; justify-content:center; }
+.node .mini-board{ width:100px; height:84px; display:grid; grid-template-columns:repeat(8,1fr); grid-template-rows:repeat(8,1fr); border-radius:6px; overflow:hidden; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.02); }
+.node .mini-square{ font-size:10px; display:flex; align-items:center; justify-content:center; line-height:1; user-select:none; }
+.node .mini-square.light{ background:#f5efe1; }
+.node .mini-square.dark{ background:#d2b79b; }
+.node.base-selected{ outline:3px solid #ff9f43; box-sizing:border-box; }
 .node small{display:block;color:#666;margin-top:4px}
 svg.connections{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
 .notice{font-size:13px;color:#666}
@@ -94,10 +100,11 @@ svg.connections{position:absolute;left:0;top:0;width:100%;height:100%;pointer-ev
         <div class="notice">Click a node to load that snapshot. Drag nodes to arrange. Select a node and press 'Link to Selected' on another node to connect them (form strategy lines).</div>
       </div>
       <div style="margin-top:8px;display:flex;gap:8px">
-        <input id="nodeName" placeholder="name for selected node" style="flex:1;padding:8px;border-radius:8px;border:1px solid #ddd" />
-        <button class="btn" id="renameNode">Rename</button>
-        <button class="btn secondary" id="linkNode">Link to Selected</button>
-      </div>
+  <button class="btn" id="selectAsBaseBtn">Select as base</button>
+  <button class="btn secondary" id="clearBaseBtn">Clear base</button>
+  <button class="btn secondary" id="deleteNodeBtn">Delete Selected Node (and descendants)</button>
+  <div style="flex:1"></div>
+</div>
     </div>
 
     <div class="panel">
@@ -477,61 +484,201 @@ document.getElementById('promoCancel').addEventListener('click',()=>{ hidePromot
 // Setup initial rights
 if(!gameState.castling) gameState.castling='KQkq';
 
-// --- Saving snapshots & node graph
+/* --- Saving snapshots & node graph (updated) --- */
 const saveCanvas = document.getElementById('saveCanvas');
 const connectionsSVG = document.getElementById('connections');
-let saves = loadSaves(); let selectedNodeId = null; renderSaves();
 
-function saveCurrentSnapshot(){ const fen = boardToFEN(gameState); const id = 'n'+Date.now(); const node = {id,name:`pos ${Object.keys(saves).length+1}`,fen, x:20 + (Object.keys(saves).length%6)*120, y:20 + Math.floor(Object.keys(saves).length/6)*80, links:[]}; saves[id]=node; persistSaves(); renderSaves(); }
+// load or migrate saves
+let saves = loadSaves(); let selectedNodeId = null;
+let baseNodeId = null; // selected "base" for future saves
+
+renderSaves();
+
+// Save current snapshot as a new node (child of baseNodeId if set)
+function saveCurrentSnapshot(){
+  const fen = boardToFEN(gameState);
+  const id = 'n'+Date.now();
+  const created = Date.now();
+  // default location layout
+  const count = Object.keys(saves).length;
+  const node = {
+    id,
+    fen,
+    x:20 + (count%6)*120,
+    y:20 + Math.floor(count/6)*80,
+    links:[],
+    parent: baseNodeId || null,
+    created
+  };
+  saves[id]=node;
+  // if a base is set, auto-link it (append -> keeps chronological order)
+  if(baseNodeId && saves[baseNodeId]){
+    // ensure no duplicate
+    if(!saves[baseNodeId].links.includes(id)) saves[baseNodeId].links.push(id);
+  }
+  persistSaves();
+  renderSaves();
+}
 document.getElementById('saveBtn').addEventListener('click',saveCurrentSnapshot);
-document.getElementById('clearSaves').addEventListener('click',()=>{ if(confirm('Clear all saves?')){ saves={}; persistSaves(); renderSaves(); }});
 
-document.getElementById('renameNode').addEventListener('click',()=>{
-  if(!selectedNodeId) return alert('Select a node first by clicking it'); const name = document.getElementById('nodeName').value.trim(); if(!name) return alert('Provide a name'); saves[selectedNodeId].name=name; persistSaves(); renderSaves();
+// clear all saves
+document.getElementById('clearSaves').addEventListener('click',()=>{
+  if(confirm('Clear all saves?')){ saves={}; persistSaves(); selectedNodeId=null; baseNodeId=null; renderSaves(); }
 });
 
-document.getElementById('linkNode').addEventListener('click',()=>{
-  if(!selectedNodeId) return alert('Select the source node first'); const target = prompt('Enter target node id to link to (e.g. n123456) or click a node to be target'); if(!target) return; if(!saves[target]) return alert('No such node'); saves[selectedNodeId].links.push(target); persistSaves(); renderSaves();
+// Select as base / clear base
+document.getElementById('selectAsBaseBtn').addEventListener('click',()=>{
+  if(!selectedNodeId){ alert('Select a node first by clicking it.'); return; }
+  baseNodeId = selectedNodeId;
+  renderSaves();
+});
+document.getElementById('clearBaseBtn').addEventListener('click',()=>{
+  baseNodeId = null; renderSaves();
 });
 
+// Delete selected node and its descendants
+document.getElementById('deleteNodeBtn').addEventListener('click',()=>{
+  if(!selectedNodeId) return alert('Select a node first by clicking it');
+  if(!confirm('Delete this node and all its descendants?')) return;
+  deleteNodeAndDescendants(selectedNodeId);
+  selectedNodeId=null; if(baseNodeId && !saves[baseNodeId]) baseNodeId=null;
+  persistSaves(); renderSaves();
+});
+
+function deleteNodeAndDescendants(id){
+  if(!saves[id]) return;
+  // recursively delete children
+  for(const childId of (saves[id].links||[])){
+    if(saves[childId]) deleteNodeAndDescendants(childId);
+  }
+  // remove references from parent (if any)
+  const parent = saves[id].parent;
+  if(parent && saves[parent]){
+    saves[parent].links = (saves[parent].links||[]).filter(x=>x!==id);
+  }
+  // remove any links pointing to this node from other nodes (guard)
+  for(const key in saves){
+    if(saves[key].links && saves[key].links.includes(id)){
+      saves[key].links = saves[key].links.filter(x=>x!==id);
+    }
+  }
+  delete saves[id];
+}
+
+// storage
 function persistSaves(){ localStorage.setItem('chess_saves', JSON.stringify(saves)); }
-function loadSaves(){ try{ return JSON.parse(localStorage.getItem('chess_saves')||'{}'); }catch(e){return{}} }
+function loadSaves(){
+  try{ const raw = JSON.parse(localStorage.getItem('chess_saves') || '{}'); return raw || {}; }catch(e){ return {}; }
+}
 
-function renderSaves(){ saveCanvas.innerHTML=''; saveCanvas.appendChild(connectionsSVG);
-  // create node elems
-  for(const id in saves){ const node=saves[id]; const el=document.createElement('div'); el.className='node'; el.style.left=node.x+'px'; el.style.top=node.y+'px'; el.id='node-'+id;
-    el.innerHTML = `<div class="title">${node.name}</div><small>${id}</small><div style="margin-top:6px;font-size:12px;color:#666">${node.fen.split(' ')[1]==='w'?'White':'Black'} to move</div>`;
-    el.addEventListener('mousedown',startDragNode(id));
-    el.addEventListener('click',e=>{ e.stopPropagation(); selectNode(id); });
+// render nodes as mini-boards with no text
+function renderSaves(){
+  saveCanvas.innerHTML=''; saveCanvas.appendChild(connectionsSVG);
+  // node elements
+  for(const id in saves){
+    const node = saves[id];
+    const el = document.createElement('div');
+    el.className='node';
+    el.style.left = node.x + 'px';
+    el.style.top = node.y + 'px';
+    el.id = 'node-'+id;
+
+    // mini-board element
+    const mini = document.createElement('div'); mini.className='mini-board';
+    // create mini squares 8x8
+    // We need to render from the node.fen -> board
+    const nodeState = fenToBoard(node.fen);
+    for(let r=0;r<8;r++){
+      for(let f=0;f<8;f++){
+        const sq = document.createElement('div');
+        const isDark = ((r+f)%2)!==0;
+        sq.className = 'mini-square ' + (isDark ? 'dark' : 'light');
+        const p = nodeState.board[r][f];
+        if(p) sq.innerText = pieceToUnicode(p);
+        mini.appendChild(sq);
+      }
+    }
+    el.appendChild(mini);
+
+    // show base selection outline if matches
+    if(baseNodeId === id) el.classList.add('base-selected'); else el.classList.remove('base-selected');
+
+    // events: drag, click
+    el.addEventListener('mousedown', startDragNode(id));
+    el.addEventListener('click', e=>{ e.stopPropagation(); selectNode(id); });
+
     saveCanvas.appendChild(el);
   }
   drawConnections();
 }
 
-function selectNode(id){ selectedNodeId=id; document.getElementById('nodeName').value = saves[id].name; // load snapshot
-  const fen = saves[id].fen; gameState = fenToBoard(fen); moveHistory=[]; lastMoveHighlight=[]; renderBoard(); }
-
-// Drag node
-let dragInfo=null;
-function startDragNode(id){ return function(e){ e.preventDefault(); dragInfo={id,ox:e.clientX,oy:e.clientY,startX:saves[id].x,startY:saves[id].y}; document.addEventListener('mousemove',onDragNode); document.addEventListener('mouseup',stopDragNode); } }
-function onDragNode(e){ if(!dragInfo) return; const dx=e.clientX-dragInfo.ox, dy=e.clientY-dragInfo.oy; saves[dragInfo.id].x = dragInfo.startX + dx; saves[dragInfo.id].y = dragInfo.startY + dy; persistSaves(); renderSaves(); }
-function stopDragNode(e){ dragInfo=null; document.removeEventListener('mousemove',onDragNode); document.removeEventListener('mouseup',stopDragNode); }
-
-// clicking empty area deselect
-saveCanvas.addEventListener('click',()=>{ selectedNodeId=null; document.getElementById('nodeName').value=''; });
-
-function drawConnections(){ // draw using SVG lines
-  connectionsSVG.innerHTML=''; const rect = saveCanvas.getBoundingClientRect();
-  for(const id in saves){ const node=saves[id]; for(const t of node.links){ const target = saves[t]; if(!target) continue;
-      const x1 = node.x + 80, y1 = node.y + 24; const x2 = target.x + 8, y2 = target.y + 24;
-      const path = document.createElementNS('http://www.w3.org/2000/svg','path'); path.setAttribute('d',`M ${x1} ${y1} C ${x1+40} ${y1} ${x2-40} ${y2} ${x2} ${y2}`);
-      path.setAttribute('stroke','#2b6cb0'); path.setAttribute('stroke-width','2'); path.setAttribute('fill','none'); connectionsSVG.appendChild(path);
-  }}
+// selecting node: loads snapshot into main board and marks selected node visually
+function selectNode(id){
+  selectedNodeId = id;
+  // load snapshot into main board
+  const fen = saves[id].fen;
+  gameState = fenToBoard(fen);
+  moveHistory = []; lastMoveHighlight = [];
+  renderBoard();
+  renderSaves();
 }
 
-// load sample saves if none
-if(Object.keys(saves).length===0){ /*empty*/ }
+// dragging (same as before)
+let dragInfo = null;
+function startDragNode(id){
+  return function(e){
+    e.preventDefault();
+    dragInfo = { id, ox: e.clientX, oy: e.clientY, startX: saves[id].x, startY: saves[id].y };
+    document.addEventListener('mousemove', onDragNode);
+    document.addEventListener('mouseup', stopDragNode);
+  }
+}
+function onDragNode(e){
+  if(!dragInfo) return;
+  const dx = e.clientX - dragInfo.ox, dy = e.clientY - dragInfo.oy;
+  const id = dragInfo.id;
+  saves[id].x = dragInfo.startX + dx;
+  saves[id].y = dragInfo.startY + dy;
+  persistSaves();
+  renderSaves();
+}
+function stopDragNode(e){
+  dragInfo = null;
+  document.removeEventListener('mousemove', onDragNode);
+  document.removeEventListener('mouseup', stopDragNode);
+}
 
+// clicking empty area deselects & clears visual selection
+saveCanvas.addEventListener('click', ()=>{ selectedNodeId = null; renderSaves(); });
+
+// Draw SVG curved connections (keeps chronological order based on node.created)
+function drawConnections(){
+  connectionsSVG.innerHTML='';
+  // compute rect offset of canvas to handle absolute coords
+  const rect = saveCanvas.getBoundingClientRect();
+  for(const id in saves){
+    const node = saves[id];
+    // ensure links are sorted by created time of target (defensive)
+    const links = (node.links || []).filter(t=>saves[t]).sort((a,b)=> (saves[a].created||0) - (saves[b].created||0));
+    for(const t of links){
+      const target = saves[t];
+      if(!target) continue;
+      const x1 = node.x + 100, y1 = node.y + 42; // right center of node
+      const x2 = target.x + 10, y2 = target.y + 42; // left center of target
+      const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+      path.setAttribute('d', `M ${x1} ${y1} C ${x1+40} ${y1} ${x2-40} ${y2} ${x2} ${y2}`);
+      path.setAttribute('stroke', '#2b6cb0');
+      path.setAttribute('stroke-width', '2');
+      path.setAttribute('fill', 'none');
+      connectionsSVG.appendChild(path);
+    }
+  }
+}
+
+// if no saves, keep empty (optional sample)
+if(Object.keys(saves).length === 0){
+  // no-op (keeps empty)
+}
 // --- Helpers for testing
 function isAttacked(squareR, squareF, byColor){ // temporary: used to check castling path safety
   const snapshot = saveStateForTest(); const saveTurn = gameState.turn; gameState.turn = byColor; const moves = generateAllLegalMoves(byColor); gameState.turn = saveTurn; restoreStateFromTest(snapshot);
