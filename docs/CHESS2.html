@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Chess Study v0.9</title>
+<title>Chess Study v0.95</title>
 <style>
 :root{
   --board-size:min(60vh,60vw);
@@ -445,8 +445,29 @@ let baseNodeId = null;         // id of base node for auto-linking
 let lastAutoLinkedId = null;   // last node auto-linked after base (to chain the next)
 renderSaves();
 
-function nowTs(){ return Date.now(); }
+function nowTs(){ return Date.now(); };
+function renderMiniBoard(fen, nodeEl) {
+  const { board } = fenToBoard(fen);
 
+  const mini = document.createElement("div");
+  mini.className = "mini-board";
+
+  for (let r = 0; r < 8; r++) {
+    for (let f = 0; f < 8; f++) {
+      const sq = document.createElement("div");
+      sq.className = "mini-square " + ((r + f) % 2 ? "dark" : "light");
+
+      const p = board[r][f];
+      if (p) {
+        sq.innerHTML = pieceToUnicode(p);
+      }
+
+      mini.appendChild(sq);
+    }
+  }
+
+  nodeEl.appendChild(mini);
+};
 function saveCurrentSnapshot(){
   const fen = boardToFEN(gameState);
   const id = 'n'+nowTs();
