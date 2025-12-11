@@ -3,58 +3,62 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Chess Study v1.2</title>
+<title>Chess Study v4</title>
 <style>
 :root{
-
-  --board-size:min(100vh,100vw);
+  --board-size:min(50vh,50vw);
   --square-size: calc(var(--board-size) / 8);
 }
 body{font-family: Inter, system-ui, Arial; background:#f2efe9; margin:20px; color:#222}
 .app{display:flex;gap:24px;align-items:flex-start}
 .board-wrap{background:linear-gradient(180deg,#e6d9c3,#d7c4a6);padding:18px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.12)}
 .board{aspect-ratio: 1 / 1;
-  width: --board-size;display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows: repeat(8, 1fr);border-radius:6px;overflow:hidden;position:relative}
+  width: var(--board-size); display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows: repeat(8, 1fr);border-radius:6px;overflow:hidden;position:relative}
 .square{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:30px;user-select:none}
 .square.light{background:linear-gradient(180deg,#fdf5e9,#f7e9d1)}
 .square.dark{background:linear-gradient(180deg,#c49663,#8f5b33)}
 .square.highlight{outline:4px solid rgba(255,255,0,0.45);box-sizing:border-box}
 .square.last-move{box-shadow:inset 0 0 40px rgba(255,255,255,0.06)}
 .coords{position:absolute;left:6px;top:6px;font-size:12px;color:rgba(0,0,0,0.45)}
-.controls{width:420px}
+.controls{width:60%}
 .controls .panel{background:white;padding:12px;border-radius:10px;box-shadow:0 6px 14px rgba(0,0,0,0.06);margin-bottom:12px}
 .btn{display:inline-block;padding:8px 12px;border-radius:8px;background:#2b6cb0;color:white;text-decoration:none;cursor:pointer}
 .btn.secondary{background:#718096}
 .piece {
-  font-size: min(10vw, 48px);
+  font-size: calc(var(--board-size)/10);
   line-height: 1;
   display:flex;
   align-items:center;
   justify-content:center;
   cursor:grab;
 }
+.thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;  /* or contain */
+  border-radius: 5px;user-drag:none;
+}
 .row{display:flex;gap:8px;align-items:center}
 .meta{font-size:13px;color:#444}
-.moves-list{max-height:140px;overflow:auto;padding:8px;border-radius:8px;background:#fbfbfb}
+.moves-list{max-height:140px;overflow:auto;padding:8px;border-radius:4px;background:#fbfbfb}
 .board-options{display:flex;gap:8px;margin-bottom:8px}
 .save-stage{background:#ffffff;padding:10px;border-radius:10px;min-height:220px}
 .save-item{background:#f7f7f8;padding:8px;border-radius:8px;margin:6px;display:inline-block;cursor:grab}
 .save-toolbar{display:flex;gap:8px;flex-wrap:wrap}
-.save-canvas{position:relative;width:100%;height:260px;border-radius:8px;background:linear-gradient(180deg,#fffafa,#f6fcff);overflow:auto}
-.node{position:absolute;padding:8px 10px;border-radius:8px;background:#fff;border:1px solid #ddd;box-shadow:0 6px 12px rgba(0,0,0,0.06);cursor:grab}
+.save-canvas{overflow=hidden;position:relative;height:90vh;border-radius:8px;background:linear-gradient(180deg,#fffafa,#f6fcff);overflow:auto}
+.node{pointer-events:auto;position:absolute;padding:0;background:none;border-radius:5px;border:2px solid #444;cursor:grab;width:150px;height:150px;align-items:center;display:flex;justify-content:center;overflow:hidden;}
 .node .title{font-weight:600;font-size:13px}
-.node { position:absolute;padding:6px;border-radius:8px;background:#fff;border:1px solid #ddd;box-shadow:0 6px 12px rgba(0,0,0,0.06);cursor:grab; width:120px; height:100px; display:flex; align-items:center; justify-content:center; }
-.node .mini-board{ width:100px; height:84px; display:grid; grid-template-columns:repeat(8,1fr); grid-template-rows:repeat(8,1fr); border-radius:6px; overflow:hidden; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.02); }
-.node .mini-square{ font-size:10px; display:flex; align-items:center; justify-content:center; line-height:1; user-select:none; }
-.node .mini-square.light{ background:#f5efe1; }
-.node .mini-square.dark{ background:#d2b79b; }
-.node.base-selected{ outline:3px solid #ff9f43; box-sizing:border-box; }
 .node small{display:block;color:#666;margin-top:4px}
-svg.connections{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
+#transformWrapper {
+    pointer-events: none;
+}
+
+svg.connections{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;}
 .notice{font-size:13px;color:#666}
 .promotion-modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);background:white;padding:14px;border-radius:10px;box-shadow:0 20px 50px rgba(0,0,0,0.2)}
 .promotion-modal button{margin:6px}
 .footer{font-size:12px;color:#666;margin-top:8px}
+.base-indicator{font-size:12px;color:#2b6cb0;margin-left:8px}
 </style>
 </head>
 <body>
@@ -71,20 +75,8 @@ svg.connections{position:absolute;left:0;top:0;width:100%;height:100%;pointer-ev
     </div>
   </div>
   <div class="controls">
-    <div class="panel">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <div style="font-weight:700">Game Controls</div>
-        <div class="notice">Board style: wooden (editable in CSS). You can switch background image with the 'Upload' control later.</div>
-      </div>
-      <div class="row board-options">
-        <label><input type="checkbox" id="legalOnly" checked> Enforce legal moves</label>
-        <label><input type="checkbox" id="showCoords" checked> Show coords</label>
-      </div>
-      <div style="margin-top:8px" class="row">
-        <div class="moves-list" id="movesList">Moves will appear here.</div>
-      </div>
-    </div>
-
+	
+    <div id="movesList" class="moves-list"></div>
     <div class="panel save-stage">
       <div style="display:flex;justify-content:space-between;align-items:center">
         <div style="font-weight:700">Save & Lines (Snapshots)</div>
@@ -97,21 +89,17 @@ svg.connections{position:absolute;left:0;top:0;width:100%;height:100%;pointer-ev
         <svg class="connections" id="connections"></svg>
       </div>
       <div style="margin-top:8px">
-        <div class="notice">Click a node to load that snapshot. Drag nodes to arrange. Select a node and press 'Link to Selected' on another node to connect them (form strategy lines).</div>
+        <div class="notice">Click a node to load that snapshot. Drag nodes to arrange. Use 'Set Base' to define which node becomes the ancestor for newly created nodes (branching).</div>
       </div>
       <div style="margin-top:8px;display:flex;gap:8px">
-  <button class="btn" id="selectAsBaseBtn">Select as base</button>
-  <button class="btn secondary" id="clearBaseBtn">Clear base</button>
-  <button class="btn secondary" id="deleteNodeBtn">Delete Selected Node (and descendants)</button>
-  <div style="flex:1"></div>
-</div>
+        <input id="nodeName" placeholder="name for selected node" style="flex:1;padding:8px;border-radius:8px;border:1px solid #ddd" />
+        <button class="btn" id="renameNode">Rename</button>
+        <button class="btn secondary" id="setBaseBtn">Set Base</button>
+        <button class="btn secondary" id="clearBaseBtn">Clear Base</button>
+        <span class="base-indicator" id="baseIndicator" style="display:none">Base: <span id="baseName"></span></span>
+      </div>
     </div>
 
-    <div class="panel">
-      <div style="font-weight:700;margin-bottom:6px">Help</div>
-      <div class="meta">This is a single-file HTML project that implements a chess board with legal move enforcement (including pins and checks), en passant, castling both sides, promotion, and a snapshot/graph system to save positions and connect them into lines.</div>
-      <div class="footer">Tips: Save positions frequently. Use labels to create lines (openings, tactical motifs).</div>
-    </div>
   </div>
 </div>
 
@@ -120,24 +108,60 @@ svg.connections{position:absolute;left:0;top:0;width:100%;height:100%;pointer-ev
   <div id="promoButtons"></div>
   <div style="text-align:right;margin-top:8px"><button class="btn secondary" id="promoCancel">Cancel</button></div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 <script>
 /*
-  Single-file chess implementation with:
-  - move generation + legality (pins, checks)
-  - en passant
-  - castling (kingside + queenside)
-  - promotion UI
-  - save/recall snapshots (FEN-like) with a draggable node graph + connections
+  Fixed Save & Nodes:
+  - Snapshot name uses the last move (option A)
+  - Set Base / Clear Base controls
+  - Automatic parent/child linking (parent stored in node.parent; links array kept for drawing)
+  - Draw connections parent -> child automatically
+  - Restores previous snapshot functionality and avoids the bug that broke saves
 */
 
 // --- Utilities
 const PIECES = { p:'pawn', r:'rook', n:'knight', b:'bishop', q:'queen', k:'king' };
 const initialFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
+let dragInfo=null;
+
 function deepClone(obj){ return JSON.parse(JSON.stringify(obj)); }
 
-// Board representation: 8x8 array with piece codes: 'P','p','K','k', etc or null
+let cameraScale = 1.0;
+let cameraX = 0;
+let cameraY = 0;
+
+const MIN_ZOOM = 0.2;
+const MAX_ZOOM = 3.0;
+
+function applyCameraTransform() {
+    const wrapper = document.getElementById("transformWrapper");
+    if (!wrapper) return;
+    wrapper.style.transform = `translate(${cameraX}px, ${cameraY}px) scale(${cameraScale})`;
+    drawConnections(document.getElementById("connections"));
+}
+
+async function renderBoardToCanvas() {
+  const oldSelected = selected;
+  selected = null;
+  const oldLast = lastMoveHighlight;
+  lastMoveHighlight = [];
+
+  renderBoard();
+
+  const boardElement = document.getElementById("board");
+  const canvasResult = await html2canvas(document.getElementById("board"), {
+    backgroundColor: null
+});
+  selected = oldSelected;
+  lastMoveHighlight = oldLast;
+
+  renderBoard();
+
+  return canvasResult;
+}
+
 function fenToBoard(fen){
   const [placement, turn, castling, ep] = fen.split(' ');
   const rows = placement.split('/');
@@ -171,20 +195,16 @@ function boardToFEN(state){
 function algebraic(r,f){ return 'abcdefgh'[f] + (8-r); }
 function fromAlg(s){ const f='abcdefgh'.indexOf(s[0]); const r=8-parseInt(s[1]); return [r,f]; }
 
-// Initialize
+// --- Game state
 let gameState = fenToBoard(initialFEN);
 let moveHistory = [];
 let selected = null; // {r,f}
 let legalOnly=true;
 let lastMoveHighlight = [];
 
-// Castling rights in state.castling like "KQkq"
+if(!gameState.castling) gameState.castling='KQkq';
 
 // --- Rendering
-const boardEl = document.getElementById('board');
-const turnLabel = document.getElementById('turnLabel');
-const statusLabel = document.getElementById('statusLabel');
-const movesList = document.getElementById('movesList');
 
 function renderBoard(){
   boardEl.innerHTML='';
@@ -193,16 +213,10 @@ function renderBoard(){
       const sq=document.createElement('div');
       sq.className='square '+(((r+f)%2) ? 'dark':'light');
       sq.dataset.r=r; sq.dataset.f=f; sq.id=`sq-${r}-${f}`;
-      // coord labels
-      if((r===7 && document.getElementById('showCoords').checked) || (f===0 && document.getElementById('showCoords').checked)){
-        const small=document.createElement('div');
-        small.style.fontSize='11px'; small.style.position='absolute'; small.style.left='6px'; small.style.top='6px'; small.style.color='rgba(0,0,0,0.2)';
-        small.innerText = algebraic(r,f);
-        sq.appendChild(small);
-      }
+      
       const p = gameState.board[r][f];
       if(p){
-        const span=document.createElement('div'); span.className='piece'; span.draggable=true; span.style.fontSize='34px';
+        const span=document.createElement('div'); span.className='piece'; span.draggable=true; 
         span.innerHTML = pieceToUnicode(p);
         span.dataset.p=p; span.dataset.r=r; span.dataset.f=f;
         span.addEventListener('dragstart',e=>dragStart(e,r,f));
@@ -216,7 +230,6 @@ function renderBoard(){
   }
   // highlight last move
   lastMoveHighlight.forEach(a=>{ const el=document.getElementById(`sq-${a[0]}-${a[1]}`); if(el) el.classList.add('last-move'); });
-  // if selected, show legal moves
   if(selected){
     const sqSel = document.getElementById(`sq-${selected.r}-${selected.f}`);
     if(sqSel) sqSel.classList.add('highlight');
@@ -239,12 +252,11 @@ function onSquareClick(r,f){ const p = gameState.board[r][f]; if(selected && sel
   if(p && ((p===p.toUpperCase() && gameState.turn==='w') || (p===p.toLowerCase() && gameState.turn==='b'))){ selected={r,f}; setStatus('Selected '+p); renderBoard(); }
 }
 
-// --- Move generation (pseudo-legal then filter by king safety)
+// --- Move generation and legality
 function generateLegalMovesForSquare(r,f){
   const p = gameState.board[r][f]; if(!p) return [];
   const color = (p===p.toUpperCase()) ? 'w':'b'; if(color!==gameState.turn) return [];
   let moves = generatePseudoMoves(r,f,p);
-  // filter illegal moves: those leaving king in check
   const legal = moves.filter(mv=>{
     const snapshot = saveStateForTest();
     makeMoveInternal(mv);
@@ -274,15 +286,12 @@ function generatePseudoMoves(r,f,p){
   const isUpper = p===p.toUpperCase();
   const lowerP = p.toLowerCase();
   if(lowerP==='p'){
-    // forward
     const r1 = r+dir;
     if(inBounds(r1,f) && !gameState.board[r1][f]){
       moves.push({from:[r,f],to:[r1,f],piece:p,type:'move'});
-      // double
       const startRow = color==='w'?6:1;
       if(r===startRow){ const r2=r+dir*2; if(!gameState.board[r2][f]) moves.push({from:[r,f],to:[r2,f],piece:p,type:'double'}); }
     }
-    // captures
     for(const df of [-1,1]){
       const rf = r+dir, ff=f+df;
       if(inBounds(rf,ff)){
@@ -292,7 +301,6 @@ function generatePseudoMoves(r,f,p){
         }
       }
     }
-    // en passant
     if(gameState.ep){
       const ep = fromAlg(gameState.ep);
       if(Math.abs(ep[1]-f)===1 && ep[0]===r+dir){ moves.push({from:[r,f],to:[ep[0],ep[1]],piece:p,type:'enpassant'}); }
@@ -317,10 +325,8 @@ function generatePseudoMoves(r,f,p){
   }
   else if(lowerP==='k'){
     for(let dr=-1;dr<=1;dr++) for(let df=-1;df<=1;df++){ if(dr===0 && df===0) continue; const rr=r+dr, ff=f+df; if(inBounds(rr,ff) && !isOwn(rr,ff,color)) moves.push({from:[r,f],to:[rr,ff],piece:p,type:isEnemy(rr,ff,color)?'capture':'move'}); }
-    // castling
     if(color==='w'){
       if(gameState.castling && gameState.castling.includes('K')){
-        // check path f+1,f+2 empty and not attacked and king not in check
         if(!gameState.board[7][5] && !gameState.board[7][6]) moves.push({from:[7,4],to:[7,6],piece:p,type:'castleK'});
       }
       if(gameState.castling && gameState.castling.includes('Q')){
@@ -342,15 +348,12 @@ function inBounds(r,f){ return r>=0 && r<8 && f>=0 && f<8; }
 function isOwn(r,f,color){ const t=gameState.board[r][f]; if(!t) return false; return (t===t.toUpperCase() && color==='w') || (t===t.toLowerCase() && color==='b'); }
 function isEnemy(r,f,color){ const t=gameState.board[r][f]; if(!t) return false; return (t===t.toUpperCase() && color==='b') || (t===t.toLowerCase() && color==='w'); }
 
-// Simulate move enforcement
 function tryMakeMove(r1,f1,r2,f2){
   const p = gameState.board[r1][f1]; if(!p) return false;
   const moves = generateLegalMovesForSquare(r1,f1);
   const mv = moves.find(m=>m.to[0]===r2 && m.to[1]===f2);
   if(!mv){ setStatus('Illegal move'); return false; }
-  // promote? If pawn reaches last rank
   if(mv.piece.toLowerCase()==='p' && (r2===0 || r2===7)){
-    // open promotion modal
     showPromotionChooser(mv, chosen=>{ makeMove(mv, chosen); });
   } else {
     makeMove(mv);
@@ -358,12 +361,37 @@ function tryMakeMove(r1,f1,r2,f2){
   return true;
 }
 
+// --- simple SAN-like move name (basic, no full disambiguation)
+// used for snapshot naming (option A)
+function simpleMoveNameFromMoveAndState(preState, mv, postState){
+  if(!mv) return 'start';
+  if(mv.type==='castleK') return 'O-O';
+  if(mv.type==='castleQ') return 'O-O-O';
+  const toAlg = algebraic(mv.to[0], mv.to[1]);
+  const piece = mv.piece;
+  const lower = piece.toLowerCase();
+  const isPawn = lower==='p';
+  let isCap = mv.type==='capture' || mv.type==='enpassant';
+  // if not explicit, check by comparing pre/post board
+  if(!isCap){
+    const preTarget = preState.board[mv.to[0]][mv.to[1]];
+    if(preTarget) isCap = true;
+  }
+  if(isPawn){
+    const fromFile = 'abcdefgh'[mv.from[1]];
+    if(isCap) return `${fromFile}x${toAlg}` + (mv.type==='enpassant' ? ' ep' : '') + '';
+    else return `${toAlg}`;
+  } else {
+    const pieceLetter = piece.toUpperCase();
+    return (isCap? pieceLetter + 'x' + toAlg : pieceLetter + toAlg);
+  }
+}
+
+// --- makeMove and internal apply
 function makeMove(mv, promotionChoice){
-  // push history
-  const hist = {state:deepClone(gameState), mv};
+  const hist = {state:deepClone(gameState), mv: deepClone(mv)};
   moveHistory.push(hist);
   makeMoveInternal(mv, promotionChoice);
-  // update last move highlight
   lastMoveHighlight = [mv.from, mv.to];
   renderMoves();
   renderBoard();
@@ -371,14 +399,11 @@ function makeMove(mv, promotionChoice){
 
 function makeMoveInternal(mv, promotionChoice){
   const [r1,f1]=mv.from; const [r2,f2]=mv.to; const p = gameState.board[r1][f1];
-  // handle special
   if(mv.type==='enpassant'){
-    // capturing pawn behind
-    const capR = r1; const capF = f2; // pawn captured
+    const capR = r1; const capF = f2;
     gameState.board[capR][capF]=null;
   }
   if(mv.type==='castleK'){
-    // king moves two, rook moves
     if(gameState.turn==='w'){
       gameState.board[7][6]=gameState.board[7][4]; gameState.board[7][4]=null;
       gameState.board[7][5]=gameState.board[7][7]; gameState.board[7][7]=null;
@@ -386,7 +411,6 @@ function makeMoveInternal(mv, promotionChoice){
       gameState.board[0][6]=gameState.board[0][4]; gameState.board[0][4]=null;
       gameState.board[0][5]=gameState.board[0][7]; gameState.board[0][7]=null;
     }
-    // clear castling rights for that side
     if(gameState.turn==='w') gameState.castling = gameState.castling.replace('K','').replace('Q',''); else gameState.castling = gameState.castling.replace('k','').replace('q','');
     gameState.ep=null; gameState.turn = gameState.turn==='w'?'b':'w'; return;
   }
@@ -401,22 +425,18 @@ function makeMoveInternal(mv, promotionChoice){
     if(gameState.turn==='w') gameState.castling = gameState.castling.replace('K','').replace('Q',''); else gameState.castling = gameState.castling.replace('k','').replace('q','');
     gameState.ep=null; gameState.turn = gameState.turn==='w'?'b':'w'; return;
   }
-  // normal move or capture
   gameState.board[r2][f2] = gameState.board[r1][f1]; gameState.board[r1][f1]=null;
-  // pawn double -> set ep
   if(mv.type==='double'){
     const epR = (r1 + r2)/2; gameState.ep = algebraic(epR,f1);
   } else {
     gameState.ep = null;
   }
-  // promotion
   if(p.toLowerCase()==='p' && (r2===0 || r2===7)){
     const make = promotionChoice||'q';
     const color = p===p.toUpperCase()?'w':'b';
     const pieceChar = color==='w'?make.toUpperCase():make.toLowerCase();
     gameState.board[r2][f2] = pieceChar;
   }
-  // clear castling rights if rook or king moved or captured
   if(p.toLowerCase()==='k'){
     if(p===p.toUpperCase()) gameState.castling = gameState.castling.replace('K','').replace('Q',''); else gameState.castling = gameState.castling.replace('k','').replace('q','');
   }
@@ -426,14 +446,12 @@ function makeMoveInternal(mv, promotionChoice){
     if(r1===0 && f1===0) gameState.castling = gameState.castling.replace('q','');
     if(r1===0 && f1===7) gameState.castling = gameState.castling.replace('k','');
   }
-  // if captured a rook, update rights
   if(mv.type==='capture'){
     if(r2===7 && f2===0) gameState.castling = gameState.castling.replace('Q','');
     if(r2===7 && f2===7) gameState.castling = gameState.castling.replace('K','');
     if(r2===0 && f2===0) gameState.castling = gameState.castling.replace('q','');
     if(r2===0 && f2===7) gameState.castling = gameState.castling.replace('k','');
   }
-  // switch turn
   gameState.turn = gameState.turn==='w'?'b':'w';
 }
 
@@ -441,24 +459,18 @@ function saveStateForTest(){ return deepClone(gameState); }
 function restoreStateFromTest(s){ gameState = s; }
 
 function isKingInCheck(color){
-  // find king
   let kr=-1,kf=-1; for(let r=0;r<8;r++) for(let f=0;f<8;f++){ const p=gameState.board[r][f]; if(p && ((p==='K' && color==='w') || (p==='k' && color==='b'))){ kr=r;kf=f; } }
-  if(kr===-1) return true; // no king
-  // find any enemy piece attacking (kr,kf)
+  if(kr===-1) return true;
   const enemy = color==='w'?'b':'w';
-  // pawn attacks
   const pd = color==='w'?-1:1;
   for(const df of [-1,1]){
     const rr=kr+pd, ff=kf+df; if(inBounds(rr,ff)){ const t=gameState.board[rr][ff]; if(t && ((t==='p' && enemy==='b') || (t==='P' && enemy==='w'))) return true; }
   }
-  // knight
   const ndirs=[[2,1],[2,-1],[-2,1],[-2,-1],[1,2],[1,-2],[-1,2],[-1,-2]];
   for(const d of ndirs){ const rr=kr+d[0], ff=kf+d[1]; if(inBounds(rr,ff)){ const t=gameState.board[rr][ff]; if(t && (t.toLowerCase()==='n') && ((t===t.toUpperCase())=== (enemy==='w'))) return true; } }
-  // sliders
   const rays = {rook:[[1,0],[-1,0],[0,1],[0,-1]], bishop:[[1,1],[1,-1],[-1,1],[-1,-1]] };
   for(const v of rays.rook){ let rr=kr+v[0], ff=kf+v[1]; while(inBounds(rr,ff)){ const t=gameState.board[rr][ff]; if(t){ if((t.toLowerCase()==='r' || t.toLowerCase()==='q') && ((t===t.toUpperCase())=== (enemy==='w'))) return true; else break; } rr+=v[0]; ff+=v[1]; } }
   for(const v of rays.bishop){ let rr=kr+v[0], ff=kf+v[1]; while(inBounds(rr,ff)){ const t=gameState.board[rr][ff]; if(t){ if((t.toLowerCase()==='b' || t.toLowerCase()==='q') && ((t===t.toUpperCase())=== (enemy==='w'))) return true; else break; } rr+=v[0]; ff+=v[1]; } }
-  // king adjacent
   for(let dr=-1;dr<=1;dr++) for(let df=-1;df<=1;df++){ if(dr===0&&df===0) continue; const rr=kr+dr, ff=kf+df; if(inBounds(rr,ff)){ const t=gameState.board[rr][ff]; if(t && t.toLowerCase()==='k' && ((t===t.toUpperCase())=== (enemy==='w'))) return true; } }
   return false;
 }
@@ -468,226 +480,510 @@ function setStatus(s){ statusLabel.innerText = s; }
 
 function renderMoves(){ movesList.innerHTML=''; for(let i=0;i<moveHistory.length;i++){ const mv = moveHistory[i].mv; const from=algebraic(mv.from[0],mv.from[1]); const to=algebraic(mv.to[0],mv.to[1]); const el=document.createElement('div'); el.innerText = (i+1)+'. '+from+'-'+to+' '+(mv.type||''); movesList.appendChild(el); } }
 
-// Undo/Reset
-document.getElementById('undoBtn').addEventListener('click',()=>{ if(moveHistory.length===0) return; const last = moveHistory.pop(); gameState = last.state; lastMoveHighlight = []; renderMoves(); renderBoard(); });
-document.getElementById('resetBtn').addEventListener('click',()=>{ gameState = fenToBoard(initialFEN); moveHistory=[]; lastMoveHighlight=[]; renderMoves(); renderBoard(); });
+// --- DOM refs (declared, initialized later in init)
+let boardEl, turnLabel, statusLabel, movesList;
+let saveCanvas, connectionsSVG;
+let saves = {}; let selectedNodeId = null;
+let baseNodeId = null;
+let lastLoadedNode = null; // set by Set Base button
 
-// Options
-document.getElementById('legalOnly').addEventListener('change',e=>{ legalOnly = e.target.checked; });
-document.getElementById('showCoords').addEventListener('change',e=>{ renderBoard(); });
+function showPromotionChooser(mv, callback) {
+  const modal = document.getElementById("promotionModal");
+  const container = document.getElementById("promoButtons");
+  container.innerHTML = "";
 
-// Promotion modal
-let promotionCallback=null; function showPromotionChooser(mv, cb){ promotionCallback = cb; const pb = document.getElementById('promoButtons'); pb.innerHTML=''; ['q','r','b','n'].forEach(p=>{ const b=document.createElement('button'); b.className='btn'; b.innerText = p.toUpperCase(); b.addEventListener('click',()=>{ hidePromotion(); cb(p); }); pb.appendChild(b); }); document.getElementById('promotionModal').style.display='block'; }
-function hidePromotion(){ document.getElementById('promotionModal').style.display='none'; promotionCallback=null; }
-document.getElementById('promoCancel').addEventListener('click',()=>{ hidePromotion(); });
+  const color = mv.piece === mv.piece.toUpperCase() ? "w" : "b";
+  const options = ["q", "r", "b", "n"];
 
-// Setup initial rights
-if(!gameState.castling) gameState.castling='KQkq';
-
-/* --- Saving snapshots & node graph (updated) --- */
-const saveCanvas = document.getElementById('saveCanvas');
-const connectionsSVG = document.getElementById('connections');
-
-// load or migrate saves
-let saves = loadSaves(); let selectedNodeId = null;
-let baseNodeId = null; // selected "base" for future saves
-
-renderSaves();
-
-// Save current snapshot as a new node (child of baseNodeId if set)
-function saveCurrentSnapshot(){
-  const fen = boardToFEN(gameState);
-  const id = 'n'+Date.now();
-  const created = Date.now();
-  // default location layout
-  const count = Object.keys(saves).length;
-  const node = {
-    id,
-    fen,
-    x:20 + (count%6)*120,
-    y:20 + Math.floor(count/6)*80,
-    links:[],
-    parent: baseNodeId || null,
-    created
-  };
-  saves[id]=node;
-  // if a base is set, auto-link it (append -> keeps chronological order)
-  if(baseNodeId && saves[baseNodeId]){
-    // ensure no duplicate
-    if(!saves[baseNodeId].links.includes(id)) saves[baseNodeId].links.push(id);
+  for (const opt of options) {
+    const btn = document.createElement("button");
+    btn.className = "btn";
+    btn.textContent = (color === "w" ? opt.toUpperCase() : opt.toLowerCase());
+    btn.addEventListener("click", () => {
+      hidePromotion();
+      callback(opt);
+    });
+    container.appendChild(btn);
   }
+
+  modal.style.display = "block";
+}
+
+function hidePromotion() {
+  const modal = document.getElementById("promotionModal");
+  modal.style.display = "none";
+}
+
+// init function: assign DOM refs and wire event listeners after DOM is ready
+function init() {
+  // assign DOM refs
+  boardEl = document.getElementById('board');
+  turnLabel = document.getElementById('turnLabel');
+  statusLabel = document.getElementById('statusLabel');
+  movesList = document.getElementById('movesList');
+  saveCanvas = document.getElementById('saveCanvas');
+  connectionsSVG = document.getElementById('connections');
+
+  // defensive checks
+  if(!boardEl) { console.error('Missing DOM element: #board'); setStatus && setStatus('Missing #board'); }
+  if(!movesList) console.warn('#movesList missing');
+  
+  // load saves and render
+  saves = loadSaves();
+  renderSaves();
+
+  // ★ ADD: disable right-click menu for CAD-style panning
+  saveCanvas.addEventListener("contextmenu", e => e.preventDefault());
+
+  // ★ ADD: mouse wheel → zoom
+  saveCanvas.addEventListener('wheel', onCanvasWheel, { passive: false });
+
+  // ★ ADD: mouse down → start panning (right mouse) or maybe dragging nodes
+  saveCanvas.addEventListener('mousedown', onCanvasMouseDown);
+
+
+  // wire UI listeners (these used to run before DOM ready)
+  const undoBtn = document.getElementById('undoBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const promoCancel = document.getElementById('promoCancel');
+
+  if(undoBtn) undoBtn.addEventListener('click', () => { if(moveHistory.length===0) return; const last = moveHistory.pop(); gameState = last.state; lastMoveHighlight = []; renderMoves(); renderBoard(); });
+  if(resetBtn) resetBtn.addEventListener('click', () => { gameState = fenToBoard(initialFEN); moveHistory=[]; lastMoveHighlight=[]; renderMoves(); renderBoard(); });
+
+  if(promoCancel) promoCancel.addEventListener('click', () => { hidePromotion(); });
+
+  // Saves panel buttons (safe-guarded)
+  const saveBtn = document.getElementById('saveBtn');
+  const clearSavesBtn = document.getElementById('clearSaves');
+  const renameNodeBtn = document.getElementById('renameNode');
+  const setBaseBtn = document.getElementById('setBaseBtn');
+  const clearBaseBtn = document.getElementById('clearBaseBtn');
+
+  if(saveBtn) saveBtn.addEventListener('click', saveCurrentSnapshot);
+  if(clearSavesBtn) clearSavesBtn.addEventListener('click', () => { if(confirm('Clear all saves?')){ saves={}; baseNodeId=null; selectedNodeId=null; persistSaves(); renderSaves(); }});
+  if(renameNodeBtn) renameNodeBtn.addEventListener('click', ()=>{ if(!selectedNodeId) return alert('Select a node first by clicking it'); const name = document.getElementById('nodeName').value.trim(); if(!name) return alert('Provide a name'); saves[selectedNodeId].name=name; persistSaves(); renderSaves(); });
+  if(setBaseBtn) setBaseBtn.addEventListener('click', ()=>{ if(!selectedNodeId) return alert('Select a node to be base first'); baseNodeId = selectedNodeId; updateBaseIndicator(); });
+  if(clearBaseBtn) clearBaseBtn.addEventListener('click', ()=>{ baseNodeId = null; updateBaseIndicator(); });
+
+  // final rendering
+  renderMoves();
+  renderBoard();
+}
+
+function onCanvasWheel(e) {
+    e.preventDefault();
+
+    const rect = saveCanvas.getBoundingClientRect();
+    const mouseX = (e.clientX - rect.left - cameraX) / cameraScale;
+    const mouseY = (e.clientY - rect.top - cameraY) / cameraScale;
+
+    const zoomFactor = -(e.deltaY) * 0.001;
+    const newScale = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, cameraScale * (1 + zoomFactor)));
+
+    cameraX -= (mouseX * newScale - mouseX * cameraScale);
+    cameraY -= (mouseY * newScale - mouseY * cameraScale);
+
+    cameraScale = newScale;
+
+    applyCameraTransform();
+}
+
+let isPanning = false;
+let panStartX = 0;
+let panStartY = 0;
+
+function onCanvasMouseDown(e) {
+    if (e.button === 2) {  // right mouse
+        isPanning = true;
+        panStartX = e.clientX - cameraX;
+        panStartY = e.clientY - cameraY;
+    }
+}
+
+window.addEventListener('mousemove', e => {
+    if (isPanning) {
+        cameraX = e.clientX - panStartX;
+        cameraY = e.clientY - panStartY;
+        applyCameraTransform();
+    }
+});
+
+window.addEventListener('mouseup', e => {
+    if (e.button === 2) isPanning = false;
+});
+
+// run init after DOM ready
+if(document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+
+function isInMainChain(parentId, nodeId) {
+  if (!parentId || !nodeId) return false;
+  let cur = parentId;
+  // guard: avoid infinite loops (defensive)
+  const visited = new Set();
+  while (cur && !visited.has(cur)) {
+    if (cur === nodeId) return true;
+    visited.add(cur);
+    const links = (saves[cur] && saves[cur].links) ? saves[cur].links : [];
+    if (links.length === 0) break;
+    cur = links[0]; // follow the main forward branch
+  }
+  return false;
+}
+
+// Save snapshot: name automatically by last move (option A)
+async function saveCurrentSnapshot(){
+  const fen = boardToFEN(gameState);
+  const ts = Date.now();
+  const id = 'n'+ts;
+
+  // Create miniature snapshot
+  const snapshotCanvas = await renderBoardToCanvas();
+ const thumbnailCanvas = document.createElement("canvas");
+const size = 300;             // match node size
+const scale = window.devicePixelRatio || 1;
+
+thumbnailCanvas.width = size * scale;
+thumbnailCanvas.height = size * scale;
+
+const ctx = thumbnailCanvas.getContext("2d");
+ctx.scale(scale, scale);       // high resolution scaling
+const finalSize = 150;
+
+ctx.drawImage(snapshotCanvas,0,0,300,300);
+ const imgData = thumbnailCanvas.toDataURL("image/png");
+
+  // Determine name: last move from moveHistory (the move that produced the current state)
+  let name = 'start';
+  if(moveHistory.length>0){
+    const preState = deepClone(moveHistory[moveHistory.length-1].state); // state before last move
+    const lastMv = moveHistory[moveHistory.length-1].mv;
+    const postState = deepClone(gameState);
+    // generate simple SAN-like name from pre/post and mv
+    name = simpleMoveNameFromMoveAndState(preState, lastMv, postState);
+  }
+
+  // Default coords for display
+  const x = 20 + (Object.keys(saves).length%6)*120;
+  const y = 20 + Math.floor(Object.keys(saves).length/6)*80;
+
+  // Node structure: keep links for drawing (like original), plus parent for convenience
+  const node = { id, name, fen, img: imgData, x, y, links: [], parent: null, created: ts };
+
+// FINAL BRANCH / CONTINUATION LOGIC
+// ===============================
+// Main chain is defined by following links[0] repeatedly.
+function isInMainChain(parentId, lastLoadedId, saves) {
+  if (!parentId || !lastLoadedId) return false;
+
+  // main chain = follow links[0] only
+  let cur = parentId;
+
+  // skip the parent itself (do NOT treat parent as continuation)
+  const visited = new Set();
+
+  while (true) {
+    const children = saves[cur].links || [];
+
+    // tail? then no continuation possible
+    if (children.length === 0) return false;
+
+    const next = children[0];
+
+    if (next === lastLoadedId) {
+      return true;   // lastLoaded lies on continuation chain
+    }
+
+    // avoid loop
+    if (visited.has(next)) return false;
+    visited.add(next);
+
+    cur = next;
+  }
+}
+
+// Insert new node `id` (node object in variable `node`) when baseNodeId is set:
+if (baseNodeId && saves[baseNodeId]) {
+  const parentId = baseNodeId;
+
+  // ensure parent's links array exists
+  saves[parentId].links = saves[parentId].links || [];
+  const oldChildren = saves[parentId].links.slice(); // copy for safety
+
+  // CASE 1: parent has no children -> attach as first child (start chain)
+  if (oldChildren.length === 0) {
+    node.parent = parentId;
+    node.links = [];
+    saves[parentId].links = [id];
+  }
+
+  // CASE 2: continuation on main chain -> lastLoadedNode lies on the parent's main chain
+  // We need to find the tail of that main chain (follow links[0]) and attach the new node
+  // as the new first-child (continuation) of the tail.
+  else if (isInMainChain(parentId, lastLoadedNode, saves)) {
+    // find tail by following first-child chain until a node has no first child
+    let tailId = parentId;
+    while (saves[tailId].links && saves[tailId].links.length > 0 && saves[tailId].links[0]) {
+      tailId = saves[tailId].links[0];
+    }
+
+    // Put new node as the first child of the tail (continues the chain)
+    // Preserve any other children tail may have (they become siblings after index 0)
+    node.parent = tailId;
+    node.links = [];
+    saves[tailId].links = saves[tailId].links || [];
+    // insert as first child
+    saves[tailId].links = [ id, ...saves[tailId].links ];
+  }
+
+  // CASE 3: fork/splice (lastLoadedNode is NOT on the main chain)
+  // Insert the new node as the SECOND child (index 1) of parentId so the original
+  // main-chain child at index 0 remains the continuation; the new branch becomes the
+  // second straight branch (and will use links[0] to continue).
+  else {
+    // ensure parent has at least the first child
+    const firstChild = oldChildren[0];
+
+    node.parent = parentId;
+    node.links = []; // new branch head has no children yet
+
+    if (!firstChild) {
+      // weird case (shouldn't happen because oldChildren.length > 0), but handle cleanly
+      saves[parentId].links = [ id, ...oldChildren.slice(1) ];
+    } else {
+      // keep first child intact at index 0, insert new node at index 1
+      const rest = oldChildren.slice(1); // children after first
+      saves[parentId].links = [ firstChild, id, ...rest ];
+    }
+  }
+
+  // persist node and mark active
+  saves[id] = node;
+  lastLoadedNode = id;
+}
+if (!saves[id]) {
+    saves[id] = node;
+}
+
   persistSaves();
   renderSaves();
 }
-document.getElementById('saveBtn').addEventListener('click',saveCurrentSnapshot);
 
-// clear all saves
-document.getElementById('clearSaves').addEventListener('click',()=>{
-  if(confirm('Clear all saves?')){ saves={}; persistSaves(); selectedNodeId=null; baseNodeId=null; renderSaves(); }
-});
-
-// Select as base / clear base
-document.getElementById('selectAsBaseBtn').addEventListener('click',()=>{
-  if(!selectedNodeId){ alert('Select a node first by clicking it.'); return; }
-  baseNodeId = selectedNodeId;
-  renderSaves();
-});
-document.getElementById('clearBaseBtn').addEventListener('click',()=>{
-  baseNodeId = null; renderSaves();
-});
-
-// Delete selected node and its descendants
-document.getElementById('deleteNodeBtn').addEventListener('click',()=>{
-  if(!selectedNodeId) return alert('Select a node first by clicking it');
-  if(!confirm('Delete this node and all its descendants?')) return;
-  deleteNodeAndDescendants(selectedNodeId);
-  selectedNodeId=null; if(baseNodeId && !saves[baseNodeId]) baseNodeId=null;
-  persistSaves(); renderSaves();
-});
-
-function deleteNodeAndDescendants(id){
-  if(!saves[id]) return;
-  // recursively delete children
-  for(const childId of (saves[id].links||[])){
-    if(saves[childId]) deleteNodeAndDescendants(childId);
-  }
-  // remove references from parent (if any)
-  const parent = saves[id].parent;
-  if(parent && saves[parent]){
-    saves[parent].links = (saves[parent].links||[]).filter(x=>x!==id);
-  }
-  // remove any links pointing to this node from other nodes (guard)
-  for(const key in saves){
-    if(saves[key].links && saves[key].links.includes(id)){
-      saves[key].links = saves[key].links.filter(x=>x!==id);
-    }
-  }
-  delete saves[id];
+function updateBaseIndicator(){
+  const el = document.getElementById('baseIndicator');
+  const nameEl = document.getElementById('baseName');
+  if(baseNodeId && saves[baseNodeId]){ el.style.display='inline'; nameEl.innerText = saves[baseNodeId].name; } else { el.style.display='none'; nameEl.innerText=''; }
 }
 
-// storage
 function persistSaves(){ localStorage.setItem('chess_saves', JSON.stringify(saves)); }
-function loadSaves(){
-  try{ const raw = JSON.parse(localStorage.getItem('chess_saves') || '{}'); return raw || {}; }catch(e){ return {}; }
-}
+function loadSaves(){ try{ return JSON.parse(localStorage.getItem('chess_saves')||'{}'); }catch(e){return{}} }
 
-// render nodes as mini-boards with no text
-function renderSaves(){
-  saveCanvas.innerHTML=''; saveCanvas.appendChild(connectionsSVG);
-  // node elements
-  for(const id in saves){
-    const node = saves[id];
-    const el = document.createElement('div');
-    el.className='node';
-    el.style.left = node.x + 'px';
-    el.style.top = node.y + 'px';
-    el.id = 'node-'+id;
+function renderSaves() {
+    // Clear existing canvas
+    saveCanvas.innerHTML = '';
 
-    // mini-board element
-    const mini = document.createElement('div'); mini.className='mini-board';
-    // create mini squares 8x8
-    // We need to render from the node.fen -> board
-    const nodeState = fenToBoard(node.fen);
-    for(let r=0;r<8;r++){
-      for(let f=0;f<8;f++){
-        const sq = document.createElement('div');
-        const isDark = ((r+f)%2)!==0;
-        sq.className = 'mini-square ' + (isDark ? 'dark' : 'light');
-        const p = nodeState.board[r][f];
-        if(p) sq.innerText = pieceToUnicode(p);
-        mini.appendChild(sq);
-      }
+
+  // --- CREATE TRANSFORM WRAPPER ---
+    const wrapper = document.createElement('div');
+    wrapper.id = 'transformWrapper';
+    wrapper.style.position = 'absolute';
+    wrapper.style.left = '0';
+    wrapper.style.top = '0';
+    wrapper.style.width = '100%';
+    wrapper.style.height = '100%';
+    wrapper.style.transformOrigin = '0 0';
+    saveCanvas.appendChild(wrapper);
+
+    // --- CREATE SVG FOR CONNECTIONS ---
+    const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svg.setAttribute('class','connections');
+    svg.setAttribute('id','connections');
+    svg.style.position = 'absolute';
+    svg.style.left = 0;
+    svg.style.top = 0;
+    svg.style.width = '100%';
+    svg.style.height = '100%';
+svg.style.overflow = "visible";
+    svg.style.pointerEvents = "none";
+    wrapper.appendChild(svg);
+
+    // --- RENDER NODES ---
+    for (const id in saves) {
+        const node = saves[id];
+        const el = document.createElement('div');
+
+        el.className = 'node';
+        el.style.position = 'absolute';
+        el.style.left = node.x + 'px';
+        el.style.top = node.y + 'px';
+        el.id = 'node-' + id;
+
+        el.innerHTML = `<img src="${node.img}" class="thumb" draggable="false">`;
+
+        el.title = node.name;
+        el.addEventListener('mousedown', (e) => {
+    if (e.button !== 0) return;  // only left mouse
+    e.stopPropagation();
+    startDragNode(id)(e);
+});
+        el.addEventListener('click', (e) => {
+            e.stopPropagation();
+            selectNode(id);
+        });
+
+        wrapper.appendChild(el);
     }
-    el.appendChild(mini);
 
-    // show base selection outline if matches
-    if(baseNodeId === id) el.classList.add('base-selected'); else el.classList.remove('base-selected');
+    // Apply camera transform (zoom + pan)
+    applyCameraTransform();
 
-    // events: drag, click
-    el.addEventListener('mousedown', startDragNode(id));
-    el.addEventListener('click', e=>{ e.stopPropagation(); selectNode(id); });
+    // Draw connections using SVG inside wrapper
+    drawConnections(svg);
 
-    saveCanvas.appendChild(el);
-  }
-  drawConnections();
+    updateBaseIndicator();
 }
 
-// selecting node: loads snapshot into main board and marks selected node visually
+saveCanvas.addEventListener('wheel', (e) => {
+    e.preventDefault();
+
+    // Get cursor position relative to wrapper
+    const rect = saveCanvas.getBoundingClientRect();
+    const offsetX = (e.clientX - rect.left - cameraX) / cameraScale ;
+    const offsetY = (e.clientY - rect.top - cameraY) / cameraScale ;
+
+    // Zoom direction
+    const zoomAmount = -e.deltaY * 0.001;
+    const newScale = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, cameraScale * (1 + zoomAmount)));
+
+    // Adjust camera so zoom is centered on cursor
+    cameraX -= (offsetX * newScale - offsetX * cameraScale);
+    cameraY -= (offsetY * newScale - offsetY * cameraScale);
+
+    cameraScale = newScale;
+    applyCameraTransform();
+}, { passive: false });
+
 function selectNode(id){
   selectedNodeId = id;
-  // load snapshot into main board
+lastLoadedNode = id;
+  document.getElementById('nodeName').value = saves[id].name;
   const fen = saves[id].fen;
   gameState = fenToBoard(fen);
-  moveHistory = []; lastMoveHighlight = [];
+  // clear live moveHistory when loading snapshot to match original behavior
+  moveHistory = [];
+  lastMoveHighlight = [];
   renderBoard();
-  renderSaves();
 }
 
-// dragging (same as before)
-let dragInfo = null;
-function startDragNode(id){
-  return function(e){
-    e.preventDefault();
-    dragInfo = { id, ox: e.clientX, oy: e.clientY, startX: saves[id].x, startY: saves[id].y };
-    document.addEventListener('mousemove', onDragNode);
-    document.addEventListener('mouseup', stopDragNode);
-  }
-}
+// Drag node handlers
+
+function startDragNode(id){ console.log("START DRAG FOR NODE", id); return function(e){ e.stopPropagation();e.preventDefault(); dragInfo={id,ox:(e.clientX - cameraX)/cameraScale,oy:(e.clientY - cameraY)/ cameraScale ,startX:saves[id].x,startY:saves[id].y}; document.addEventListener('mousemove',onDragNode); document.addEventListener('mouseup',stopDragNode); } }
 function onDragNode(e){
-  if(!dragInfo) return;
-  const dx = e.clientX - dragInfo.ox, dy = e.clientY - dragInfo.oy;
-  const id = dragInfo.id;
-  saves[id].x = dragInfo.startX + dx;
-  saves[id].y = dragInfo.startY + dy;
-  persistSaves();
-  renderSaves();
-}
-function stopDragNode(e){
-  dragInfo = null;
-  document.removeEventListener('mousemove', onDragNode);
-  document.removeEventListener('mouseup', stopDragNode);
+   console.log("DRAGGING", dragInfo);
+    if (!dragInfo) return;
+
+    const worldX = (e.clientX - cameraX) / cameraScale;
+    const worldY = (e.clientY - cameraY) / cameraScale;
+
+    const dx = worldX - dragInfo.ox;
+    const dy = worldY - dragInfo.oy;
+
+    saves[dragInfo.id].x = dragInfo.startX + dx;
+    saves[dragInfo.id].y = dragInfo.startY + dy;
+
+    // Update DOM position
+    const el = document.getElementById("node-" + dragInfo.id);
+    if (el) {
+        el.style.left = saves[dragInfo.id].x + "px";
+        el.style.top  = saves[dragInfo.id].y + "px";
+    }
+
+    drawConnections(document.getElementById("connections"));
+}function stopDragNode(e){ dragInfo=null; document.removeEventListener('mousemove',onDragNode); document.removeEventListener('mouseup',stopDragNode); }
+
+// clicking empty area deselect
+saveCanvas.addEventListener('click',()=>{ selectedNodeId=null; document.getElementById('nodeName').value=''; });
+
+function getNodeAnchors(node) {
+  const w = 150;      // your node width
+  const h =150;      // approx height (90px image + padding)
+  const x = node.x;
+  const y = node.y;
+
+  return {
+    top:    { x: x + w/2,     y: y },
+    bottom: { x: x + w/2,     y: y + h },
+    left:   { x: x,           y: y + h/2 },
+    right:  { x: x + w,       y: y + h/2 }
+  };
 }
 
-// clicking empty area deselects & clears visual selection
-saveCanvas.addEventListener('click', ()=>{ selectedNodeId = null; renderSaves(); });
-
-// Draw SVG curved connections (keeps chronological order based on node.created)
-function drawConnections(){
-  connectionsSVG.innerHTML='';
-  // compute rect offset of canvas to handle absolute coords
-  const rect = saveCanvas.getBoundingClientRect();
+// Drawing connections (parent->child using links array)
+function drawConnections(svgElement){
+  // if svgElement not passed, try to get current connections element
+  const svg = svgElement || document.getElementById('connections');
+  if(!svg) return;
+  svg.innerHTML = '';
   for(const id in saves){
     const node = saves[id];
-    // ensure links are sorted by created time of target (defensive)
-    const links = (node.links || []).filter(t=>saves[t]).sort((a,b)=> (saves[a].created||0) - (saves[b].created||0));
-    for(const t of links){
-      const target = saves[t];
-      if(!target) continue;
-      const x1 = node.x + 100, y1 = node.y + 42; // right center of node
-      const x2 = target.x + 10, y2 = target.y + 42; // left center of target
-      const path = document.createElementNS('http://www.w3.org/2000/svg','path');
-      path.setAttribute('d', `M ${x1} ${y1} C ${x1+40} ${y1} ${x2-40} ${y2} ${x2} ${y2}`);
-      path.setAttribute('stroke', '#2b6cb0');
-      path.setAttribute('stroke-width', '2');
-      path.setAttribute('fill', 'none');
-      connectionsSVG.appendChild(path);
+    if(node.links && node.links.length>0){
+      for(const childId of node.links){
+        const child = saves[childId];
+        if(!child) continue;
+
+        const parentAnchors = getNodeAnchors(node);
+const childAnchors  = getNodeAnchors(child);
+
+let start, end;
+
+// determine direction
+if (child.y > node.y + 50) {
+    // child is below
+    start = parentAnchors.bottom;
+    end   = childAnchors.top;
+} else if (child.y + 50 < node.y) {
+    // child is above
+    start = parentAnchors.top;
+    end   = childAnchors.bottom;
+} else if (child.x > node.x) {
+    // child is to the right
+    start = parentAnchors.right;
+    end   = childAnchors.left;
+} else {
+    // child is to the left
+    start = parentAnchors.left;
+    end   = childAnchors.right;
+}
+
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+
+const c1x = start.x + (end.x - start.x) * 0.3;
+const c1y = start.y + (end.y - start.y) * 0.3;
+const c2x = start.x + (end.x - start.x) * 0.7;
+const c2y = start.y + (end.y - start.y) * 0.7;
+
+path.setAttribute("d", `M ${start.x} ${start.y} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${end.x} ${end.y}`);
+path.setAttribute("stroke", "#2b6cb0");
+path.setAttribute("stroke-width", "2");
+path.setAttribute("fill", "none");
+
+svg.appendChild(path);
+      }
     }
   }
 }
 
-// if no saves, keep empty (optional sample)
-if(Object.keys(saves).length === 0){
-  // no-op (keeps empty)
-}
-// --- Helpers for testing
-function isAttacked(squareR, squareF, byColor){ // temporary: used to check castling path safety
+// helper used for castling path safety (same as original)
+function isAttacked(squareR, squareF, byColor){
   const snapshot = saveStateForTest(); const saveTurn = gameState.turn; gameState.turn = byColor; const moves = generateAllLegalMoves(byColor); gameState.turn = saveTurn; restoreStateFromTest(snapshot);
   return moves.some(m=>m.to[0]===squareR && m.to[1]===squareF);
 }
 
-// Re-render initially
-renderBoard();
 
 </script>
 </body>
 </html>
+
