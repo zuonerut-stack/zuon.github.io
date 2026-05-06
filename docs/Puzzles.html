@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Connecting Dots Puzzle</title>
+<style>
+  body { font-family: sans-serif; text-align: center; }
+  canvas { border: 1px solid #333; touch-action: none; }
+  .controls { margin: 10px; }
+</style>
+</head>
+<body>
+<h2>Connecting Dots Puzzle</h2>
+<div class="controls">
+  Grid Size: <input type="number" id="gridSize" value="6" min="3" max="12">
+  Color Pairs: <input type="number" id="pairCount" value="3" min="1" max="10">
+  <button onclick="init()">Reset</button>
+</div>
+<canvas id="canvas" width="480" height="480"></canvas>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+let gridSize = 6;
+let cellSize;
+let pairs = [];
+let paths = {};
+let currentPath = null;
+
+const colors = ['red','blue','green','orange','purple','brown','cyan','magenta','yellow','black'];
+
+function init() {
+  gridSize = parseInt(document.getElementById('gridSize').value);
+  const pairCount = parseInt(document.getElementById('pairCount').value);
+
+  cellSize = canvas.width / gridSize;
+  pairs = [];
+  paths = {};
+
+  // 랜덤 시작/끝 점 생성
+  for (let i = 0; i < pairCount; i++) {
+    let p1 = randCell();
+    let p2 = randCell();
+    pairs.push({ color: colors[i], start: p1, end: p2 });
+    paths[colors[i]] = [];
+  }
+  draw();
+}
+
+function randCell() {
+  return {
+    x: Math.floor(Math.random() * gridSize),
+    y: Math.floor(Math.random() * gridSize)
+  };
+}
+
+function draw() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  // grid
+  ctx.strokeStyle = '#ccc';
+  for (let i = 0; i <= gridSize; i++) {
+    ctx.beginPath();
+    ctx.moveTo(i*cellSize,0);
+    ctx.lineTo(i*cellSize,canvas.height);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(0,i*cellSize);
+    ctx.lineTo(canvas.width,i*cellSize);
+    ctx.stroke();
+  }
+
+  // paths
+  for (let c in paths) {
+    ctx.strokeStyle = c;
+    ctx.lineWidth = cellSize/4;
+    ctx.beginPath();
+    paths[c].forEach((p, i) => {
+      let cx = p.x*cellSize + cellSize/2;
+      let cy = p.y*cellSize + cellSize/2;
+      if (i===0) ctx.moveTo(cx,cy);
+      else ctx.lineTo(cx,cy);
+    });
+    ctx.stroke();
+  }
+
+  // dots
+  pairs.forEach(p => {
+    drawDot(p.start, p.color);
+    drawDot(p.end, p.color);
+  });
+}
+
+function drawDot(p, color) {
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.arc(p.x*cellSize+cellSize/2, p.y*cellSize+cellSize/2, cellSize/4, 0, Math.PI*2);
+  ctx.fill();
+}
+
+function getCell(evt) {
+  const rect = canvas.getBoundingClientRect();
+  const x = evt.clientX - rect.left;
+  const y = evt.clientY - rect.top;
+  return {
+    x: Math.floor(x / cellSize),
+    y: Math.floor(y / cellSize)
+  };
+}
+
+function sameCell(a,b){ return a.x===b.x && a.y===b.y; }
+
+function isAdjacent(a,b){
+  return Math.abs(a.x-b.x)+Math.abs(a.y-b.y)===1;
+}
+
+canvas.addEventListener('mousedown', e => {
+  const cell = getCell(e);
+
+  // 시작점인지 확인
+  for (let p of pairs) {
+    if (sameCell(cell,p.start) || sameCell(cell,p.end)) {
+      currentPath = { color: p.color, cells: [cell] };
+      paths[p.color] = [cell];
+      break;
+    }
+  }
+});
+
+canvas.addEventListener('mousemove', e => {
+  if (!currentPath) return;
+  const cell = getCell(e);
+  const last = currentPath.cells[currentPath.cells.length-1];
+
+  if (isAdjacent(cell,last)) {
+    // 이미 포함된 경우 뒤로가기 처리
+    let idx = currentPath.cells.findIndex(c => sameCell(c,cell));
+    if (idx !== -1) {
+      currentPath.cells = currentPath.cells.slice(0, idx+1);
+    } else {
+      currentPath.cells.push(cell);
+    }
+    paths[currentPath.color] = [...currentPath.cells];
+    draw();
+  }
+});
+
+canvas.addEventListener('mouseup', () => {
+  currentPath = null;
+});
+
+canvas.addEventListener('mouseleave', () => {
+  currentPath = null;
+});
+
+init();
+</script>
+</body>
+</html>
