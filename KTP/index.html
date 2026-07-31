@@ -1,1 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#efe5d5" />
+  <meta name="description" content="A mobile-first Korean learning prototype for daily life and work." />
+  <title>Everyday Korean</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="paper-noise" aria-hidden="true"></div>
+  <div class="app-shell">
+    <header class="topbar">
+      <button class="icon-btn" id="menuBtn" aria-label="Open menu">
+        <span class="menu-lines" aria-hidden="true"></span>
+      </button>
+      <a class="brand" href="#top" aria-label="Everyday Korean home">
+        <span class="brand-mark">한</span>
+        <span><small>KOREAN FOR DAILY LIFE</small><strong>Everyday Korean</strong></span>
+      </a>
+      <button class="icon-btn" id="soundToggle" aria-label="Toggle sound"><span>♬</span></button>
+    </header>
+
+    <main id="top">
+      <section class="hero-card">
+        <div class="hero-copy">
+          <span class="soft-label">TODAY · <span id="todayMinutes">8</span> MIN</span>
+          <h1>Understand the feeling<br />behind the sentence.</h1>
+          <p>Listen to natural Korean, notice the speaker’s attitude, and reuse it in daily situations.</p>
+          <div class="hero-actions">
+            <button class="button button-primary" id="startTodayBtn"><span>Start today</span><b>→</b></button>
+            <button class="button button-ghost" id="savedBtn"><span>Saved cards</span><b id="savedCount">0</b></button>
+          </div>
+        </div>
+        <div class="streak-card" aria-label="Current study streak">
+          <span class="streak-icon">✦</span>
+          <strong id="streakDays">4</strong>
+          <small>day streak</small>
+          <div class="week-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        </div>
+      </section>
+
+      <section class="continue-panel">
+        <div class="continue-icon">↗</div>
+        <div class="continue-main">
+          <span class="overline">CONTINUE LEARNING</span>
+          <strong id="continueTitle">Weather and reactions</strong>
+          <small id="continueWords">덥네요 · 덥구나 · 덥다니까</small>
+          <div class="progress-track"><span id="continueProgress"></span></div>
+        </div>
+        <button class="compact-button" id="resumeBtn">Resume</button>
+      </section>
+
+      <section class="content-section">
+        <div class="section-title-row">
+          <div><span class="overline">YOUR COURSES</span><h2>Choose how to learn</h2></div>
+          <button class="small-action" id="filterBtn">View all <span>↗</span></button>
+        </div>
+        <div class="track-grid" id="trackGrid" aria-live="polite"></div>
+      </section>
+
+      <section class="content-section practice-section" id="practiceSection">
+        <div class="section-title-row">
+          <div><span class="overline">MEMORY CARD</span><h2>One meaning, different attitudes</h2></div>
+          <button class="small-action" id="shuffleBtn">New card <span>↻</span></button>
+        </div>
+
+        <article class="memory-card" id="memoryCard">
+          <div class="card-topline">
+            <div class="topic-chip"><span id="cardEmoji">☀</span><b id="cardTopic">Weather</b></div>
+            <span class="card-position" id="cardPosition">01 / 03</span>
+          </div>
+
+          <div class="scene-box">
+            <span>CONTEXT</span>
+            <p id="sceneText">You step outside and notice the heat.</p>
+          </div>
+
+          <div class="expression-area">
+            <button class="round-control primary-control" id="playSentence" aria-label="Play Korean sentence">▶</button>
+            <div class="expression-copy">
+              <p class="korean" id="koreanText">덥네요.</p>
+              <p class="roman" id="romanText">deop-neyo</p>
+              <p class="translation" id="translationText">It’s hot.</p>
+            </div>
+            <button class="round-control save-control" id="favoriteBtn" aria-label="Save memory card">♡</button>
+          </div>
+
+          <div class="attitude-box">
+            <div class="attitude-label"><span>↳</span> HIDDEN ATTITUDE</div>
+            <strong id="hiddenThought">“Oh, I notice it’s hot.”</strong>
+            <p id="attitudeNote">The speaker discovers or notices the situation now.</p>
+          </div>
+
+          <div class="variant-tabs" id="choiceRow" role="tablist" aria-label="Sentence attitudes"></div>
+
+          <div class="card-footer">
+            <div><span class="tip-label">KEY IDEA</span><p id="tipText">Korean often places the speaker’s attitude at the end of the sentence.</p></div>
+            <button class="next-button" id="nextCardBtn">Next <span>→</span></button>
+          </div>
+        </article>
+      </section>
+
+      <section class="content-section" id="dailySection">
+        <div class="section-title-row">
+          <div><span class="overline">DAILY SENTENCES</span><h2 id="dailySetTitle">At work</h2></div>
+          <button class="small-action" id="seeAllBtn">See all <span>→</span></button>
+        </div>
+        <div class="sentence-list" id="sentenceList" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Primary navigation">
+      <button class="nav-item active" data-target="top"><span>⌂</span><small>Home</small></button>
+      <button class="nav-item" data-target="trackGrid"><span>▤</span><small>Learn</small></button>
+      <button class="nav-item" data-target="practiceSection"><span>◉</span><small>Practice</small></button>
+      <button class="nav-item" data-target="dailySection"><span>♡</span><small>Saved</small></button>
+    </nav>
+  </div>
+
+  <dialog id="trackDialog">
+    <button class="dialog-close" id="dialogClose" aria-label="Close">×</button>
+    <span class="overline" id="dialogEyebrow">TRACK</span>
+    <h2 id="dialogTitle"></h2>
+    <p id="dialogDescription"></p>
+    <div class="dialog-list" id="dialogList"></div>
+    <button class="button button-primary dialog-start" id="startLessonBtn"><span>Start first lesson</span><b>→</b></button>
+  </dialog>
+
+  <aside class="side-sheet" id="sideSheet" aria-hidden="true">
+    <button class="dialog-close" id="sheetClose" aria-label="Close menu">×</button>
+    <span class="overline">EVERYDAY KOREAN</span>
+    <h2>Learning menu</h2>
+    <button data-sheet-target="top">Home</button>
+    <button data-sheet-target="trackGrid">Course tracks</button>
+    <button data-sheet-target="practiceSection">Memory cards</button>
+    <button data-sheet-target="dailySection">Daily sentences</button>
+    <div class="sheet-note"><strong>GitHub-ready content</strong><p>Edit the files inside <code>data/</code> to add or revise lessons without changing the page layout.</p></div>
+  </aside>
+  <div class="sheet-backdrop" id="sheetBackdrop"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
 
