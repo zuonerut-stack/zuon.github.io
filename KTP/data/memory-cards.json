@@ -60,8 +60,8 @@
       },
       {
         "label": "Confirm",
-        "korean": "~ 라고 말하신 거죠? 알겠습니다.",
-        "romanization": "rago malhashin geojyo? alge sseumnida",
+        "korean": "~ 라고 말하신 거죠?",
+        "romanization": "rago malhashin geojyo?",
         "translation": "~ That's what you said, did I get it right?",
         "hiddenThought": "“I believe that is what you said; please confirm.”",
         "attitudeNote": "The ending invites the listener to confirm shared information.",
