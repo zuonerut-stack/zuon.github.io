@@ -60,9 +60,9 @@
       },
       {
         "label": "Confirm",
-        "korean": "다시 말씀하신 거죠?",
-        "romanization": "dasi malsseumhasin geojyo",
-        "translation": "You said it again, right?",
+        "korean": "~ 라고 말하신 거죠? 알겠습니다.",
+        "romanization": "rago malhashin geojyo? alge sseumnida",
+        "translation": "~ That's what you said, did I get it right?",
         "hiddenThought": "“I believe that is what you said; please confirm.”",
         "attitudeNote": "The ending invites the listener to confirm shared information.",
         "scene": "You think you understood, but want to confirm what was said."
