@@ -1,0 +1,72 @@
+[
+  {
+    "id": "weather-hot",
+    "topic": "Weather",
+    "emoji": "☀",
+    "tip": "Korean often places the speaker’s attitude at the end of the sentence.",
+    "variants": [
+      {
+        "label": "Notice",
+        "korean": "덥네요.",
+        "romanization": "deop-neyo",
+        "translation": "It’s hot.",
+        "hiddenThought": "“Oh, I notice it’s hot.”",
+        "attitudeNote": "The speaker discovers or notices the situation now.",
+        "scene": "You step outside and notice the heat."
+      },
+      {
+        "label": "Realize",
+        "korean": "덥구나!",
+        "romanization": "deop-guna",
+        "translation": "Oh, it is hot!",
+        "hiddenThought": "“Ah, now I realize it’s hot.”",
+        "attitudeNote": "The speaker reaches a realization, often while talking to oneself or someone close.",
+        "scene": "You open the window and finally realize how hot it is."
+      },
+      {
+        "label": "Insist",
+        "korean": "덥다니까!",
+        "romanization": "deop-da-nikka",
+        "translation": "I’m telling you, it’s hot!",
+        "hiddenThought": "“I’m telling you, it’s hot.”",
+        "attitudeNote": "The speaker repeats or strongly insists because the listener has not accepted it.",
+        "scene": "Someone says it is not hot, but you strongly disagree."
+      }
+    ]
+  },
+  {
+    "id": "work-repeat",
+    "topic": "At work",
+    "emoji": "▣",
+    "tip": "Learn the communicative purpose first; grammar becomes easier to remember afterward.",
+    "variants": [
+      {
+        "label": "Direct",
+        "korean": "다시 말해 주세요.",
+        "romanization": "dasi malhae juseyo",
+        "translation": "Please say it again.",
+        "hiddenThought": "“Please repeat that for me.”",
+        "attitudeNote": "A clear and polite request suitable for many daily situations.",
+        "scene": "You did not hear an instruction at work."
+      },
+      {
+        "label": "Softer",
+        "korean": "다시 말씀해 주실래요?",
+        "romanization": "dasi malsseumhae jusillaeyo",
+        "translation": "Could you say that again?",
+        "hiddenThought": "“Would you be willing to repeat that?”",
+        "attitudeNote": "The speaker makes the request more indirect and considerate.",
+        "scene": "You politely ask a supervisor to repeat an explanation."
+      },
+      {
+        "label": "Confirm",
+        "korean": "다시 말씀하신 거죠?",
+        "romanization": "dasi malsseumhasin geojyo",
+        "translation": "You said it again, right?",
+        "hiddenThought": "“I believe that is what you said; please confirm.”",
+        "attitudeNote": "The ending invites the listener to confirm shared information.",
+        "scene": "You think you understood, but want to confirm what was said."
+      }
+    ]
+  }
+]

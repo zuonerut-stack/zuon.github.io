@@ -1,0 +1,30 @@
+[
+  {
+    "id": "work-arrival-time",
+    "category": "At work",
+    "korean": "몇 시까지 가면 돼요?",
+    "translation": "What time should I be there by?",
+    "note": "Ask for the deadline or required arrival time."
+  },
+  {
+    "id": "work-repeat",
+    "category": "At work",
+    "korean": "다시 한번 말씀해 주세요.",
+    "translation": "Please say that one more time.",
+    "note": "A practical sentence when listening is difficult."
+  },
+  {
+    "id": "work-put-object",
+    "category": "At work",
+    "korean": "이건 어디에 두면 돼요?",
+    "translation": "Where should I put this?",
+    "note": "Use this while holding or pointing at an object."
+  },
+  {
+    "id": "work-finished",
+    "category": "At work",
+    "korean": "이제 다 했어요.",
+    "translation": "I’m finished now.",
+    "note": "Report that a task has been completed."
+  }
+]

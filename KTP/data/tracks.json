@@ -1,0 +1,36 @@
+[
+  {
+    "id": "contexts",
+    "number": "01",
+    "eyebrow": "MEANING + ATTITUDE",
+    "title": "Contexts in words and sentences",
+    "description": "See how the same idea changes with situation, tone, relationship, and sentence ending.",
+    "lessonCount": 6,
+    "minutes": 12,
+    "symbol": "◌",
+    "tone": "sand",
+    "lessons": [
+      "Weather: 덥네요 / 덥구나 / 덥다니까",
+      "Requests: 해 주세요 / 해 주실래요?",
+      "Shared knowledge: 알죠? / 알잖아요",
+      "Guessing: 바쁜가 봐요 / 바쁘겠어요"
+    ]
+  },
+  {
+    "id": "daily",
+    "number": "02",
+    "eyebrow": "USE IT TODAY",
+    "title": "Daily sentences",
+    "description": "Short expressions for work, transport, meals, housing, and everyday requests.",
+    "lessonCount": 10,
+    "minutes": 15,
+    "symbol": "日",
+    "tone": "clay",
+    "lessons": [
+      "Arriving at work",
+      "Asking someone to repeat",
+      "Finding a place or object",
+      "Ordering food and making requests"
+    ]
+  }
+]
