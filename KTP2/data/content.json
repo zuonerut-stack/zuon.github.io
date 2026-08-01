@@ -31,8 +31,8 @@
       "text": "Passenger: Please take me to Busan Station.<br>Driver: Which exit at Busan Station would you like to go to?<br>Passenger: Please take me near Busan Station for now.<br>Driver: All right.<br><br>…<br><br>Passenger: I’ll get out here. Can I pay by card?<br>Driver: Yes, you can.<br>Passenger: Here you are.<br>Driver: Thank you. Goodbye.<br>Passenger: Thank you."
     },
     {
-      "label": "Focus",
-      "text": "~로 가 주세요.<br><strong>ro ga juseyo</strong><br><br>여기<br><strong>yeogi</strong><br><br>~ 되나요?<br><strong>~ doenayo</strong>"
+      "label": "Key expressions",
+      "text": "~(으)로 가 주세요.<br><strong>ro ga juseyo</strong><br><br>여기서 내릴게요.<br><strong>yeogi</strong><br><br>~ 되나요?<br><strong>~ doenayo</strong>"
     },
     {
       "label": "Situation",
@@ -76,7 +76,7 @@
     },
 
     {
-      "label": "Focus",
+      "label": "Key expressions",
       "text": "몇 분이세요?<br><strong>myeot bun-iseyo</strong><br><br>좀 이따가 부를게요.<br><strong>jom ittdaga bureulgeyo</strong><br><br>주문할게요.<br><strong>jumunhalgeyo</strong><br><br>삼겹살 2인분, 밥 두 공기<br><strong>samgyeopsal i-inbun, bap du gonggi</strong>"
     },
 
@@ -86,6 +86,374 @@
     }
   ]
 },
+  {
+  "id": "cafe-basic",
+  "folder": "everyday",
+  "type": "dialogue",
+  "badge": "04",
+  "title": "At a Cafe",
+  "subtitle": "Ordering · size · takeaway · payment",
+
+  "tags": [
+    "cafe",
+    "coffee",
+    "americano",
+    "size",
+    "takeaway",
+    "card",
+    "order",
+    "payment"
+  ],
+
+  "blocks": [
+    {
+      "label": "Dialogue · Korean",
+      "text": "손님: 안녕하세요.<br>직원: 어서 오세요.<br>손님: 아이스 아메리카노 한 잔 주세요.<br>직원: 라지로 드릴까요?<br>손님: 네, 라지로 주세요.<br>직원: 드시고 가시나요, 가지고 가시나요?<br>손님: 가지고 갈게요.<br>직원: 5,500원입니다.<br>손님: 카드로 계산할게요.<br>직원: 감사합니다. 주문번호는 37번입니다.<br>손님: 감사합니다.",
+      "korean": true,
+      "speakable": "안녕하세요. 어서 오세요. 아이스 아메리카노 한 잔 주세요. 라지로 드릴까요? 네, 라지로 주세요. 드시고 가시나요, 가지고 가시나요? 가지고 갈게요. 5,500원입니다. 카드로 계산할게요. 감사합니다. 주문번호는 37번입니다. 감사합니다."
+    },
+    {
+      "label": "Dialogue · English",
+      "text": "Customer: Hello.<br>Staff: Welcome.<br>Customer: I'd like one iced Americano, please.<br>Staff: Would you like a large size?<br>Customer: Yes, a large, please.<br>Staff: For here or to go?<br>Customer: To go, please.<br>Staff: That'll be 5,500 won.<br>Customer: I'll pay by card.<br>Staff: Thank you. Your order number is 37.<br>Customer: Thank you."
+    },
+    {
+      "label": "Key Expressions",
+      "text": "N 한 잔 주세요.<br><strong>...han jan juseyo</strong><br><br>가지고 갈게요.<br><strong>gajigo galgeyo</strong><br><br>카드로 계산할게요.<br><strong>kadeuro gyesanhalgeyo</strong>"
+    },
+    {
+      "label": "Situation",
+      "text": "A customer orders an iced Americano at a cafe. The staff asks about the drink size and whether the order is for here or to go. After confirming the order, the customer pays by card, receives an order number, and politely ends the conversation."
+    }
+  ]
+},
+  {
+  "id": "clothing-store-basic",
+  "folder": "everyday",
+  "type": "dialogue",
+  "badge": "05",
+  "title": "At a Clothing Store",
+  "subtitle": "Shopping · fitting · payment",
+
+  "tags": [
+    "clothing",
+    "shopping",
+    "shirt",
+    "fitting room",
+    "try on",
+    "payment",
+    "card",
+    "store"
+  ],
+
+  "blocks": [
+    {
+      "label": "Dialogue · Korean",
+      "text": "손님: 안녕하세요.<br>직원: 어서 오세요. 찾으시는 게 있으세요?<br>손님: 셔츠를 보고 싶은데요.<br>직원: 이쪽에 있습니다.<br>손님: 이거 입어 봐도 될까요?<br>직원: 네. 탈의실은 저쪽입니다.<br><br>…<br><br>손님: 잘 맞네요. 이걸로 살게요.<br>직원: 계산 도와드리겠습니다.<br>손님: 카드로 계산할게요.<br>직원: 감사합니다.<br>손님: 감사합니다.",
+      "korean": true,
+      "speakable": "안녕하세요. 어서 오세요. 찾으시는 게 있으세요? 셔츠를 보고 싶은데요. 이쪽에 있습니다. 이거 입어 봐도 될까요? 네. 탈의실은 저쪽입니다. 잘 맞네요. 이걸로 살게요. 계산 도와드리겠습니다. 카드로 계산할게요. 감사합니다. 감사합니다."
+    },
+    {
+      "label": "Dialogue · English",
+      "text": "Customer: Hello.<br>Staff: Welcome. May I help you?<br>Customer: I'd like to look at some shirts.<br>Staff: They're over here.<br>Customer: May I try this on?<br>Staff: Of course. The fitting room is over there.<br><br>...<br><br>Customer: It fits well. I'll take this one.<br>Staff: I'll ring it up for you.<br>Customer: I'll pay by card.<br>Staff: Thank you.<br>Customer: Thank you."
+    },
+    {
+      "label": "Key Expressions",
+      "text": "N를 보고 싶은데요.<br><strong>...reul bogo sipeundeyo</strong><br><br>입어 봐도 될까요?<br><strong>ibeo bwado doelkkayo</strong><br><br>이걸로 살게요.<br><strong>igeollo salgeyo</strong>"
+    },
+    {
+      "label": "Situation",
+      "text": "A customer visits a clothing store to buy a shirt. After asking where the shirts are, the customer tries one on in the fitting room. Since it fits well, the customer decides to buy it, pays by card, and politely finishes the conversation."
+    }
+  ]
+},
+
+  {
+  "id": "hospital-cold-basic",
+  "folder": "everyday",
+  "type": "dialogue",
+  "badge": "06",
+  "title": "At a Hospital (Cold)",
+  "subtitle": "Reception · symptoms · prescription",
+
+  "tags": [
+    "hospital",
+    "clinic",
+    "cold",
+    "cough",
+    "fever",
+    "doctor",
+    "medicine",
+    "prescription"
+  ],
+
+  "blocks": [
+    {
+      "label": "Dialogue · Korean",
+      "text": "접수: 어떻게 오셨나요?<br>환자: 감기 증상이 있어서 왔어요.<br>접수: 잠시만 기다려 주세요.<br><br>…<br><br>의사: 어디가 불편하세요?<br>환자: 기침이 나고 목이 아파요.<br>의사: 열은 있으세요?<br>환자: 조금 있는 것 같아요.<br>의사: 감기인 것 같습니다. 약을 처방해 드릴게요.<br>환자: 감사합니다.",
+      "korean": true,
+      "speakable": "어떻게 오셨나요? 감기 증상이 있어서 왔어요. 잠시만 기다려 주세요. 어디가 불편하세요? 기침이 나고 목이 아파요. 열은 있으세요? 조금 있는 것 같아요. 감기인 것 같습니다. 약을 처방해 드릴게요. 감사합니다."
+    },
+    {
+      "label": "Dialogue · English",
+      "text": "Receptionist: What brings you in today?<br>Patient: I came because I have cold symptoms.<br>Receptionist: Please wait a moment.<br><br>...<br><br>Doctor: What seems to be the problem?<br>Patient: I have a cough and a sore throat.<br>Doctor: Do you have a fever?<br>Patient: I think I have a slight fever.<br>Doctor: It looks like you have a cold. I'll prescribe some medicine.<br>Patient: Thank you."
+    },
+    {
+      "label": "Key Expressions",
+      "text": "감기 증상이 있어서 왔어요.<br><strong>gamgi jeungsangi isseoseo wasseoyo</strong><br><br>어디가 불편하세요?<br><strong>eodiga bulpyeonhaseyo</strong><br><br>약을 처방해 드릴게요.<br><strong>yageul cheobanghae deurilgeyo</strong>"
+    },
+    {
+      "label": "Situation",
+      "text": "A patient visits a clinic because of cold symptoms. After checking in at the reception desk, the patient waits to see the doctor, explains the symptoms, and is diagnosed with a cold. The doctor prescribes medicine, and the conversation ends politely."
+    }
+  ]
+},
+
+  {
+  "id": "hospital-sprained-ankle-basic",
+  "folder": "everyday",
+  "type": "dialogue",
+  "badge": "07",
+  "title": "At a Hospital (Sprained Ankle)",
+  "subtitle": "Reception · injury · treatment",
+
+  "tags": [
+    "hospital",
+    "clinic",
+    "ankle",
+    "sprain",
+    "injury",
+    "doctor",
+    "treatment",
+    "walking"
+  ],
+
+  "blocks": [
+    {
+      "label": "Dialogue · Korean",
+      "text": "접수: 어떻게 오셨나요?<br>환자: 계단에서 발목을 삐었어요.<br>접수: 잠시만 기다려 주세요.<br><br>…<br><br>의사: 많이 아프세요?<br>환자: 걸을 때 많이 아파요.<br>의사: 발목을 한번 보겠습니다.<br>환자: 네.<br>의사: 심한 염좌는 아닌 것 같습니다. 당분간 무리하지 마세요.<br>환자: 감사합니다.",
+      "korean": true,
+      "speakable": "어떻게 오셨나요? 계단에서 발목을 삐었어요. 잠시만 기다려 주세요. 많이 아프세요? 걸을 때 많이 아파요. 발목을 한번 보겠습니다. 네. 심한 염좌는 아닌 것 같습니다. 당분간 무리하지 마세요. 감사합니다."
+    },
+    {
+      "label": "Dialogue · English",
+      "text": "Receptionist: What brings you in today?<br>Patient: I sprained my ankle on the stairs.<br>Receptionist: Please wait a moment.<br><br>...<br><br>Doctor: Does it hurt a lot?<br>Patient: It hurts when I walk.<br>Doctor: Let me take a look at your ankle.<br>Patient: Okay.<br>Doctor: It doesn't seem to be a severe sprain. Please avoid strenuous activity for a while.<br>Patient: Thank you."
+    },
+    {
+      "label": "Key Expressions",
+      "text": "발목을 삐었어요.<br><strong>balmogeul ppieosseoyo</strong><br><br>걸을 때 아파요.<br><strong>georeul ttae apayo</strong><br><br>당분간 무리하지 마세요.<br><strong>dangbungan murihaji maseyo</strong>"
+    },
+    {
+      "label": "Situation",
+      "text": "A patient visits a clinic after spraining an ankle on the stairs. The doctor asks about the pain, examines the ankle, and explains that it is not a serious sprain. The patient is advised to avoid strenuous activity for a while before leaving."
+    }
+  ]
+},
+
+  {
+  "id": "hospital-stomachache-basic",
+  "folder": "everyday",
+  "type": "dialogue",
+  "badge": "08",
+  "title": "At a Hospital (Stomachache)",
+  "subtitle": "Reception · stomachache · diagnosis",
+
+  "tags": [
+    "hospital",
+    "clinic",
+    "stomachache",
+    "stomach",
+    "nausea",
+    "doctor",
+    "medicine",
+    "treatment"
+  ],
+
+  "blocks": [
+    {
+      "label": "Dialogue · Korean",
+      "text": "접수: 어떻게 오셨나요?<br>환자: 배가 많이 아파서 왔어요.<br>접수: 잠시만 기다려 주세요.<br><br>…<br><br>의사: 언제부터 아프셨나요?<br>환자: 오늘 아침부터 아팠어요.<br>의사: 다른 증상도 있으세요?<br>환자: 속이 메스껍고 밥도 잘 못 먹겠어요.<br>의사: 위장염인 것 같습니다. 약을 처방해 드릴게요.<br>환자: 감사합니다.",
+      "korean": true,
+      "speakable": "어떻게 오셨나요? 배가 많이 아파서 왔어요. 잠시만 기다려 주세요. 언제부터 아프셨나요? 오늘 아침부터 아팠어요. 다른 증상도 있으세요? 속이 메스껍고 밥도 잘 못 먹겠어요. 위장염인 것 같습니다. 약을 처방해 드릴게요. 감사합니다."
+    },
+    {
+      "label": "Dialogue · English",
+      "text": "Receptionist: What brings you in today?<br>Patient: I came because I have a bad stomachache.<br>Receptionist: Please wait a moment.<br><br>...<br><br>Doctor: When did the pain start?<br>Patient: It started this morning.<br>Doctor: Do you have any other symptoms?<br>Patient: I feel nauseous, and I can't eat very well.<br>Doctor: It looks like you have gastroenteritis. I'll prescribe some medicine.<br>Patient: Thank you."
+    },
+    {
+      "label": "Key Expressions",
+      "text": "배가 많이 아파서 왔어요.<br><strong>baega mani apaseo wasseoyo</strong><br><br>언제부터 아프셨나요?<br><strong>eonjebuteo apeusyeonnayo</strong><br><br>속이 메스꺼워요.<br><strong>sogi meseukkeowoyo</strong>"
+    },
+    {
+      "label": "Situation",
+      "text": "A patient visits a clinic because of a stomachache. The doctor asks when the pain started and whether there are any other symptoms. After hearing that the patient feels nauseous and has trouble eating, the doctor diagnoses gastroenteritis and prescribes medicine."
+    }
+  ]
+},
+
+  {
+  "id": "pharmacy-basic",
+  "folder": "everyday",
+  "type": "dialogue",
+  "badge": "09",
+  "title": "At a Pharmacy",
+  "subtitle": "Prescription · medicine · directions",
+
+  "tags": [
+    "pharmacy",
+    "medicine",
+    "prescription",
+    "pharmacist",
+    "dosage",
+    "cold",
+    "treatment",
+    "medicine"
+  ],
+
+  "blocks": [
+    {
+      "label": "Dialogue · Korean",
+      "text": "손님: 안녕하세요.<br>약사: 안녕하세요.<br>손님: 처방전을 가지고 왔어요.<br>약사: 처방전 주세요.<br>손님: 여기 있습니다.<br>약사: 하루 세 번, 식후에 드시면 됩니다.<br>손님: 주의할 점이 있나요?<br>약사: 물을 충분히 드시고, 졸릴 수 있으니 운전은 피하세요.<br>손님: 알겠습니다. 감사합니다.<br>약사: 빨리 나으세요.",
+      "korean": true,
+      "speakable": "안녕하세요. 안녕하세요. 처방전을 가지고 왔어요. 처방전 주세요. 여기 있습니다. 하루 세 번, 식후에 드시면 됩니다. 주의할 점이 있나요? 물을 충분히 드시고, 졸릴 수 있으니 운전은 피하세요. 알겠습니다. 감사합니다. 빨리 나으세요."
+    },
+    {
+      "label": "Dialogue · English",
+      "text": "Customer: Hello.<br>Pharmacist: Hello.<br>Customer: I have a prescription.<br>Pharmacist: May I have your prescription, please?<br>Customer: Here you are.<br>Pharmacist: Take this medicine three times a day after meals.<br>Customer: Is there anything I should be careful about?<br>Pharmacist: Drink plenty of water, and avoid driving because it may make you drowsy.<br>Customer: I understand. Thank you.<br>Pharmacist: Get well soon."
+    },
+    {
+      "label": "Key Expressions",
+      "text": "처방전을 가지고 왔어요.<br><strong>cheobangjeoneul gajigo wasseoyo</strong><br><br>하루 세 번, 식후에 드시면 됩니다.<br><strong>haru se beon, sikhue deusimyeon doemnida</strong><br><br>주의할 점이 있나요?<br><strong>juihal jeomi innayo</strong>"
+    },
+    {
+      "label": "Situation",
+      "text": "A customer visits a pharmacy with a prescription from a clinic. The pharmacist explains how to take the medicine and gives some precautions. After asking one question, the customer thanks the pharmacist and leaves."
+    }
+  ]
+},
+
+  {
+  "id": "delivery-problem-basic",
+  "folder": "everyday",
+  "type": "dialogue",
+  "badge": "10",
+  "title": "Delivery Problem",
+  "subtitle": "Customer service · package · delivery",
+
+  "tags": [
+    "delivery",
+    "package",
+    "customer service",
+    "tracking",
+    "shipping",
+    "courier",
+    "problem",
+    "delivery delay"
+  ],
+
+  "blocks": [
+    {
+      "label": "Dialogue · Korean",
+      "text": "고객: 안녕하세요. 택배가 아직 도착하지 않았어요.<br>상담원: 불편을 드려 죄송합니다. 송장번호를 알려주시겠어요?<br>고객: 123456789입니다.<br>상담원: 잠시만 확인해 보겠습니다.<br><br>…<br><br>상담원: 배송이 지연되고 있습니다. 오늘 안에 배송될 예정입니다.<br>고객: 알겠습니다. 감사합니다.<br>상담원: 기다려 주셔서 감사합니다.",
+      "korean": true,
+      "speakable": "안녕하세요. 택배가 아직 도착하지 않았어요. 불편을 드려 죄송합니다. 송장번호를 알려주시겠어요? 123456789입니다. 잠시만 확인해 보겠습니다. 배송이 지연되고 있습니다. 오늘 안에 배송될 예정입니다. 알겠습니다. 감사합니다. 기다려 주셔서 감사합니다."
+    },
+    {
+      "label": "Dialogue · English",
+      "text": "Customer: Hello. My package hasn't arrived yet.<br>Agent: We're sorry for the inconvenience. Could you tell me the tracking number?<br>Customer: It's 123456789.<br>Agent: Let me check that for you.<br><br>...<br><br>Agent: Your delivery has been delayed. It is expected to arrive today.<br>Customer: I understand. Thank you.<br>Agent: Thank you for your patience."
+    },
+    {
+      "label": "Key Expressions",
+      "text": "택배가 아직 도착하지 않았어요.<br><strong>taekbaega ajik dochakhaji anasseoyo</strong><br><br>송장번호를 알려주시겠어요?<br><strong>songjangbeonhoreul allyeojusigesseoyo</strong><br><br>배송이 지연되고 있습니다.<br><strong>baesongi jiyeondoego itseumnida</strong>"
+    },
+    {
+      "label": "Situation",
+      "text": "A customer contacts customer service because a package has not arrived. After checking the tracking number, the agent explains that the delivery has been delayed and is expected to arrive later that day. The conversation ends politely."
+    }
+  ]
+},
+
+  {
+  "id": "convenience-store-basic",
+  "folder": "everyday",
+  "type": "dialogue",
+  "badge": "11",
+  "title": "At a Convenience Store",
+  "subtitle": "Shopping · asking · payment",
+
+  "tags": [
+    "convenience store",
+    "shopping",
+    "charger",
+    "usb-c",
+    "payment",
+    "card",
+    "customer",
+    "store"
+  ],
+
+  "blocks": [
+    {
+      "label": "Dialogue · Korean",
+      "text": "손님: 안녕하세요.<br>직원: 안녕하세요.<br>손님: 휴대폰 충전기 있나요?<br>직원: 네. 어떤 종류를 찾으세요?<br>손님: C타입이요.<br>직원: 여기 있습니다.<br>손님: 이걸로 살게요.<br>직원: 8,000원입니다.<br>손님: 카드로 계산할게요.<br>직원: 감사합니다.<br>손님: 감사합니다.",
+      "korean": true,
+      "speakable": "안녕하세요. 안녕하세요. 휴대폰 충전기 있나요? 네. 어떤 종류를 찾으세요? C타입이요. 여기 있습니다. 이걸로 살게요. 8,000원입니다. 카드로 계산할게요. 감사합니다. 감사합니다."
+    },
+    {
+      "label": "Dialogue · English",
+      "text": "Customer: Hello.<br>Staff: Hello.<br>Customer: Do you have a phone charger?<br>Staff: Yes. What type are you looking for?<br>Customer: USB-C, please.<br>Staff: Here it is.<br>Customer: I'll take this one.<br>Staff: That'll be 8,000 won.<br>Customer: I'll pay by card.<br>Staff: Thank you.<br>Customer: Thank you."
+    },
+    {
+      "label": "Key Expressions",
+      "text": "N 있나요?<br><strong>... innayo</strong><br><br>어떤 종류를 찾으세요?<br><strong>eotteon jongnyureul chajeuseyo</strong><br><br>이걸로 살게요.<br><strong>igeollo salgeyo</strong>"
+    },
+    {
+      "label": "Situation",
+      "text": "A customer visits a convenience store to buy a phone charger. After asking whether the store has one, the staff asks which type is needed. The customer chooses a USB-C charger, pays by card, and politely ends the conversation."
+    }
+  ]
+},
+
+  {
+  "id": "tourist-restroom-basic",
+  "folder": "everyday",
+  "type": "dialogue",
+  "badge": "12",
+  "title": "At a Tourist Attraction",
+  "subtitle": "Asking for directions · restroom",
+
+  "tags": [
+    "tourist",
+    "tourist attraction",
+    "restroom",
+    "directions",
+    "information",
+    "help",
+    "visitor",
+    "guide"
+  ],
+
+  "blocks": [
+    {
+      "label": "Dialogue · Korean",
+      "text": "관광객: 실례합니다.<br>안내원: 네. 무엇을 도와드릴까요?<br>관광객: 화장실이 어디에 있나요?<br>안내원: 저쪽으로 쭉 가시면 오른쪽에 있습니다.<br>관광객: 멀어요?<br>안내원: 아니요. 1분 정도 걸립니다.<br>관광객: 감사합니다.<br>안내원: 천만에요. 좋은 관람 되세요.<br>관광객: 감사합니다.",
+      "korean": true,
+      "speakable": "실례합니다. 네. 무엇을 도와드릴까요? 화장실이 어디에 있나요? 저쪽으로 쭉 가시면 오른쪽에 있습니다. 멀어요? 아니요. 1분 정도 걸립니다. 감사합니다. 천만에요. 좋은 관람 되세요. 감사합니다."
+    },
+    {
+      "label": "Dialogue · English",
+      "text": "Visitor: Excuse me.<br>Staff: Yes. How can I help you?<br>Visitor: Where is the restroom?<br>Staff: Go straight that way, and you'll find it on your right.<br>Visitor: Is it far?<br>Staff: No. It's about a one-minute walk.<br>Visitor: Thank you.<br>Staff: You're welcome. Enjoy your visit.<br>Visitor: Thank you."
+    },
+    {
+      "label": "Key Expressions",
+      "text": "화장실이 어디에 있나요?<br><strong>hwajangsiri eodie innayo</strong><br><br>쭉 가시면 됩니다.<br><strong>jjuk gasimyeon doemnida</strong><br><br>멀어요?<br><strong>meoreoyo</strong>"
+    },
+    {
+      "label": "Situation",
+      "text": "A visitor asks for the location of the restroom at a tourist attraction. The staff gives simple directions and explains that it is only a short walk away. After receiving the information, the visitor thanks the staff, who wishes the visitor an enjoyable visit."
+    }
+  ]
+},
+  
 
 
 
