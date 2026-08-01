@@ -23,7 +23,8 @@
     {
       "label": "Dialogue · Korean",
       "text": "승객: 기사님, 부산역으로 가 주세요.<br>기사: 부산역 몇 번 출구로 가실까요?<br>승객: 일단 부산역 주변으로 가 주세요.<br>기사: 알겠습니다.<br><br>…<br><br>승객: 여기서 내릴게요. 카드도 되나요?<br>기사: 네, 됩니다.<br>승객: 여기 있습니다.<br>기사: 감사합니다. 안녕히 가세요.<br>승객: 감사합니다.",
-      "korean": true
+      "korean": true,
+      "speakable": "기사님, 부산역으로 가 주세요.  부산역 몇 번 출구로 가실까요?  일단 부산역 주변으로 가 주세요.   알겠습니다.   여기서 내릴게요. 카드도 되나요?   네, 됩니다.  여기 있습니다.   감사합니다. 안녕히 가세요.  감사합니다."
     },
     {
       "label": "Dialogue · English",
@@ -65,7 +66,8 @@
     {
       "label": "Dialogue · Korean",
       "text": "직원: 몇 분이세요?<br>나: 두 명이요.<br>직원: 이쪽으로 앉으세요.<br>직원: 주문하시겠어요?<br>나: 좀 이따가 부를게요. 감사합니다.<br>직원: 네, 알겠습니다.<br><br>친구: 3인분 먹을까? 아니면 2인분?<br>나: 2인분만 하자.<br>친구: 그래.<br><br>나: 저기요, 주문할게요.<br>직원: 네, 말씀하세요.<br>나: 삼겹살 2인분하고 밥 두 공기 주세요.<br>직원: 음료는 뭐로 드릴까요?<br>나: 사이다 한 병 주세요.<br>직원: 네, 알겠습니다.",
-      "korean": true
+      "korean": true,
+      "speakable" "몇 분이세요?  두 명이요.   이쪽으로 앉으세요.   주문하시겠어요?  좀 이따가 부를게요. 감사합니다.  네, 알겠습니다.  3인분 먹을까? 아니면 2인분?   2인분만 하자.   그래.    저기요, 주문할게요.   네, 말씀하세요.   삼겹살 2인분하고 밥 두 공기 주세요.   음료는 뭐로 드릴까요?    사이다 한 병 주세요.   네, 알겠습니다."
     },
 
     {
@@ -331,7 +333,8 @@
     {
       "label": "Examples",
       "text": "덥네. → It's hot. <br><br>싫네. → I don't like it. <br><br>잘 아네. → So you konw it.<br><br>좋네. → It's good.<br><br>빠르네. → It's fast.",
-      "korean": true
+      "korean": true,
+      "speakable": "덥네.  싫네.  잘 아네.  좋네.   빠르네."
     },
     {
       "label": "Naturalness",
@@ -370,7 +373,8 @@
     {
       "label": "Examples",
       "text": "덥<mark>죠</mark>? → It's hot. <mark>right</mark>? <br><br>싫죠? → You don't like it. right? <br><br>믿죠? → You belive it right? <br><br>알죠? → You know it. Right? <br><br>맞죠. → It's correct. Right?",
-      "korean": true
+      "korean": true,
+       "speakable": "덥죠?  싫죠?   믿죠?   알죠?   맞죠?"
     },
     {
       "label": "Situation",
@@ -402,7 +406,8 @@
     {
       "label": "Examples",
       "text": "덥<mark>구나</mark>. → So it's truely hot. <br><br>그렇구나. → So that's it. <br><br>이 사람이 담당자<mark>군요</mark>. → So he is the person in the charge. <br><br>생각보다 멀군요. → So it is further than I thought. ",
-      "korean": true
+      "korean": true,
+       "speakable": "덥구나.  그렇구나.  이 사람이 담당자군요.   생각보다 멀군요."
     },
     {
       "label": "Situation",
@@ -434,7 +439,8 @@
     {
       "label": "Examples",
       "text": "덥<mark>겠네</mark>요. → It <mark>looks</mark> hot. <br><br>힘들겠네요. → It looks hard. <br><br>많이 바쁜가 봐요*. → You look quite busy. <br><br>비가 오겠네요. → It seems it will rain.",
-      "korean": true
+      "korean": true,
+       "speakable": "덥겠네요.  힘들겠네요.   많이 바쁜가 봐요.   비가 오겠네요.  "
     },
     {
       "label": "Situation",
@@ -466,7 +472,8 @@
     {
       "label": "Examples",
       "text": "덥다<mark>니까</mark>. → I'm serious it's hot! <br><br>맞다니까. → I'm no lying! <br><br>괜찮다니까. → I'm surely fine! <br><br>진짜라니까. → It's really true! ",
-      "korean": true
+      "korean": true,
+       "speakable": "덥다니까.  맞다니까.   괜찮다니까.   진짜라니까.  "
     },
     {
       "label": "Situation",
@@ -499,7 +506,8 @@
     {
       "label": "Examples",
       "text": "사람이 <mark>정말</mark> 많네요. → There are so many people. <br><mark>생각보다</mark> 비싸군요. → It is more expensive than I expected. <br><br><mark>벌써</mark> 다 끝났네요. → Oh, it is <mark>already</mark> finished. <br><br>한국어를 정말 잘하시네요. → You speak Korean very well.",
-      "korean": true
+      "korean": true,
+       "speakable": "사람이 정말 많네요.  생각보다 비싸군요.   벌써 다 끝났네요.  한국어를 정말 잘하시네요."
     },
     {
       "label": "Situation",
@@ -531,7 +539,8 @@
     {
       "label": "Examples",
       "text": "여기가 부산역 맞죠? → This is Busan Station, right? <br><br>내일까지 하면 되는 거죠? → I only need to finish it by tomorrow, right? <br><br>카드로 계산할 수 있<mark>나요</mark>? → Can I pay by card? <br><br>이 버스가 시청에 가는 거죠? → This bus goes to City Hall, right?",
-      "korean": true
+      "korean": true,
+       "speakable": "여기가 부산역 맞죠?   내일까지 하면 되는 거죠?  카드로 계산할 수 있나요?  이 버스가 시청에 가는 거죠? "
     },
     {
       "label": "Situation",
@@ -563,7 +572,8 @@
     {
       "label": "Examples",
       "text": "오늘 쉬는 날이<mark>잖아요</mark>. → You know today is a day off. <br><br>제가 아까 말씀드렸잖아요. → I told you earlier, remember? <br><br>여기는 주차하면 안 되잖아요. → You know we cannot park here. <br>그 사람 바쁜 거 알잖아요. → You know that person is busy.",
-      "korean": true
+      "korean": true,
+       "speakable": "오늘 쉬는 날이잖아요.  제가 아까 말씀드렸잖아요.  여기는 주차하면 안되잖아요. 그 사람 바쁜 거 알잖아요. "
     },
     {
       "label": "Situation",
@@ -595,7 +605,8 @@
     {
       "label": "Examples",
       "text": "맛있<mark>기는 한데</mark> 너무 비싸요. → It is tasty, but it is too expensive. <br><br>좋기는 해요. 그런데 좀 멀어요. → It is good, but it is a little far away. <br><br>맞기는 한데 설명이 부족해요. → That is true, but the explanation is incomplete. <br><br>갈 수는 있는데 늦을 것 같아요. → I can go, but I think I will be late.",
-      "korean": true
+      "korean": true,
+       "speakable": "맛있기는 한데 너무 비싸요.  좋기는 해요. 그런데 좀 멀어요.  맞기는 한데 설명이 부족해요.  갈수는 있는데 늦을 것 같아요."
     },
     {
       "label": "Situation",
@@ -627,7 +638,8 @@
     {
       "label": "Examples",
       "text": "오늘은 좀 어려울 것 같아요. → I do not think today will work. <br><br>그건 <mark>조금 곤란</mark>한데요. → That may be a little difficult. <br><br>지금 바로 결정하기는 좀 그래요<. → I am not comfortable deciding right now. <br><br>이번에는 참석하기 어려울 것 같습니다. → I do not think I can attend this time.",
-      "korean": true
+      "korean": true,
+       "speakable": "오늘은 좀 어려울 것 같아요.  그건 조금 곤란한데요.  지금 바로 결정하기는 좀 그래요.   이번에는 참석하기 어려울 것 같습니다."
     },
     {"label": "Pattern",
      "text": "Speaker is not confident and it follows with negative signs ★'는'(but, though) '조금(좀)'(little) '약간'(few) '살짝'(a bit) '별로'(not) '그다지'(not so much) )"
@@ -662,7 +674,8 @@
     {
       "label": "Examples",
       "text": "많이 힘드시<mark>겠어요</mark>. → That must be very difficult for you. <br><br>비가 많이 오는데 괜찮겠어요? → It is raining heavily. Will you be all right? <br><br>얼굴이 안 좋아 보여요. → You do not look well. <br><br>이렇게 늦어서 어떡해요? → What are we going to do now that it is so late?",
-      "korean": true
+      "korean": true,
+       "speakable": "많이 힘드시겠어요.  비가 많이 오는데 괜찮겠어요?   얼굴이 안좋아 보여요.  이렇게 늦어서 어떡해요?"
     },
     {
       "label": "Situation",
@@ -694,7 +707,8 @@
     {
       "label": "Examples",
       "text": "제가 다시 전화<mark>할게</mark>요. → I will call you again. <br><br>여기서 내릴게요. → I will get out here. <br><br>제가 확인해 보겠습니다. → I will check it. <br><br>이번 주말에는 집에서 쉬려고 해요. → I am planning to rest at home this weekend.",
-      "korean": true
+      "korean": true,
+       "speakable": "제가 다시 전화할게요.  여기서 내릴게요.  제가 확인해 보겠습니다.  이번 주말에는 집에서 쉬려고 해요."
     },
     {
       "label": "Situation",
@@ -726,7 +740,8 @@
     {
       "label": "Examples",
       "text": "오늘은 늦게 끝<mark>날 것 같아요</mark>. → I think we will finish late today. <br><br><mark>아마</mark> 주말에는 사람이 많겠어요. → There will probably be many people on the weekend. <br><br>이 길이 더 빠를 것 같아요. → I think this road will be faster. <br><br>아마 내일 도착할 거예요. → It will probably arrive tomorrow.",
-      "korean": true
+      "korean": true,
+       "speakable": "오늘은 늦게 끝날 것 같아요.  주말에는 사람이 많겠어요.  이 길이 더 빠를 것 같아요.  아마 내일 도착할 거예요."
     },
     {
       "label": "Situation",
@@ -758,7 +773,8 @@
     {
       "label": "Examples",
       "text": "택시를 <mark>탈 걸</mark> 그랬어요. → I <mark>should have taken</mark> a taxi. <br><br>미리 예약<mark>할 걸</mark> 그랬네요. → I should have made a reservation earlier. <br><br>그 말을 하지 말걸 그랬어요. → I wish I had not said that. <br><br>괜히 늦게 출발했어요. → I should not have left so late.",
-      "korean": true
+      "korean": true,
+       "speakable": "택시를 탈 걸 그랬어요.  미리 예약할 걸 그랬네요.  그 말을 하지 말걸 그랬어요.  괜히 늦게 출발했어요."
     },
     {
       "label": "Situation",
@@ -790,7 +806,8 @@
     {
       "label": "Examples",
       "text": "괜찮아요. 천천히 하세요. → It is all right. Take your time. <br><br>걱정하지 마세요. 제가 할게요. → Do not worry. I will do it. <br><br>시간 충분하다니까요. → I am telling you, we have enough time. <br><br>이 정도면 괜찮을 거예요. → This should be fine.",
-      "korean": true
+      "korean": true,
+       "speakable": "괜찮아요. 천천히 하세요.  걱정하지 마세요. 제가 할게요.  시간 충분하다니까요.  이 정도면 괜찮을 거예요."
     },
     {
       "label": "Situation",
