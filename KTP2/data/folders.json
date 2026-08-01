@@ -23,12 +23,16 @@
     ]
   },
   {
-    "id": "third",
-    "title": "Third Content",
-    "icon": "…",
-    "description": "Reserved for a future content type without forcing the structure too early.",
-    "sections": [
-      "In development"
-    ]
-  }
+  "id": "attitudes",
+  "title": "Attitudes",
+  "icon": "💭",
+  "description": "Practice Korean expressions by the speaker's attitude rather than by word roots.",
+  "sections": [
+    "Notice",
+    "Shared Knowledge",
+    "Realization",
+    "Guess",
+    "Insistence"
+  ]
+}
 ]
