@@ -1,0 +1,34 @@
+[
+  {
+    "id": "everyday",
+    "title": "Everyday Sentences",
+    "icon": "▱",
+    "description": "Browse practical dialogues by place, topic, and situation.",
+    "sections": [
+      "Dialogue",
+      "Focus",
+      "Summary"
+    ]
+  },
+  {
+    "id": "vocabulary",
+    "title": "Vocabulary and Contexts",
+    "icon": "Aa",
+    "description": "Compare words, explore similar expressions, common senses, and idioms.",
+    "sections": [
+      "Contrast",
+      "Similar",
+      "Common Senses",
+      "Idioms"
+    ]
+  },
+  {
+    "id": "third",
+    "title": "Third Content",
+    "icon": "…",
+    "description": "Reserved for a future content type without forcing the structure too early.",
+    "sections": [
+      "In development"
+    ]
+  }
+]

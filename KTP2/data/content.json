@@ -1,0 +1,233 @@
+[
+  {
+    "id": "work-repeat",
+    "folder": "everyday",
+    "type": "dialogue",
+    "badge": "01",
+    "title": "At work: asking someone to repeat",
+    "subtitle": "Workplace · clarification · polite request",
+    "tags": [
+      "work",
+      "repeat",
+      "말씀",
+      "다시"
+    ],
+    "blocks": [
+      {
+        "label": "Dialogue",
+        "text": "A: 이건 오늘까지 끝내 주세요.<br>B: 죄송하지만, 다시 한번 말씀해 주세요.",
+        "korean": true
+      },
+      {
+        "label": "Focus",
+        "text": "‘다시 한번’ softens the request and frames it as one more attempt. ‘말씀’ raises the other person's speech politely."
+      },
+      {
+        "label": "Summary",
+        "text": "Useful when instructions were unclear. You can reuse the same form in offices, hospitals, and public services."
+      }
+    ]
+  },
+  {
+    "id": "restaurant-order",
+    "folder": "everyday",
+    "type": "dialogue",
+    "badge": "02",
+    "title": "At a restaurant: checking an order",
+    "subtitle": "Restaurant · ordering · confirmation",
+    "tags": [
+      "restaurant",
+      "order",
+      "맞아요",
+      "이거"
+    ],
+    "blocks": [
+      {
+        "label": "Dialogue",
+        "text": "A: 이거 매운 거 맞아요?<br>B: 네, 조금 매워요.",
+        "korean": true
+      },
+      {
+        "label": "Focus",
+        "text": "‘맞아요?’ asks whether the listener confirms an assumption already in the speaker's mind."
+      },
+      {
+        "label": "Summary",
+        "text": "Useful for confirming food, locations, names, schedules, and prices."
+      }
+    ]
+  },
+  {
+    "id": "weather-ending",
+    "folder": "vocabulary",
+    "type": "contrast",
+    "badge": "C",
+    "title": "덥네요 / 덥구나 / 덥다니까",
+    "subtitle": "Same weather, different speaker attitude",
+    "tags": [
+      "덥다",
+      "weather",
+      "ending",
+      "attitude"
+    ],
+    "blocks": [
+      {
+        "label": "Notice",
+        "text": "덥네요.",
+        "korean": true
+      },
+      {
+        "label": "Realize",
+        "text": "덥구나!",
+        "korean": true
+      },
+      {
+        "label": "Insist",
+        "text": "덥다니까!",
+        "korean": true
+      },
+      {
+        "label": "Hidden thought",
+        "text": "The event is the same. What changes is the speaker's stance toward it."
+      }
+    ]
+  },
+  {
+    "id": "good-bad",
+    "folder": "vocabulary",
+    "type": "contrast",
+    "badge": "C",
+    "title": "좋다 / 나쁘다",
+    "subtitle": "Basic evaluative contrast",
+    "tags": [
+      "좋다",
+      "나쁘다",
+      "opposite",
+      "evaluation"
+    ],
+    "blocks": [
+      {
+        "label": "Positive",
+        "text": "좋아요.",
+        "korean": true
+      },
+      {
+        "label": "Negative",
+        "text": "나빠요.",
+        "korean": true
+      },
+      {
+        "label": "Context",
+        "text": "These words evaluate things, conditions, decisions, health, weather, and many other topics."
+      }
+    ]
+  },
+  {
+    "id": "pretty-beautiful",
+    "folder": "vocabulary",
+    "type": "similar",
+    "badge": "S",
+    "title": "예쁘다 / 아름답다",
+    "subtitle": "Similar meaning, different scope and tone",
+    "tags": [
+      "예쁘다",
+      "아름답다",
+      "similar",
+      "beauty"
+    ],
+    "blocks": [
+      {
+        "label": "예쁘다",
+        "text": "예뻐요.",
+        "korean": true
+      },
+      {
+        "label": "아름답다",
+        "text": "아름다워요.",
+        "korean": true
+      },
+      {
+        "label": "Difference",
+        "text": "예쁘다 is common and everyday. 아름답다 is broader and often more elevated or literary."
+      }
+    ]
+  },
+  {
+    "id": "rain-umbrella",
+    "folder": "vocabulary",
+    "type": "common sense",
+    "badge": "CS",
+    "title": "비가 오다 → 우산을 가져가다",
+    "subtitle": "A natural situation-to-action connection",
+    "tags": [
+      "비",
+      "우산",
+      "rain",
+      "umbrella",
+      "common sense"
+    ],
+    "blocks": [
+      {
+        "label": "Situation",
+        "text": "비가 와요.",
+        "korean": true
+      },
+      {
+        "label": "Likely action",
+        "text": "우산을 가져가요.",
+        "korean": true
+      },
+      {
+        "label": "Why it matters",
+        "text": "This section connects words through ordinary expectations rather than dictionary definitions alone."
+      }
+    ]
+  },
+  {
+    "id": "big-hand",
+    "folder": "vocabulary",
+    "type": "idiom",
+    "badge": "I",
+    "title": "손이 크다",
+    "subtitle": "To prepare or give more than expected",
+    "tags": [
+      "손이 크다",
+      "idiom",
+      "food",
+      "generous"
+    ],
+    "blocks": [
+      {
+        "label": "Expression",
+        "text": "우리 어머니는 손이 커요.",
+        "korean": true
+      },
+      {
+        "label": "Meaning",
+        "text": "She tends to prepare a lot, especially food. It does not literally describe hand size."
+      },
+      {
+        "label": "Scene",
+        "text": "A meal for three people becomes enough food for ten."
+      }
+    ]
+  },
+  {
+    "id": "future-placeholder",
+    "folder": "third",
+    "type": "placeholder",
+    "badge": "…",
+    "title": "Third Content",
+    "subtitle": "Structure intentionally left open",
+    "tags": [
+      "future",
+      "third content"
+    ],
+    "blocks": [
+      {
+        "label": "Status",
+        "text": "This space is reserved. V2 does not force a premature category before the learning idea is clear."
+      }
+    ]
+  }
+]
