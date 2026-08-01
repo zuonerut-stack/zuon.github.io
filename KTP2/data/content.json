@@ -369,7 +369,7 @@
     },
     {
       "label": "Examples",
-      "text": "덥죠? → It's hot. right? <br>싫죠? → You don't like it. right? <br>믿죠? → You belive it right? <br>알죠? → You know it. Right? <br>맞죠. → It's correct. Right?",
+      "text": "덥<mark>죠</mark>? → It's hot. <mark>right</mark>? <br>싫죠? → You don't like it. right? <br>믿죠? → You belive it right? <br>알죠? → You know it. Right? <br>맞죠. → It's correct. Right?",
       "korean": true
     },
     {
@@ -401,7 +401,7 @@
     },
     {
       "label": "Examples",
-      "text": "덥구나. → So it's truely hot. <br>그렇구나. → So that's it. <br>이 사람이 담당자군요. → So he is the person in the charge. <br>생각보다 멀군요. → So it is further than I thought. ",
+      "text": "덥<mark>구나</mark>. → So it's truely hot. <br>그렇구나. → So that's it. <br>이 사람이 담당자<mark>군요</mark>. → So he is the person in the charge. <br>생각보다 멀군요. → So it is further than I thought. ",
       "korean": true
     },
     {
@@ -433,7 +433,7 @@
     },
     {
       "label": "Examples",
-      "text": "덥겠네요. → It looks hot. <br>힘들겠네요. → It looks hard. <br>많이 바쁜가 봐요*. → You look quite busy. <br>비가 오겠네요. → It seems it will rain.",
+      "text": "덥<mark>겠네</mark>요. → It <mark>looks</mark> hot. <br>힘들겠네요. → It looks hard. <br>많이 바쁜가 봐요*. → You look quite busy. <br>비가 오겠네요. → It seems it will rain.",
       "korean": true
     },
     {
@@ -465,7 +465,7 @@
     },
     {
       "label": "Examples",
-      "text": "덥다니까. → I'm serious it's hot! <br>맞다니까. → I'm no lying! <br>괜찮다니까. → I'm surely fine! <br>진짜라니까. → It's really true! ",
+      "text": "덥다<mark>니까</mark>. → I'm serious it's hot! <br>맞다니까. → I'm no lying! <br>괜찮다니까. → I'm surely fine! <br>진짜라니까. → It's really true! ",
       "korean": true
     },
     {
@@ -498,7 +498,7 @@
     },
     {
       "label": "Examples",
-      "text": "사람이 정말 많네요. → There are so many people. <br>생각보다 비싸군요. → It is more expensive than I expected. <br>벌써 다 끝났네요. → Oh, it is already finished. <br>한국어를 정말 잘하시네요. → You speak Korean very well.",
+      "text": "사람이 <mark>정말</mark> 많네요. → There are so many people. <br><mark>생각보다</mark> 비싸군요. → It is more expensive than I expected. <br><mark>벌써</mark> 다 끝났네요. → Oh, it is <mark>already</mark> finished. <br>한국어를 정말 잘하시네요. → You speak Korean very well.",
       "korean": true
     },
     {
@@ -530,7 +530,7 @@
     },
     {
       "label": "Examples",
-      "text": "여기가 부산역 맞죠? → This is Busan Station, right? <br>내일까지 하면 되는 거죠? → I only need to finish it by tomorrow, right? <br>카드로 계산할 수 있나요? → Can I pay by card? <br>이 버스가 시청에 가는 거죠? → This bus goes to City Hall, right?",
+      "text": "여기가 부산역 맞죠? → This is Busan Station, right? <br>내일까지 하면 되는 거죠? → I only need to finish it by tomorrow, right? <br>카드로 계산할 수 있<mark>나요</mark>? → Can I pay by card? <br>이 버스가 시청에 가는 거죠? → This bus goes to City Hall, right?",
       "korean": true
     },
     {
@@ -562,7 +562,7 @@
     },
     {
       "label": "Examples",
-      "text": "오늘 쉬는 날이잖아요. → You know today is a day off. <br>제가 아까 말씀드렸잖아요. → I told you earlier, remember? <br>여기는 주차하면 안 되잖아요. → You know we cannot park here. <br>그 사람 바쁜 거 알잖아요. → You know that person is busy.",
+      "text": "오늘 쉬는 날이<mark>잖아요</mark>. → You know today is a day off. <br>제가 아까 말씀드렸잖아요. → I told you earlier, remember? <br>여기는 주차하면 안 되잖아요. → You know we cannot park here. <br>그 사람 바쁜 거 알잖아요. → You know that person is busy.",
       "korean": true
     },
     {
@@ -594,7 +594,7 @@
     },
     {
       "label": "Examples",
-      "text": "맛있기는 한데 너무 비싸요. → It is tasty, but it is too expensive. <br>좋기는 해요. 그런데 좀 멀어요. → It is good, but it is a little far away. <br>맞기는 한데 설명이 부족해요. → That is true, but the explanation is incomplete. <br>갈 수는 있는데 늦을 것 같아요. → I can go, but I think I will be late.",
+      "text": "맛있<mark>기는 한데</mark> 너무 비싸요. → It is tasty, but it is too expensive. <br>좋기는 해요. 그런데 좀 멀어요. → It is good, but it is a little far away. <br>맞기는 한데 설명이 부족해요. → That is true, but the explanation is incomplete. <br>갈 수는 있는데 늦을 것 같아요. → I can go, but I think I will be late.",
       "korean": true
     },
     {
@@ -626,9 +626,11 @@
     },
     {
       "label": "Examples",
-      "text": "오늘은 좀 어려울 것 같아요. → I do not think today will work. <br>그건 조금 곤란한데요. → That may be a little difficult. <br>지금 바로 결정하기는 좀 그래요. → I am not comfortable deciding right now. <br>이번에는 참석하기 어려울 것 같습니다. → I do not think I can attend this time.",
+      "text": "오늘은 좀 어려울 것 같아요. → I do not think today will work. <br>그건 <mark>조금 곤란</mark>한데요. → That may be a little difficult. <br>지금 바로 결정하기는 좀 그래요<. → I am not comfortable deciding right now. <br>이번에는 참석하기 어려울 것 같습니다. → I do not think I can attend this time.",
       "korean": true
     },
+    {"label": "Pattern",
+     "text": "Speaker is not confident it follows with certain signs ★'는'(but, though) '조금(좀)'(little) '약간'(few) '살짝'(a bit) '별로'(not) '그다지'(not so much) )"
     {
       "label": "Situation",
       "text": "The speaker softens a refusal or negative judgment instead of stating it bluntly. Words such as 좀 and expressions such as 것 같아요 leave room for the listener to infer the refusal."
@@ -658,7 +660,7 @@
     },
     {
       "label": "Examples",
-      "text": "많이 힘드시겠어요. → That must be very difficult for you. <br>비가 많이 오는데 괜찮겠어요? → It is raining heavily. Will you be all right? <br>얼굴이 안 좋아 보여요. → You do not look well. <br>이렇게 늦어서 어떡해요? → What are we going to do now that it is so late?",
+      "text": "많이 힘드시<mark>겠어요</mark>. → That must be very difficult for you. <br>비가 많이 오는데 괜찮겠어요? → It is raining heavily. Will you be all right? <br>얼굴이 안 좋아 보여요. → You do not look well. <br>이렇게 늦어서 어떡해요? → What are we going to do now that it is so late?",
       "korean": true
     },
     {
@@ -690,7 +692,7 @@
     },
     {
       "label": "Examples",
-      "text": "제가 다시 전화할게요. → I will call you again. <br>여기서 내릴게요. → I will get out here. <br>제가 확인해 보겠습니다. → I will check it. <br>이번 주말에는 집에서 쉬려고 해요. → I am planning to rest at home this weekend.",
+      "text": "제가 다시 전화<mark>할게요. → I will call you again. <br>여기서 내릴게요. → I will get out here. <br>제가 확인해 보겠습니다. → I will check it. <br>이번 주말에는 집에서 쉬려고 해요. → I am planning to rest at home this weekend.",
       "korean": true
     },
     {
@@ -722,7 +724,7 @@
     },
     {
       "label": "Examples",
-      "text": "오늘은 늦게 끝날 것 같아요. → I think we will finish late today. <br>주말에는 사람이 많겠어요. → There will probably be many people on the weekend. <br>이 길이 더 빠를 것 같아요. → I think this road will be faster. <br>아마 내일 도착할 거예요. → It will probably arrive tomorrow.",
+      "text": "오늘은 늦게 끝<mark>날 것 같아요</mark>. → I think we will finish late today. <br><mark>아마</mark> 주말에는 사람이 많겠어요. → There will probably be many people on the weekend. <br>이 길이 더 빠를 것 같아요. → I think this road will be faster. <br>아마 내일 도착할 거예요. → It will probably arrive tomorrow.",
       "korean": true
     },
     {
@@ -754,7 +756,7 @@
     },
     {
       "label": "Examples",
-      "text": "택시를 탈 걸 그랬어요. → I should have taken a taxi. <br>미리 예약할 걸 그랬네요. → I should have made a reservation earlier. <br>그 말을 하지 말걸 그랬어요. → I wish I had not said that. <br>괜히 늦게 출발했어요. → I should not have left so late.",
+      "text": "택시를 <mark>탈 걸</mark> 그랬어요. → I <mark>should have taken</mark> a taxi. <br>미리 예약<mark>할 걸</mark> 그랬네요. → I should have made a reservation earlier. <br>그 말을 하지 말걸 그랬어요. → I wish I had not said that. <br>괜히 늦게 출발했어요. → I should not have left so late.",
       "korean": true
     },
     {
