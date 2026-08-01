@@ -17,10 +17,12 @@
 * { box-sizing: border-box; }
 html { background: var(--bg); }
 mark {
-  background: #ead7a1;
-  color: inherit;
-  padding: 0.08em 0.18em;
-  border-radius: 0.2em;
+  background: #dfc58f;
+  color: #3b2d23;
+  padding: 0.06em 0.2em;
+  border-radius: 0.25em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
 }
 body {
   margin: 0;
