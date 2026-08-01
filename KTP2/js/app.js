@@ -115,13 +115,29 @@ $("#dialogClose").addEventListener("click", () => $("#contentDialog").close());
 
 $("#playAudio").addEventListener("click", () => {
   if (!state.activeItem) return;
-  const korean = state.activeItem.blocks.find(b => b.korean)?.text || state.activeItem.title;
-  if (!("speechSynthesis" in window)) return;
+
+  const spokenText = state.activeItem.blocks
+    .map(block => block.speakable || "")
+    .filter(text => text.trim() !== "")
+    .join(" ");
+
+  if (!spokenText) {
+    console.info("No speakable text is defined for this item.");
+    return;
+  }
+
+  if (!("speechSynthesis" in window)) {
+    console.warn("Speech synthesis is not supported in this browser.");
+    return;
+  }
+
   speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(korean.replace(/<[^>]+>/g, " "));
-  u.lang = "ko-KR";
-  u.rate = 0.85;
-  speechSynthesis.speak(u);
+
+  const utterance = new SpeechSynthesisUtterance(spokenText);
+  utterance.lang = "ko-KR";
+  utterance.rate = 0.85;
+
+  speechSynthesis.speak(utterance);
 });
 
 $("#saveItem").addEventListener("click", () => {
