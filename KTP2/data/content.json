@@ -106,13 +106,15 @@
     "blocks": [
       {
         "label": "Positive",
-        "text": "좋아요.",
-        "korean": true
+        "text": "좋아요.<br><br> 좋은 생각 nice idea <br><br> 좋은 느낌 good feeling <br><br> nice person <br><br> 좋은 시점 exact timing <br><br> loving heart",
+        "korean": true,
+        "speakable": "좋아요. 좋은 생각. 좋은 느낌. 좋은 사람. 좋은 시점. 좋은 마음."
       },
       {
         "label": "Negative",
-        "text": "나빠요.",
-        "korean": true
+        "text": "나빠요. <br><br> 나쁜 기분 bad feeling <br><br> 나쁜 의도 ill intention <br><br>  나쁜 상태 bad condition <br><br> 나쁜 선택 wrong choice <br><br> 나쁜 말 harful words",
+        "korean": true,
+        "speakable": "나빠요. 나쁜 기분. 나쁜 사람. 나쁜 의도. 나쁜 상태. 나쁜 선택. 나쁜 말."
       },
       {
         "label": "Context",
@@ -136,12 +138,13 @@
     "blocks": [
       {
         "label": "예쁘다",
-        "text": "예뻐요.",
-        "korean": true
+        "text": "예뻐요. It looks pretty. ",
+        "korean": true,
+        "speakable": "예뻐요. 아름다워요."
       },
       {
         "label": "아름답다",
-        "text": "아름다워요.",
+        "text": "아름다워요. That's beauty",
         "korean": true
       },
       {
@@ -167,12 +170,13 @@
     "blocks": [
       {
         "label": "Situation",
-        "text": "비가 와요.",
-        "korean": true
+        "text": "비가 와요. It's raining.",
+        "korean": true,
+        "speakable": "비가 와요. 우산을 가져가요."
       },
       {
         "label": "Likely action",
-        "text": "우산을 가져가요.",
+        "text": "(그러니) 우산을 가져가요. So you'll take the umbrella",
         "korean": true
       },
       {
@@ -198,7 +202,8 @@
       {
         "label": "Expression",
         "text": "우리 어머니는 손이 커요.",
-        "korean": true
+        "korean": true,
+        "speakable": "우리 어머니는 손이 커요."
       },
       {
         "label": "Meaning",
