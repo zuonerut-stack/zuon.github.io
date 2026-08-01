@@ -1,5 +1,41 @@
 [
   {
+  "id": "taxi-basic",
+  "folder": "everyday",
+  "type": "dialogue",
+  "badge": "03",
+
+  "title": "In a taxi",
+
+  "subtitle": "Transportation · destination · payment",
+
+  "tags": [
+    "taxi",
+    "transport",
+    "기사님",
+    "서울역",
+    "카드"
+  ],
+
+  "blocks": [
+    {
+      "label": "Dialogue",
+      "text": "A: 기사님, 서울역으로 가 주세요.<br>B: 네. 여기에서 출발합니다.",
+      "korean": true
+    },
+
+    {
+      "label": "Focus",
+      "text": "기사님은 택시 기사에게 가장 자연스러운 호칭입니다. '~으로 가 주세요'는 목적지를 말할 때 가장 많이 사용하는 표현입니다."
+    },
+
+    {
+      "label": "Summary",
+      "text": "기사님\n~으로 가 주세요\n여기에서 내려 주세요\n카드 돼요?"
+    }
+  ]
+},
+  {
     "id": "work-repeat",
     "folder": "everyday",
     "type": "dialogue",
