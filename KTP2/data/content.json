@@ -330,12 +330,12 @@
     },
     {
       "label": "Examples",
-      "text": "덥네.<br>싫네.<br>잘 아네.<br>좋네.<br>빠르네.",
+      "text": "덥네. → It's hot. <br>싫네. → I don't like it. <br>잘 아네. → So you konw it.<br>좋네. → It's good.<br>빠르네. → It's fast.",
       "korean": true
     },
     {
       "label": "Naturalness",
-      "text": "Some combinations are grammatically possible but uncommon without a suitable context. For example, 믿네 may sound marked or incomplete in ordinary conversation."
+      "text": "Some combinations are grammatically possible but uncommon without a suitable context. For example, '믿네' may sound marked or incomplete in ordinary conversation."
     },
     {
       "label": "Situation",
@@ -369,7 +369,7 @@
     },
     {
       "label": "Examples",
-      "text": "덥죠.<br>싫죠.<br>믿죠.<br>알죠.<br>맞죠.",
+      "text": "덥죠? → It's hot. right? <br>싫죠? → You don't like it. right? <br>믿죠? → You belive it right? <br>알죠? → You know it. Right? <br>맞죠. → It's correct. Right?",
       "korean": true
     },
     {
@@ -401,7 +401,7 @@
     },
     {
       "label": "Examples",
-      "text": "덥구나.<br>그렇구나.<br>이 사람이 담당자군요.<br>생각보다 멀군요.",
+      "text": "덥구나. → So it's truely hot. <br>그렇구나. → So that's it. <br>이 사람이 담당자군요. → So he is the person in the charge. <br>생각보다 멀군요. → So it is further than I thought. ",
       "korean": true
     },
     {
@@ -433,7 +433,7 @@
     },
     {
       "label": "Examples",
-      "text": "덥겠네요.<br>힘들겠네요.<br>많이 바쁜가 봐요.<br>비가 오겠네요.",
+      "text": "덥겠네요. → It looks hot. <br>힘들겠네요. → It looks hard. <br>많이 바쁜가 봐요*. → You look quite busy. <br>비가 오겠네요. → It seems it will rain.",
       "korean": true
     },
     {
@@ -465,7 +465,7 @@
     },
     {
       "label": "Examples",
-      "text": "덥다니까.<br>맞다니까.<br>괜찮다니까.<br>진짜라니까.",
+      "text": "덥다니까. → I'm serious it's hot! <br>맞다니까. → I'm no lying! <br>괜찮다니까. → I'm surely fine! <br>진짜라니까. → It's really true! ",
       "korean": true
     },
     {
@@ -473,5 +473,327 @@
       "text": "The speaker strengthens a statement because the listener doubts it, disagrees, misunderstands, or has not responded appropriately."
     }
   ]
+},
+
+{
+  "id": "attitude-surprise",
+  "folder": "attitudes",
+  "type": "attitude",
+  "badge": "S",
+  "title": "Surprise",
+  "subtitle": "The speaker reacts to something unexpected or more striking than anticipated.",
+
+  "tags": [
+    "surprise",
+    "네요",
+    "군요",
+    "이렇게",
+    "생각보다"
+  ],
+
+  "blocks": [
+    {
+      "label": "Hidden Thought",
+      "text": "“Oh, I didn't expect that...”"
+    },
+    {
+      "label": "Examples",
+      "text": "사람이 정말 많네요. → There are so many people. <br>생각보다 비싸군요. → It is more expensive than I expected. <br>벌써 다 끝났네요. → Oh, it is already finished. <br>한국어를 정말 잘하시네요. → You speak Korean very well.",
+      "korean": true
+    },
+    {
+      "label": "Situation",
+      "text": "The speaker encounters something unexpected and immediately expresses surprise, admiration, or a mismatch with their previous expectation."
+    }
+  ]
+},
+{
+  "id": "attitude-confirmation",
+  "folder": "attitudes",
+  "type": "attitude",
+  "badge": "C",
+  "title": "Confirmation",
+  "subtitle": "The speaker checks whether their understanding or assumption is correct.",
+
+  "tags": [
+    "confirmation",
+    "맞죠",
+    "거죠",
+    "나요",
+    "확인"
+  ],
+
+  "blocks": [
+    {
+      "label": "Hidden Thought",
+      "text": "“My understanding is correct, right?”"
+    },
+    {
+      "label": "Examples",
+      "text": "여기가 부산역 맞죠? → This is Busan Station, right? <br>내일까지 하면 되는 거죠? → I only need to finish it by tomorrow, right? <br>카드로 계산할 수 있나요? → Can I pay by card? <br>이 버스가 시청에 가는 거죠? → This bus goes to City Hall, right?",
+      "korean": true
+    },
+    {
+      "label": "Situation",
+      "text": "The speaker already has an assumption or partial understanding and asks the listener to confirm it before proceeding."
+    }
+  ]
+},
+{
+  "id": "attitude-reminder",
+  "folder": "attitudes",
+  "type": "attitude",
+  "badge": "R",
+  "title": "Reminder",
+  "subtitle": "The speaker presents information as something the listener should already know or remember.",
+
+  "tags": [
+    "reminder",
+    "잖아요",
+    "알잖아요",
+    "했잖아요",
+    "shared knowledge"
+  ],
+
+  "blocks": [
+    {
+      "label": "Hidden Thought",
+      "text": "“You already know this...”"
+    },
+    {
+      "label": "Examples",
+      "text": "오늘 쉬는 날이잖아요. → You know today is a day off. <br>제가 아까 말씀드렸잖아요. → I told you earlier, remember? <br>여기는 주차하면 안 되잖아요. → You know we cannot park here. <br>그 사람 바쁜 거 알잖아요. → You know that person is busy.",
+      "korean": true
+    },
+    {
+      "label": "Situation",
+      "text": "The speaker reminds the listener of information treated as already shared. Depending on tone, it may sound explanatory, persuasive, frustrated, or mildly reproachful."
+    }
+  ]
+},
+{
+  "id": "attitude-concession",
+  "folder": "attitudes",
+  "type": "attitude",
+  "badge": "CO",
+  "title": "Concession",
+  "subtitle": "The speaker acknowledges one fact before introducing a limitation, contrast, or different conclusion.",
+
+  "tags": [
+    "concession",
+    "기는 하지만",
+    "긴 한데",
+    "맞기는 해요",
+    "하지만"
+  ],
+
+  "blocks": [
+    {
+      "label": "Hidden Thought",
+      "text": "“That is true, but...”"
+    },
+    {
+      "label": "Examples",
+      "text": "맛있기는 한데 너무 비싸요. → It is tasty, but it is too expensive. <br>좋기는 해요. 그런데 좀 멀어요. → It is good, but it is a little far away. <br>맞기는 한데 설명이 부족해요. → That is true, but the explanation is incomplete. <br>갈 수는 있는데 늦을 것 같아요. → I can go, but I think I will be late.",
+      "korean": true
+    },
+    {
+      "label": "Situation",
+      "text": "The speaker accepts part of another person's statement or recognizes a positive point, while signaling that another concern changes the overall judgment."
+    }
+  ]
+},
+{
+  "id": "attitude-reluctance",
+  "folder": "attitudes",
+  "type": "attitude",
+  "badge": "RL",
+  "title": "Reluctance",
+  "subtitle": "The speaker hesitates, avoids a direct refusal, or signals that something is difficult to accept.",
+
+  "tags": [
+    "reluctance",
+    "좀",
+    "어려울 것 같아요",
+    "곤란해요",
+    "hesitation"
+  ],
+
+  "blocks": [
+    {
+      "label": "Hidden Thought",
+      "text": "“I would rather not say no directly, but...”"
+    },
+    {
+      "label": "Examples",
+      "text": "오늘은 좀 어려울 것 같아요. → I do not think today will work. <br>그건 조금 곤란한데요. → That may be a little difficult. <br>지금 바로 결정하기는 좀 그래요. → I am not comfortable deciding right now. <br>이번에는 참석하기 어려울 것 같습니다. → I do not think I can attend this time.",
+      "korean": true
+    },
+    {
+      "label": "Situation",
+      "text": "The speaker softens a refusal or negative judgment instead of stating it bluntly. Words such as 좀 and expressions such as 것 같아요 leave room for the listener to infer the refusal."
+    }
+  ]
+},
+{
+  "id": "attitude-concern",
+  "folder": "attitudes",
+  "type": "attitude",
+  "badge": "W",
+  "title": "Concern",
+  "subtitle": "The speaker notices a possible problem and expresses worry or consideration for another person.",
+
+  "tags": [
+    "concern",
+    "괜찮아요",
+    "힘들겠어요",
+    "걱정",
+    "어떡해요"
+  ],
+
+  "blocks": [
+    {
+      "label": "Hidden Thought",
+      "text": "“I am worried about this...”"
+    },
+    {
+      "label": "Examples",
+      "text": "많이 힘드시겠어요. → That must be very difficult for you. <br>비가 많이 오는데 괜찮겠어요? → It is raining heavily. Will you be all right? <br>얼굴이 안 좋아 보여요. → You do not look well. <br>이렇게 늦어서 어떡해요? → What are we going to do now that it is so late?",
+      "korean": true
+    },
+    {
+      "label": "Situation",
+      "text": "The speaker infers that another person may be experiencing difficulty or that a situation may develop badly, and responds with sympathy, worry, or caution."
+    }
+  ]
+},
+{
+  "id": "attitude-intention",
+  "folder": "attitudes",
+  "type": "attitude",
+  "badge": "IN",
+  "title": "Intention",
+  "subtitle": "The speaker presents a decision, plan, or immediate course of action.",
+
+  "tags": [
+    "intention",
+    "할게요",
+    "하겠습니다",
+    "하려고 해요",
+    "plan"
+  ],
+
+  "blocks": [
+    {
+      "label": "Hidden Thought",
+      "text": "“This is what I have decided to do...”"
+    },
+    {
+      "label": "Examples",
+      "text": "제가 다시 전화할게요. → I will call you again. <br>여기서 내릴게요. → I will get out here. <br>제가 확인해 보겠습니다. → I will check it. <br>이번 주말에는 집에서 쉬려고 해요. → I am planning to rest at home this weekend.",
+      "korean": true
+    },
+    {
+      "label": "Situation",
+      "text": "The speaker communicates a decision or plan. 할게요 often responds to the immediate situation, while 하겠습니다 can sound more formal or deliberate."
+    }
+  ]
+},
+{
+  "id": "attitude-expectation",
+  "folder": "attitudes",
+  "type": "attitude",
+  "badge": "E",
+  "title": "Expectation",
+  "subtitle": "The speaker anticipates a likely event or outcome based on current knowledge.",
+
+  "tags": [
+    "expectation",
+    "것 같아요",
+    "겠어요",
+    "아마",
+    "likely"
+  ],
+
+  "blocks": [
+    {
+      "label": "Hidden Thought",
+      "text": "“This will probably happen...”"
+    },
+    {
+      "label": "Examples",
+      "text": "오늘은 늦게 끝날 것 같아요. → I think we will finish late today. <br>주말에는 사람이 많겠어요. → There will probably be many people on the weekend. <br>이 길이 더 빠를 것 같아요. → I think this road will be faster. <br>아마 내일 도착할 거예요. → It will probably arrive tomorrow.",
+      "korean": true
+    },
+    {
+      "label": "Situation",
+      "text": "The speaker predicts a future event or outcome. Unlike direct observation, the statement is presented as an expectation rather than a confirmed fact."
+    }
+  ]
+},
+{
+  "id": "attitude-regret",
+  "folder": "attitudes",
+  "type": "attitude",
+  "badge": "RG",
+  "title": "Regret",
+  "subtitle": "The speaker looks back on an action or missed opportunity with dissatisfaction.",
+
+  "tags": [
+    "regret",
+    "걸 그랬어요",
+    "하지 말걸",
+    "괜히",
+    "아쉽다"
+  ],
+
+  "blocks": [
+    {
+      "label": "Hidden Thought",
+      "text": "“I should have done something differently...”"
+    },
+    {
+      "label": "Examples",
+      "text": "택시를 탈 걸 그랬어요. → I should have taken a taxi. <br>미리 예약할 걸 그랬네요. → I should have made a reservation earlier. <br>그 말을 하지 말걸 그랬어요. → I wish I had not said that. <br>괜히 늦게 출발했어요. → I should not have left so late.",
+      "korean": true
+    },
+    {
+      "label": "Situation",
+      "text": "The speaker evaluates a past choice negatively and imagines a better alternative that was not taken."
+    }
+  ]
+},
+{
+  "id": "attitude-reassurance",
+  "folder": "attitudes",
+  "type": "attitude",
+  "badge": "RA",
+  "title": "Reassurance",
+  "subtitle": "The speaker tries to reduce another person's worry or resistance.",
+
+  "tags": [
+    "reassurance",
+    "괜찮아요",
+    "걱정하지 마세요",
+    "된다니까",
+    "assurance"
+  ],
+
+  "blocks": [
+    {
+      "label": "Hidden Thought",
+      "text": "“You do not need to worry...”"
+    },
+    {
+      "label": "Examples",
+      "text": "괜찮아요. 천천히 하세요. → It is all right. Take your time. <br>걱정하지 마세요. 제가 할게요. → Do not worry. I will do it. <br>시간 충분하다니까요. → I am telling you, we have enough time. <br>이 정도면 괜찮을 거예요. → This should be fine.",
+      "korean": true
+    },
+    {
+      "label": "Situation",
+      "text": "The speaker responds to another person's concern by presenting the situation as manageable, safe, or less serious than feared."
+    }
+  ]
 }
+  
 ]
