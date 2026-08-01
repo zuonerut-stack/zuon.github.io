@@ -307,21 +307,171 @@
     ]
   },
   {
-    "id": "future-placeholder",
-    "folder": "third",
-    "type": "placeholder",
-    "badge": "…",
-    "title": "Third Content",
-    "subtitle": "Structure intentionally left open",
-    "tags": [
-      "future",
-      "third content"
-    ],
-    "blocks": [
-      {
-        "label": "Status",
-        "text": "This space is reserved. V2 does not force a premature category before the learning idea is clear."
-      }
-    ]
-  }
+  "id": "attitude-notice",
+  "folder": "attitudes",
+  "type": "attitude",
+  "badge": "N",
+  "title": "Notice",
+  "subtitle": "The speaker notices or recognizes something in the moment.",
+
+  "tags": [
+    "notice",
+    "네",
+    "네요",
+    "덥네",
+    "싫네",
+    "잘 아네"
+  ],
+
+  "blocks": [
+    {
+      "label": "Hidden Thought",
+      "text": "“Oh, I notice that...”"
+    },
+    {
+      "label": "Examples",
+      "text": "덥네.<br>싫네.<br>잘 아네.<br>좋네.<br>빠르네.",
+      "korean": true
+    },
+    {
+      "label": "Naturalness",
+      "text": "Some combinations are grammatically possible but uncommon without a suitable context. For example, 믿네 may sound marked or incomplete in ordinary conversation."
+    },
+    {
+      "label": "Situation",
+      "text": "The speaker encounters new information, notices a quality, or reacts to something happening in front of them."
+    }
+  ]
+},
+{
+  "id": "attitude-shared-knowledge",
+  "folder": "attitudes",
+  "type": "attitude",
+  "badge": "SK",
+  "title": "Shared Knowledge",
+  "subtitle": "The speaker treats the information as something both people know or can agree on.",
+
+  "tags": [
+    "shared knowledge",
+    "agreement",
+    "죠",
+    "지요",
+    "덥죠",
+    "싫죠",
+    "믿죠",
+    "알죠"
+  ],
+
+  "blocks": [
+    {
+      "label": "Hidden Thought",
+      "text": "“You know that too, right?”"
+    },
+    {
+      "label": "Examples",
+      "text": "덥죠.<br>싫죠.<br>믿죠.<br>알죠.<br>맞죠.",
+      "korean": true
+    },
+    {
+      "label": "Situation",
+      "text": "The speaker presents the statement as mutually accessible information and often expects agreement or confirmation from the listener."
+    }
+  ]
+},
+{
+  "id": "attitude-realization",
+  "folder": "attitudes",
+  "type": "attitude",
+  "badge": "R",
+  "title": "Realization",
+  "subtitle": "The speaker reaches a new understanding.",
+
+  "tags": [
+    "realization",
+    "구나",
+    "군요",
+    "덥구나",
+    "그렇구나"
+  ],
+
+  "blocks": [
+    {
+      "label": "Hidden Thought",
+      "text": "“Ah, now I understand...”"
+    },
+    {
+      "label": "Examples",
+      "text": "덥구나.<br>그렇구나.<br>이 사람이 담당자군요.<br>생각보다 멀군요.",
+      "korean": true
+    },
+    {
+      "label": "Situation",
+      "text": "The speaker processes new information and expresses the moment of understanding or realization."
+    }
+  ]
+},
+{
+  "id": "attitude-guess",
+  "folder": "attitudes",
+  "type": "attitude",
+  "badge": "G",
+  "title": "Guess",
+  "subtitle": "The speaker infers something from available signs or circumstances.",
+
+  "tags": [
+    "guess",
+    "겠네요",
+    "나 봐요",
+    "덥겠네요",
+    "힘들겠네요"
+  ],
+
+  "blocks": [
+    {
+      "label": "Hidden Thought",
+      "text": "“I suppose...”"
+    },
+    {
+      "label": "Examples",
+      "text": "덥겠네요.<br>힘들겠네요.<br>많이 바쁜가 봐요.<br>비가 오겠네요.",
+      "korean": true
+    },
+    {
+      "label": "Situation",
+      "text": "The speaker does not state the information as directly observed fact, but infers it from context, appearance, or prior information."
+    }
+  ]
+},
+{
+  "id": "attitude-insistence",
+  "folder": "attitudes",
+  "type": "attitude",
+  "badge": "I",
+  "title": "Insistence",
+  "subtitle": "The speaker repeats or reinforces a claim.",
+
+  "tags": [
+    "insistence",
+    "다니까",
+    "라니까",
+    "덥다니까",
+    "맞다니까"
+  ],
+
+  "blocks": [
+    {
+      "label": "Hidden Thought",
+      "text": "“I'm telling you...”"
+    },
+    {
+      "label": "Examples",
+      "text": "덥다니까.<br>맞다니까.<br>괜찮다니까.<br>진짜라니까.",
+      "korean": true
+    },
+    {
+      "label": "Situation",
+      "text": "The speaker strengthens a statement because the listener doubts it, disagrees, misunderstands, or has not responded appropriately."
+    }
+  ]
+}
 ]
