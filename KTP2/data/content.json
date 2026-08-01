@@ -1,40 +1,98 @@
 [
-  {
+{
   "id": "taxi-basic",
   "folder": "everyday",
   "type": "dialogue",
   "badge": "03",
-
   "title": "In a taxi",
-
   "subtitle": "Transportation · destination · payment",
 
   "tags": [
     "taxi",
-    "transport",
+    "transportation",
     "기사님",
-    "서울역",
-    "카드"
+    "부산역",
+    "출구",
+    "내릴게요",
+    "카드",
+    "destination",
+    "payment"
   ],
 
   "blocks": [
     {
-      "label": "Dialogue",
-      "text": "A: 기사님, 서울역으로 가 주세요.<br>B: 네. 여기에서 출발합니다.",
+      "label": "Dialogue · Korean",
+      "text": "승객: 기사님, 부산역으로 가 주세요.<br>기사: 부산역 몇 번 출구로 가실까요?<br>승객: 일단 부산역 주변으로 가 주세요.<br>기사: 알겠습니다.<br><br>…<br><br>승객: 여기서 내릴게요. 카드도 되나요?<br>기사: 네, 됩니다.<br>승객: 여기 있습니다.<br>기사: 감사합니다. 안녕히 가세요.<br>승객: 감사합니다.",
+      "korean": true
+    },
+    {
+      "label": "Dialogue · English",
+      "text": "Passenger: Please take me to Busan Station.<br>Driver: Which exit at Busan Station would you like to go to?<br>Passenger: Please take me near Busan Station for now.<br>Driver: All right.<br><br>…<br><br>Passenger: I’ll get out here. Can I pay by card?<br>Driver: Yes, you can.<br>Passenger: Here you are.<br>Driver: Thank you. Goodbye.<br>Passenger: Thank you."
+    },
+    {
+      "label": "Focus",
+      "text": "~로 가 주세요.<br><strong>ro ga juseyo</strong><br><br>여기<br><strong>yeogi</strong><br><br>~ 되나요?<br><strong>~ doenayo</strong>"
+    },
+    {
+      "label": "Situation",
+      "text": "A passenger asks to go to Busan Station. The driver asks for a specific exit, but the passenger does not know the exact location and asks to go near the station first. At the end of the ride, the passenger asks to stop, checks whether card payment is available, pays, and exchanges polite goodbyes with the driver."
+    }
+  ]
+},
+{
+  "id": "restaurant-order",
+
+  "folder": "everyday",
+
+  "type": "dialogue",
+
+  "badge": "04",
+
+  "title": "At a restaurant",
+
+  "subtitle": "Restaurant · ordering food",
+
+  "tags": [
+    "restaurant",
+    "order",
+    "삼겹살",
+    "사이다",
+    "밥",
+    "인분"
+  ],
+
+  "blocks": [
+    {
+      "label": "Dialogue · Korean",
+      "text": "직원: 몇 분이세요?<br>나: 두 명이요.<br>직원: 이쪽으로 앉으세요.<br>직원: 주문하시겠어요?<br>나: 좀 이따가 부를게요. 감사합니다.<br>직원: 네, 알겠습니다.<br><br>친구: 3인분 먹을까? 아니면 2인분?<br>나: 2인분만 하자.<br>친구: 그래.<br><br>나: 저기요, 주문할게요.<br>직원: 네, 말씀하세요.<br>나: 삼겹살 2인분하고 밥 두 공기 주세요.<br>직원: 음료는 뭐로 드릴까요?<br>나: 사이다 한 병 주세요.<br>직원: 네, 알겠습니다.",
       "korean": true
     },
 
     {
-      "label": "Focus",
-      "text": "기사님은 택시 기사에게 가장 자연스러운 호칭입니다. '~으로 가 주세요'는 목적지를 말할 때 가장 많이 사용하는 표현입니다."
+      "label": "Dialogue · English",
+      "text": "Staff: How many people?<br>Me: Two.<br>Staff: Please have a seat over here.<br>Staff: Are you ready to order?<br>Me: We'll call you in a little while. Thank you.<br>Staff: Certainly.<br><br>Friend: Three servings? Or two?<br>Me: Let's just get two servings.<br>Friend: Okay.<br><br>Me: Excuse me, we'd like to order.<br>Staff: Certainly, go ahead.<br>Me: Two servings of pork belly and two bowls of rice, please.<br>Staff: What would you like to drink?<br>Me: One bottle of Sprite, please.<br>Staff: Certainly."
     },
 
     {
-      "label": "Summary",
-      "text": "기사님\n~으로 가 주세요\n여기에서 내려 주세요\n카드 돼요?"
+      "label": "Focus",
+      "text": "몇 분이세요?<br><strong>myeot bun-iseyo</strong><br><br>좀 이따가 부를게요.<br><strong>jom ittdaga bureulgeyo</strong><br><br>주문할게요.<br><strong>jumunhalgeyo</strong><br><br>삼겹살 2인분, 밥 두 공기<br><strong>samgyeopsal i-inbun, bap du gonggi</strong>"
+    },
+
+    {
+      "label": "Situation",
+      "text": "Two friends enter a restaurant and are shown to a table. They decide to choose their food before ordering, then call the staff when they are ready. They order two servings of pork belly, two bowls of rice, and a bottle of soda."
     }
   ]
 },
+
+
+
+
+
+
+
+
+  
   {
     "id": "work-repeat",
     "folder": "everyday",
