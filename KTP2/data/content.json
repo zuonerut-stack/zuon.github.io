@@ -630,7 +630,8 @@
       "korean": true
     },
     {"label": "Pattern",
-     "text": "Speaker is not confident it follows with certain signs ★'는'(but, though) '조금(좀)'(little) '약간'(few) '살짝'(a bit) '별로'(not) '그다지'(not so much) )"
+     "text": "Speaker is not confident and it follows with negative signs ★'는'(but, though) '조금(좀)'(little) '약간'(few) '살짝'(a bit) '별로'(not) '그다지'(not so much) )"
+    },
     {
       "label": "Situation",
       "text": "The speaker softens a refusal or negative judgment instead of stating it bluntly. Words such as 좀 and expressions such as 것 같아요 leave room for the listener to infer the refusal."
